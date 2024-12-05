@@ -1,0 +1,408 @@
+.accounting-container {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.page-title {
+  color: var(--el-color-primary);
+  font-size: 28px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--el-text-color-primary);
+}
+
+.add-record-form {
+  display: flex;
+  justify-content: center;
+}
+
+.form-content {
+  width: 400px;
+  max-width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.form-item {
+  margin-bottom: 20px;
+  overflow: visible;
+}
+
+.category-icons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: nowrap;
+  width: 100%;
+  padding: 10px 0;
+  overflow-x: auto;
+  align-items: center;
+  min-width: 0;
+  margin: 0 -20px;
+  padding: 10px 20px;
+  scroll-behavior: smooth;
+}
+
+.category-icons::-webkit-scrollbar {
+  height: 6px;
+  background-color: transparent;
+}
+
+.category-icons::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.category-icons::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.category-icons .icon-button.el-button {
+  flex-shrink: 0;
+  width: 60px !important;
+  height: 60px !important;
+  font-size: 24px;
+  transition: all 0.3s;
+  border: none;
+  position: relative;
+  overflow: visible;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  margin: 0 6px;
+}
+
+.category-icons .icon-button.el-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+}
+
+.category-icons .icon-button.el-button.active {
+  background-color: var(--el-color-primary-light-9) !important;
+  color: var(--el-color-primary);
+  transform: scale(1.05);
+  border: 2px solid var(--el-color-primary-light-5);
+}
+
+.form-input {
+  width: 100%;
+}
+
+.submit-button {
+  width: 120px;
+  margin-top: 20px;
+  height: 40px;
+  font-size: 16px;
+  display: block;
+  margin: auto;
+}
+
+/* Element Plus 组件样式覆盖 */
+:deep(.el-input-number) {
+  width: 100%;
+}
+
+:deep(.el-select) {
+  width: 100%;
+}
+
+:deep(.el-form-item__label) {
+  padding-bottom: 8px;
+  text-align: left !important;
+  font-weight: 500;
+}
+
+:deep(.el-card__header) {
+  border-bottom: 2px solid var(--el-color-primary-light-8);
+  padding: 15px 20px;
+}
+
+/* 图表相关样式 */
+.chart-container {
+  height: 300px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.chart {
+  height: 100%;
+  width: 100%;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-header h3 {
+  margin: 0;
+}
+
+.charts-section {
+  margin-top: 20px;
+}
+
+.chart-card {
+  height: 100%;
+  margin-bottom: 20px;
+}
+
+:deep(.el-card__body) {
+  height: calc(100% - 60px);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+:deep(.el-dialog__body) {
+  padding: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .form-content {
+    width: 100%;
+  }
+  
+  .category-icons .icon-button.el-button {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 20px;
+  }
+  
+  .category-icons {
+    gap: 8px;
+  }
+}
+
+.category-icons .icon-button .delete-icon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #f56c6c;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.category-icons .icon-button:hover .delete-icon {
+  opacity: 1;
+}
+
+.category-icons .icon-button .delete-icon:hover {
+  background-color: #e64242;
+  transform: scale(1.1);
+}
+
+/* 添加按钮特殊样式 */
+.category-icons .icon-button.add-button {
+  background-color: #f5f5f5 !important;
+  border: 2px dashed #dcdfe6 !important;
+}
+
+.category-icons .icon-button.add-button:hover {
+  border-color: var(--el-color-primary) !important;
+  color: var(--el-color-primary);
+}
+
+/* 分页容器样式 */
+.pagination-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 0;
+}
+
+/* 确保分页组件在移动端也能正常显示 */
+@media (max-width: 768px) {
+  .pagination-container {
+    justify-content: center;
+  }
+  
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* 登录框样式 */
+.login-dialog .el-dialog__body {
+  padding: 30px 20px;
+}
+
+.login-dialog .el-form-item {
+  margin-bottom: 20px;
+}
+
+.login-dialog .dialog-footer {
+  display: flex;
+  justify-content: center;
+}
+
+/* Element Plus 按钮样式覆盖 */
+:deep(.el-button.is-circle) {
+  padding: 0;
+  width: 60px !important;
+  height: 60px !important;
+}
+
+/* 下拉选项样式 */
+.el-select-dropdown__item {
+  padding: 8px 12px !important;
+}
+
+/* 分类图标按钮样式 */
+.category-icons .icon-button.el-button {
+  flex-shrink: 0;
+  width: 60px !important;
+  height: 60px !important;
+  font-size: 24px;
+  transition: all 0.3s;
+  border: none;
+  position: relative;
+  overflow: visible;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  margin: 0 6px;
+}
+
+.category-icons .icon-button.el-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+}
+
+.category-icons .icon-button.el-button.active {
+  background-color: var(--el-color-primary-light-9) !important;
+  color: var(--el-color-primary);
+  transform: scale(1.05);
+  border: 2px solid var(--el-color-primary-light-5);
+}
+
+/* 删除图标样式 */
+.category-icons .icon-button .delete-icon {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #f56c6c;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.category-icons .icon-button:hover .delete-icon {
+  opacity: 1;
+}
+
+.category-icons .icon-button .delete-icon:hover {
+  background-color: #e64242;
+  transform: scale(1.1);
+}
+
+/* 添加按钮特殊样式 */
+.category-icons .icon-button.add-button {
+  background-color: #f5f5f5 !important;
+  border: 2px dashed #dcdfe6 !important;
+}
+
+.category-icons .icon-button.add-button:hover {
+  border-color: var(--el-color-primary) !important;
+  color: var(--el-color-primary);
+}
+
+/* Element Plus 组件样式覆盖 */
+:deep(.el-input-number) {
+  width: 100%;
+}
+
+:deep(.el-select) {
+  width: 100%;
+}
+
+:deep(.el-form-item__label) {
+  padding-bottom: 8px;
+  text-align: left !important;
+  font-weight: 500;
+}
+
+:deep(.el-card__header) {
+  border-bottom: 2px solid var(--el-color-primary-light-8);
+  padding: 15px 20px;
+}
+
+:deep(.el-card__body) {
+  height: calc(100% - 60px);
+}
+
+:deep(.el-dialog__body) {
+  padding: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .form-content {
+    width: 100%;
+  }
+  
+  .category-icons .icon-button.el-button {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 20px;
+  }
+  
+  .category-icons {
+    gap: 8px;
+  }
+
+  .pagination-container {
+    justify-content: center;
+  }
+  
+  .el-pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
