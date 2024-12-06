@@ -133,6 +133,15 @@
         <template #header>
           <div class="card-header">
             <h2>收支记录</h2>
+            <el-button 
+              type="primary" 
+              @click="handleDownloadExcel"
+              class="download-excel-button"
+              size="small"
+            >
+              <el-icon class="download-icon"><Download /></el-icon>
+              <span>导出Excel</span>
+            </el-button>
           </div>
         </template>
         
@@ -186,22 +195,26 @@
               </template>
             </el-table-column>
             <el-table-column prop="note" label="备注" />
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="120">
               <template #default="scope">
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="startEdit(scope.row)"
-                >
-                  修改
-                </el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click="deleteRecord(scope.row.id)"
-                >
-                  删除
-                </el-button>
+                <div class="operation-buttons">
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="startEdit(scope.row)"
+                    class="operation-button"
+                  >
+                    修改
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="danger"
+                    @click="deleteRecord(scope.row.id)"
+                    class="operation-button"
+                  >
+                    删除
+                  </el-button>
+                </div>
               </template>
             </el-table-column>
           </el-table>
@@ -397,10 +410,16 @@
     </div>
   </template>
   
+<style lang="scss">
+  @import '@/assets/styles/accounting.css';
+  @import '@/assets/styles/downloadExcel.css';
+</style>
+
   <script setup>
   import { onMounted } from 'vue'
   import { useAccounting } from '@/composables/useAccounting'
   import '@/assets/styles/accounting.css'
+  import '@/assets/styles/downloadExcel.css'
   import { use } from 'echarts/core'
   import { CanvasRenderer } from 'echarts/renderers'
   import {
@@ -417,7 +436,7 @@
   import VChart from 'vue-echarts'
   import * as ElementPlusIconsVue from '@element-plus/icons-vue'
   import { h } from 'vue'
-  import { Close, Plus } from '@element-plus/icons-vue'
+  import { Close, Plus, Download } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
   
   // 注册必需的 ECharts 组件
@@ -469,7 +488,8 @@
     handleCurrentChange,
     handleSizeChange,
     loading,
-    fetchCategories
+    fetchCategories,
+    handleDownloadExcel
   } = useAccounting()
 
   // 修改页面加载时的逻辑
@@ -498,7 +518,3 @@
     addRecord(newRecord.value)
   }
   </script>
-  
-  <style lang="scss">
-  @import '@/assets/styles/accounting.css';
-  </style> 

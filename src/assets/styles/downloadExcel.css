@@ -1,0 +1,27 @@
+.download-excel-button {
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  height: 28px !important;
+  width: 100px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+}
+
+.download-excel-button .download-icon {
+  margin-right: 2px;
+  font-size: 14px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 0;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 18px;
+} 

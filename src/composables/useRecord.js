@@ -3,6 +3,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
+import { downloadExcel } from '@/utils/downloadExcel'
 
 export function useRecord() {
   const userStore = useUserStore()
@@ -57,7 +58,7 @@ export function useRecord() {
           type: record.type === '支出' ? 'expense' : 'income',
           amount: record.amount,
           category: record.categoryName,
-          date: record.updatedAt,
+          date: record.transactionDate,
           note: record.notes
         }))
 
@@ -215,6 +216,16 @@ export function useRecord() {
     await fetchRecords()
   }
 
+  // 下载Excel
+  const handleDownloadExcel = async () => {
+    try {
+      await downloadExcel(userId.value)
+      ElMessage.success('下载成功')
+    } catch (error) {
+      ElMessage.error('下载失败')
+    }
+  }
+
   return {
     records,
     newRecord,
@@ -233,6 +244,7 @@ export function useRecord() {
     cancelEdit,
     saveEdit,
     handleCurrentChange,
-    handleSizeChange
+    handleSizeChange,
+    handleDownloadExcel
   }
 } 
