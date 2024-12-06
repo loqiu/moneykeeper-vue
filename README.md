@@ -164,7 +164,7 @@ npm run build
 
 ```nginx
 location /api {
-    proxy_pass http://8.208.121.218:8080/moneykeeper-back-0.0.1-SNAPSHOT/api;
+    proxy_pass http://<your-server-ip>:8080/moneykeeper-back-0.0.1-SNAPSHOT/api;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
 }
