@@ -45,7 +45,7 @@ export function useRecord() {
 
     loading.value = true
     try {
-      const response = await axios.get(`${API_URL}/records/list`, {
+      const response = await axios.get(`${API_URL}/records/listWithCategoryName`, {
         params: {
           userId: userId.value
         }
@@ -56,8 +56,8 @@ export function useRecord() {
           id: record.id,
           type: record.type === '支出' ? 'expense' : 'income',
           amount: record.amount,
-          category: record.categoryId,
-          date: record.transactionDate,
+          category: record.categoryName,
+          date: record.updatedAt,
           note: record.notes
         }))
 
