@@ -22,13 +22,24 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Clean Install Dependencies  # 清理并重新安装依赖
+        run: |
+          rm -rf node_modules
+          rm -rf dist
+          npm ci  # 使用 ci 而不是 install 以确保干净安装
 
       - name: Build
         run: npm run build
 
-
+      - name: Clean Remote Directory  # 添加清理远程目录的步骤
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            rm -rf /usr/share/nginx/html/*
+      
       - name: Deploy to Server
         uses: appleboy/scp-action@master
         with:
