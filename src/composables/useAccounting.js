@@ -1,10 +1,22 @@
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
+import { useUserStore } from '@/stores/user'
 
 export function useAccounting() {
   const category = useCategory()
   const record = useRecord()
+  const userStore = useUserStore()
+
+  // 监听用户登录状态
+  watch(() => userStore.userId, async (newUserId) => {
+    if (newUserId) {
+      await Promise.all([
+        record.fetchRecords(),
+        category.fetchCategories()
+      ])
+    }
+  })
 
   // 图表配置
   const pieOption = computed(() => {

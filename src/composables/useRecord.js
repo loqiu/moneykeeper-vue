@@ -1,14 +1,12 @@
 import { ref, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
-import { downloadExcel } from '@/utils/downloadExcel'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import request from '@/utils/axios'
 
 export function useRecord() {
   const userStore = useUserStore()
   const { userId } = storeToRefs(userStore)
-  const API_URL = process.env.VUE_APP_API_URL
 
   // 响应式数据
   const records = ref([])
@@ -46,13 +44,12 @@ export function useRecord() {
 
     loading.value = true
     try {
-      const response = await axios.get(`${API_URL}/records/listWithCategoryName`, {
+      const response = await request.get(`/records/listWithCategoryName`, {
         params: {
           userId: userId.value
         }
       })
       if (response.data) {
-        // 转换后端数据格式为前端所需格式
         records.value = response.data.map(record => ({
           id: record.id,
           type: record.type === '支出' ? 'expense' : 'income',
@@ -62,10 +59,8 @@ export function useRecord() {
           note: record.notes
         }))
 
-        // 设置总数
         pagination.value.total = records.value.length
 
-        // 手动处理分页
         const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
         const end = start + pagination.value.pageSize
         records.value = records.value.slice(start, end)
@@ -82,14 +77,13 @@ export function useRecord() {
 
   // 添加记录
   const addRecord = async (record) => {
-    console.log('record: ', JSON.stringify(record))
     if (!record.amount || !record.category) {
       ElMessage.warning('请填写完整的记账信息')
       return
     }
 
     try {
-      const response = await axios.post(`${API_URL}/records`, {
+      const response = await request.post(`/records`, {
         userId: userId.value,
         categoryId: Number(record.category),
         type: record.type === 'expense' ? '支出' : '收入',
@@ -120,7 +114,6 @@ export function useRecord() {
   // 删除记录
   const deleteRecord = async (id) => {
     try {
-      // 确保 recordId 是数字类型
       const recordId = Number(id)
       if (isNaN(recordId)) {
         throw new Error('Invalid record ID')
@@ -136,7 +129,7 @@ export function useRecord() {
         }
       )
 
-      await axios.delete(`${API_URL}/records/${recordId}`)
+      await request.delete(`/records/${recordId}`)
       await fetchRecords()
       ElMessage.success('删除成功')
     } catch (error) {
@@ -155,6 +148,7 @@ export function useRecord() {
   const cancelEdit = () => {
     editingRecord.value = null
   }
+
   // 保存修改
   const saveEdit = async () => {
     if (!editingRecord.value) return
@@ -165,20 +159,18 @@ export function useRecord() {
     }
 
     try {
-      // 确保 recordId 是数字类型
       const recordId = Number(editingRecord.value.id)
       if (isNaN(recordId)) {
         throw new Error('Invalid record ID')
       }
 
-      // 构建请求体，只包含需要更新的字段
       const updateData = {
         amount: Number(editingRecord.value.amount),
         transactionDate: editingRecord.value.date,
         notes: editingRecord.value.note || ''
       }
 
-      await axios.put(`${API_URL}/records/${recordId}`, updateData)
+      await request.put(`/records/${recordId}`, updateData)
       
       await fetchRecords()
       ElMessage.success('修改成功')
@@ -188,21 +180,6 @@ export function useRecord() {
       ElMessage.error('修改失败')
     }
   }
-
-  // 统计数据
-  const totalIncome = computed(() => {
-    return records.value
-      .filter(record => record.type === 'income')
-      .reduce((sum, record) => sum + record.amount, 0)
-  })
-
-  const totalExpense = computed(() => {
-    return records.value
-      .filter(record => record.type === 'expense')
-      .reduce((sum, record) => sum + record.amount, 0)
-  })
-
-  const balance = computed(() => totalIncome.value - totalExpense.value)
 
   // 分页处理
   const handleCurrentChange = async (val) => {
@@ -216,25 +193,12 @@ export function useRecord() {
     await fetchRecords()
   }
 
-  // 下载Excel
-  const handleDownloadExcel = async () => {
-    try {
-      await downloadExcel(userId.value)
-      ElMessage.success('下载成功')
-    } catch (error) {
-      ElMessage.error('下载失败')
-    }
-  }
-
   return {
     records,
     newRecord,
     loading,
     timeUnit,
     pagination,
-    totalIncome,
-    totalExpense,
-    balance,
     editingRecord,
     showEditDialog,
     fetchRecords,
@@ -244,7 +208,6 @@ export function useRecord() {
     cancelEdit,
     saveEdit,
     handleCurrentChange,
-    handleSizeChange,
-    handleDownloadExcel
+    handleSizeChange
   }
 } 

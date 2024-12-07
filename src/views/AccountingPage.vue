@@ -438,6 +438,7 @@
   import { h } from 'vue'
   import { Close, Plus, Download } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
+  import { useUserStore } from '@/stores/user'
   
   // 注册必需的 ECharts 组件
   use([
@@ -492,12 +493,16 @@
     handleDownloadExcel
   } = useAccounting()
 
+  const userStore = useUserStore()
+
   // 修改页面加载时的逻辑
   onMounted(async () => {
-    await Promise.all([
-      fetchRecords(),
-      fetchCategories()
-    ])
+    if (userStore.userId) {
+      await Promise.all([
+        fetchRecords(),
+        fetchCategories()
+      ])
+    }
   })
 
   // 添加分类选择处理函数

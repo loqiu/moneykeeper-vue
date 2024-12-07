@@ -1,10 +1,8 @@
-import axios from 'axios'
-
-const API_URL = process.env.VUE_APP_API_URL
+import request from './axios'
 
 export const downloadExcel = async (userId) => {
   try {
-    const response = await axios.get(`${API_URL}/excel/download/${userId}`, {
+    const response = await request.get(`/excel/download/${userId}`, {
       responseType: 'blob'
     })
     

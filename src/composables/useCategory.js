@@ -1,43 +1,45 @@
 import { ref } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
 import { useUserStore } from '@/stores/user'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import request from '@/utils/axios'
 
 export function useCategory() {
   const userStore = useUserStore()
-  const API_URL = process.env.VUE_APP_API_URL
-
-  // 分类数据
   const expenseCategories = ref([])
   const incomeCategories = ref([])
   const dialogVisible = ref(false)
   const categoryType = ref('expense')
   const newCategory = ref({
     name: '',
-    icon: 'Food'
+    icon: 'shopping-cart'
   })
 
   // 获取分类列表
   const fetchCategories = async () => {
+    if (!userStore.userId) {
+      console.warn('No userId available')
+      return
+    }
+
     try {
-      const response = await axios.get(`${API_URL}/categories/list`)
+      const response = await request.get(`/categories/user/${userStore.userId}`)
       if (response.data) {
         expenseCategories.value = response.data
           .filter(category => category.type === '支出')
           .map(category => ({
+            id: category.id,
             name: category.name,
             icon: category.icon,
-            bgColor: category.color,
-            id: category.id
+            bgColor: category.color
           }))
 
         incomeCategories.value = response.data
           .filter(category => category.type === '收入')
           .map(category => ({
+            id: category.id,
             name: category.name,
             icon: category.icon,
-            bgColor: category.color,
-            id: category.id
+            bgColor: category.color
           }))
       }
     } catch (error) {
@@ -48,16 +50,21 @@ export function useCategory() {
 
   // 显示添加分类对话框
   const showAddCategoryDialog = (type) => {
-    categoryType.value = type
-    newCategory.value = {
-      name: '',
-      icon: 'Food'
+    if (!userStore.userId) {
+      ElMessage.warning('请先登录')
+      return
     }
+    categoryType.value = type
     dialogVisible.value = true
   }
 
   // 删除分类
   const deleteCategory = async (index, type) => {
+    if (!userStore.userId) {
+      ElMessage.warning('请先登录')
+      return
+    }
+
     try {
       const category = type === 'expense' 
         ? expenseCategories.value[index]
@@ -73,16 +80,12 @@ export function useCategory() {
         }
       )
 
-      // 确保 categoryId 是数字类型
       const categoryId = Number(category.id)
       if (isNaN(categoryId)) {
         throw new Error('Invalid category ID')
       }
 
-      // 调用后端删除 API
-      await axios.delete(`${API_URL}/categories/${categoryId}`)
-
-      // 删除成功后重新获取分类列表
+      await request.delete(`/categories/${categoryId}`)
       await fetchCategories()
       ElMessage.success(`已删除${type === 'expense' ? '支出' : '收入'}分类：${category.name}`)
     } catch (error) {
@@ -93,7 +96,7 @@ export function useCategory() {
     }
   }
 
-  // 可用的图标列表 - 使用 Element Plus 的图标名称
+  // 可用的图标列表
   const availableIcons = [
     { value: 'ShoppingCart', label: 'shopping-cart' },
     { value: 'Food', label: 'food' },
@@ -107,15 +110,15 @@ export function useCategory() {
     { value: 'More', label: 'more' }
   ]
 
-  // 修改添加分类方法
+  // 添加分类
   const addCategory = async (category) => {
-    if (!category.name || !category.icon) {
-      ElMessage.warning('请填写完整的分类信息')
+    if (!userStore.userId) {
+      ElMessage.warning('请先登录')
       return
     }
 
-    if (!userStore.userId) {
-      ElMessage.error('用户未登录')
+    if (!category.name || !category.icon) {
+      ElMessage.warning('请填写完整的分类信息')
       return
     }
 
@@ -126,13 +129,12 @@ export function useCategory() {
     const randomBgColor = bgColors[Math.floor(Math.random() * bgColors.length)]
 
     try {
-      // 找到对应的图标对象
       const iconObj = availableIcons.find(icon => icon.label === category.icon)
-      const iconName = iconObj ? iconObj.value : 'More'  // 使用 PascalCase 格式的图标名
+      const iconName = iconObj ? iconObj.value : 'More'
 
-      const response = await axios.post(`${API_URL}/categories/${userStore.userId}`, {
+      const response = await request.post(`/categories/${userStore.userId}`, {
         name: category.name,
-        icon: iconName,  // 使用 PascalCase 格式的图标名
+        icon: iconName,
         color: randomBgColor,
         type: categoryType.value === 'expense' ? '支出' : '收入'
       })
@@ -140,7 +142,7 @@ export function useCategory() {
       if (response.data) {
         await fetchCategories()
         dialogVisible.value = false
-        newCategory.value = { name: '', icon: 'shopping-cart' }  // 使用 kebab-case 格式作为默认值
+        newCategory.value = { name: '', icon: 'shopping-cart' }
         ElMessage.success('添加分类成功')
       }
     } catch (error) {
@@ -154,8 +156,8 @@ export function useCategory() {
     incomeCategories,
     dialogVisible,
     categoryType,
-    newCategory,
     availableIcons,
+    newCategory,
     fetchCategories,
     showAddCategoryDialog,
     deleteCategory,
