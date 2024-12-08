@@ -19,6 +19,7 @@ module.exports = defineConfig({
           ? 'http://localhost:8081'
           : 'http://8.208.121.218:8080/moneykeeper-back-0.0.1-SNAPSHOT',
         changeOrigin: true,
+        ws: true,
         pathRewrite: {
           '^/api': '/api'
         }

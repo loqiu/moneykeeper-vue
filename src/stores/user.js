@@ -1,13 +1,111 @@
 import { defineStore } from 'pinia'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import { ElNotification } from 'element-plus'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     userId: null,
     username: '',
-    token: null
+    token: null,
+    controller: null,
+    isConnecting: false  // 添加连接状态标志
   }),
 
   actions: {
+    async initializeSSE() {
+      // 避免重复连接
+      if (this.userId && !this.isConnecting) {
+        const token = this.token
+        
+        // 如果存在旧的连接，先关闭
+        if (this.controller) {
+          this.closeSSE()
+        }
+        
+        this.controller = new AbortController()
+        this.isConnecting = true
+        
+        try {
+          await fetchEventSource(
+            `http://localhost:8081/api/notifications/subscribe/${this.userId}`, {
+              headers: {
+                'Authorization': token.startsWith('Bearer ') ? token : `Bearer ${token}`
+              },
+              signal: this.controller.signal,
+              credentials: 'include',
+              onmessage: (event) => {
+                try {
+                  // 尝试解析JSON
+                  const data = JSON.parse(event.data)
+                  console.log('收到SSE消息(JSON):', data)
+                  
+                  // 显示通知
+                  ElNotification({
+                    title: data.title || '新消息',
+                    message: data.message || data.toString(),
+                    type: data.type || 'info',
+                    position: 'top-right',
+                    duration: 4500
+                  })
+                } catch (e) {
+                  // 如果不是JSON格式，直接显示文本消息
+                  console.log('收到SSE消息(文本):', event.data)
+                  ElNotification({
+                    title: '新消息',
+                    message: event.data,
+                    type: 'info',
+                    position: 'top-right',
+                    duration: 4500
+                  })
+                }
+              },
+              onopen: async (response) => {
+                if (response.ok) {
+                  console.log('SSE连接已建立')
+                  this.isConnecting = true
+                } else {
+                  this.isConnecting = false
+                  throw new Error(`服务器返回 ${response.status} ${response.statusText}`)
+                }
+              },
+              onerror: (err) => {
+                console.error('SSE连接错误:', err)
+                this.isConnecting = false
+                throw err
+              },
+              onclose: () => {
+                console.log('SSE连接关闭')
+                this.isConnecting = false
+                // 如果不是主动关闭，尝试重连
+                if (this.userId && !this.controller.signal.aborted) {
+                  setTimeout(() => {
+                    this.initializeSSE()
+                  }, 5000)
+                }
+              }
+            }
+          )
+        } catch (err) {
+          console.error('SSE连接失败:', err)
+          this.isConnecting = false
+          // 只有在用户仍然登录时才重试
+          if (this.userId) {
+            setTimeout(() => {
+              this.initializeSSE()
+            }, 5000)
+          }
+        }
+      }
+    },
+
+    closeSSE() {
+      if (this.controller) {
+        this.controller.abort()
+        this.controller = null
+      }
+      this.isConnecting = false
+    },
+
     setUserInfo(userInfo) {
       this.userId = Number(userInfo.userId)
       this.username = userInfo.username
@@ -18,9 +116,13 @@ export const useUserStore = defineStore('user', {
         username: this.username,
         token: this.token
       }))
+      // 登录后初始化SSE连接
+      this.initializeSSE()
     },
 
     clearUserInfo() {
+      // 登出时关闭SSE连接
+      this.closeSSE()
       this.userId = null
       this.username = ''
       this.token = null
@@ -35,6 +137,8 @@ export const useUserStore = defineStore('user', {
         this.userId = Number(parsedInfo.userId)
         this.username = parsedInfo.username
         this.token = parsedInfo.token
+        // 从存储恢复后初始化SSE连接
+        this.initializeSSE()
       }
     }
   },
