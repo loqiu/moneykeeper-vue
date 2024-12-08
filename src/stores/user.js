@@ -8,13 +8,16 @@ export const useUserStore = defineStore('user', {
     username: '',
     token: null,
     controller: null,
-    isConnecting: false  // 添加连接状态标志
+    isConnecting: false,
+    isConnected: false  // 添加连接成功标志
   }),
 
   actions: {
     async initializeSSE() {
-      // 避免重复连接
-      if (this.userId && !this.isConnecting) {
+      // 避免重复连接，并且只在未连接时才建立连接
+      if (this.userId && !this.isConnecting && !this.isConnected) {
+        console.log('初始化SSE连接')
+        console.log(this.userId, this.isConnecting, this.isConnected)
         const token = this.token
         
         // 如果存在旧的连接，先关闭
@@ -27,7 +30,7 @@ export const useUserStore = defineStore('user', {
         
         try {
           await fetchEventSource(
-            `http://localhost:8081/api/notifications/subscribe/${this.userId}`, {
+            `/api/notifications/subscribe/${this.userId}`, {
               headers: {
                 'Authorization': token.startsWith('Bearer ') ? token : `Bearer ${token}`
               },
@@ -62,21 +65,25 @@ export const useUserStore = defineStore('user', {
               onopen: async (response) => {
                 if (response.ok) {
                   console.log('SSE连接已建立')
-                  this.isConnecting = true
+                  this.isConnecting = false
+                  this.isConnected = true  // 标记连接成功
                 } else {
                   this.isConnecting = false
+                  this.isConnected = false
                   throw new Error(`服务器返回 ${response.status} ${response.statusText}`)
                 }
               },
               onerror: (err) => {
                 console.error('SSE连接错误:', err)
                 this.isConnecting = false
+                this.isConnected = false
                 throw err
               },
               onclose: () => {
                 console.log('SSE连接关闭')
                 this.isConnecting = false
-                // 如果不是主动关闭，尝试重连
+                this.isConnected = false
+                // 只在非主动关闭且用户仍在登录状态时重连
                 if (this.userId && !this.controller.signal.aborted) {
                   setTimeout(() => {
                     this.initializeSSE()
@@ -88,8 +95,9 @@ export const useUserStore = defineStore('user', {
         } catch (err) {
           console.error('SSE连接失败:', err)
           this.isConnecting = false
-          // 只有在用户仍然登录时才重试
-          if (this.userId) {
+          this.isConnected = false
+          // 只在用户仍在登录状态时重试
+          if (this.userId && !this.isConnected) {
             setTimeout(() => {
               this.initializeSSE()
             }, 5000)
@@ -104,6 +112,7 @@ export const useUserStore = defineStore('user', {
         this.controller = null
       }
       this.isConnecting = false
+      this.isConnected = false
     },
 
     setUserInfo(userInfo) {
@@ -116,7 +125,9 @@ export const useUserStore = defineStore('user', {
         username: this.username,
         token: this.token
       }))
-      // 登录后初始化SSE连接
+      // 确保之前的连接已关闭
+      this.closeSSE()
+      // 初始化新连接
       this.initializeSSE()
     },
 
