@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { fetchEventSource } from '@microsoft/fetch-event-source'
 import { ElNotification } from 'element-plus'
 
+let reconnectTimeout = null
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     userId: null,
@@ -14,13 +16,16 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     async initializeSSE() {
-      // 避免重复连接，并且只在未连接时才建立连接
+      // 清除之前的重连定时器
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout)
+        reconnectTimeout = null
+      }
+
       if (this.userId && !this.isConnecting && !this.isConnected) {
         console.log('初始化SSE连接')
-        console.log(this.userId, this.isConnecting, this.isConnected)
         const token = this.token
         
-        // 如果存在旧的连接，先关闭
         if (this.controller) {
           this.closeSSE()
         }
@@ -37,6 +42,7 @@ export const useUserStore = defineStore('user', {
               signal: this.controller.signal,
               credentials: 'include',
               onmessage: (event) => {
+                this.checkConnection()
                 try {
                   // 尝试解析JSON
                   const data = JSON.parse(event.data)
@@ -51,8 +57,7 @@ export const useUserStore = defineStore('user', {
                     duration: 4500
                   })
                 } catch (e) {
-                  // 如果不是JSON格式，直接显示文本消息
-                  console.log('收到SSE消息(文本):', event.data)
+                  console.error('消息解析失败:', e, '原始消息:', event.data);
                   ElNotification({
                     title: '新消息',
                     message: event.data,
@@ -64,41 +69,40 @@ export const useUserStore = defineStore('user', {
               },
               onopen: async (response) => {
                 if (response.ok) {
-                  console.log('SSE连接已建立')
+                  console.log('SSE连接已建立, 状态码:', response.status)
                   this.isConnecting = false
                   this.isConnected = true  // 标记连接成功
                 } else {
+                  console.log('SSE连接失败, 状态码:', response.status)
                   this.isConnecting = false
                   this.isConnected = false
                   throw new Error(`服务器返回 ${response.status} ${response.statusText}`)
                 }
               },
               onerror: (err) => {
-                console.error('SSE连接错误:', err)
+                console.error('SSE连接错误, 详细信息:', err)
                 this.isConnecting = false
                 this.isConnected = false
-                throw err
-              },
-              onclose: () => {
-                console.log('SSE连接关闭')
-                this.isConnecting = false
-                this.isConnected = false
-                // 只在非主动关闭且用户仍在登录状态时重连
-                if (this.userId && !this.controller.signal.aborted) {
-                  setTimeout(() => {
+                
+                // 如果是 AbortError，说明是主动中断，不需要重连
+                if (err.name !== 'AbortError' && this.userId) {
+                  reconnectTimeout = setTimeout(() => {
                     this.initializeSSE()
                   }, 5000)
                 }
+                // 不抛出错误，而是正常处理
+                return
               }
             }
           )
         } catch (err) {
-          console.error('SSE连接失败:', err)
+          console.error('SSE连接失败, 详细错误:', err)
           this.isConnecting = false
           this.isConnected = false
-          // 只在用户仍在登录状态时重试
-          if (this.userId && !this.isConnected) {
-            setTimeout(() => {
+          
+          // 只在非主动中断且用户仍在登录状态时重试
+          if (err.name !== 'AbortError' && this.userId && !this.isConnected) {
+            reconnectTimeout = setTimeout(() => {
               this.initializeSSE()
             }, 5000)
           }
@@ -106,7 +110,22 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    checkConnection() {
+      console.log('SSE连接状态:', {
+        userId: this.userId,
+        isConnecting: this.isConnecting,
+        isConnected: this.isConnected,
+        hasController: !!this.controller
+      })
+    },
+
     closeSSE() {
+      // 清除重连定时器
+      if (reconnectTimeout) {
+        clearTimeout(reconnectTimeout)
+        reconnectTimeout = null
+      }
+      
       if (this.controller) {
         this.controller.abort()
         this.controller = null
