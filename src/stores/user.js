@@ -58,12 +58,12 @@ export const useUserStore = defineStore('user', {
             this.checkConnection()
             try {
               console.log('收到SSE消息:', event.data)
-              if (event.type === 'HEARTBEAT') {
+              if (event.type === "HEARTBEAT") {
                 console.log('收到心跳消息:', event.data)
                 return
               }
               
-              if (event.type === 'CONNECT') {
+              if (event.type === "CONNECT") {
                 console.log('收到连接成功消息:', event.data)
                 return
               }

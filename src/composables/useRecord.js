@@ -3,6 +3,7 @@ import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/utils/axios'
+import axios from 'axios'
 
 export function useRecord() {
   const userStore = useUserStore()
@@ -35,20 +36,29 @@ export function useRecord() {
     set: (value) => { if (!value) editingRecord.value = null }
   })
 
-  // 获取记录列表
-  const fetchRecords = async () => {
-    if (!userId.value) {
-      console.warn('No userId available')
-      return
-    }
+  // 新增统计数据的响应式引用
+  const totalIncome = ref(0)
+  const totalExpense = ref(0)
+  const balance = ref(0)
 
+  // 新增获取统计数据的方法
+  const fetchRecordsSummary = async () => {
+    try {
+      const response = await axios.get(`/api/records/summary/${userStore.userId}`)
+      totalIncome.value = response.data.totalIncome
+      totalExpense.value = response.data.totalExpense
+      balance.value = response.data.balance
+    } catch (error) {
+      console.error('获取统计数据失败:', error)
+      ElMessage.error('获取统计数据失败')
+    }
+  }
+
+  // 获取记录列表
+  const fetchRecords = async (params = {}) => {
     loading.value = true
     try {
-      const response = await request.get(`/records/listWithCategoryName`, {
-        params: {
-          userId: userId.value
-        }
-      })
+      const response = await request.get(`/records/listWithCategoryName/${userId.value}`, { params })
       if (response.data) {
         records.value = response.data.map(record => ({
           id: record.id,
@@ -64,6 +74,11 @@ export function useRecord() {
         const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
         const end = start + pagination.value.pageSize
         records.value = records.value.slice(start, end)
+
+        // 获取统计数据
+        await fetchRecordsSummary()
+
+        return response.data
       }
     } catch (error) {
       console.error('获取记录列表失败:', error)
@@ -208,6 +223,9 @@ export function useRecord() {
     cancelEdit,
     saveEdit,
     handleCurrentChange,
-    handleSizeChange
+    handleSizeChange,
+    totalIncome,
+    totalExpense,
+    balance
   }
 } 

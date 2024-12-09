@@ -148,7 +148,7 @@
         <el-row class="summary">
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic title="总收入" :value="totalIncome" prefix="¥">
+              <el-statistic :value="totalIncome" prefix="£">
                 <template #title>
                   <div class="statistic-title">总收入</div>
                 </template>
@@ -157,7 +157,7 @@
           </el-col>
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic title="总支出" :value="totalExpense" prefix="¥">
+              <el-statistic :value="totalExpense" prefix="£">
                 <template #title>
                   <div class="statistic-title">总支出</div>
                 </template>
@@ -166,7 +166,7 @@
           </el-col>
           <el-col :span="8">
             <div class="statistic-card">
-              <el-statistic title="结余" :value="balance" prefix="¥">
+              <el-statistic :value="balance" prefix="£">
                 <template #title>
                   <div class="statistic-title">结余</div>
                 </template>
@@ -190,7 +190,7 @@
             <el-table-column prop="amount" label="金额" width="120">
               <template #default="scope">
                 <span :class="scope.row.type === 'income' ? 'income' : 'expense'">
-                  ¥{{ scope.row.amount }}
+                  £{{ scope.row.amount }}
                 </span>
               </template>
             </el-table-column>
@@ -439,6 +439,7 @@
   import { Close, Plus, Download } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
   import { useUserStore } from '@/stores/user'
+  import { downloadExcel } from '@/utils/downloadExcel'
   
   // 注册必需的 ECharts 组件
   use([
@@ -457,7 +458,7 @@
     const { icon } = props
     return h(ElementPlusIconsVue[icon])
   }
-  
+
   const {
     records,
     newRecord,
@@ -489,8 +490,7 @@
     handleCurrentChange,
     handleSizeChange,
     loading,
-    fetchCategories,
-    handleDownloadExcel
+    fetchCategories
   } = useAccounting()
 
   const userStore = useUserStore()
@@ -521,5 +521,13 @@
 
     // 调用添加记录方法
     addRecord(newRecord.value)
+  }
+
+  const handleDownloadExcel = () => {
+    if (!records.value || records.value.length === 0) {
+      ElMessage.warning('没有可导出的数据')
+      return
+    }
+    downloadExcel(userStore.userId)
   }
   </script>
