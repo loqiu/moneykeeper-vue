@@ -29,6 +29,7 @@ export function useLogin() {
       })
 
       if (response.data) {
+        // console.log('保存用户信息和token到store', response.data)
         // 保存用户信息和token到store
         userStore.setUserInfo({
           userId: response.data.userId,
