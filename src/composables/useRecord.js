@@ -40,6 +40,8 @@ export function useRecord() {
   const totalIncome = ref(0)
   const totalExpense = ref(0)
   const balance = ref(0)
+  // 所有记录
+  const allRecords = ref([])
 
   // 新增获取统计数据的方法
   const fetchRecordsSummary = async () => {
@@ -60,7 +62,7 @@ export function useRecord() {
     try {
       const response = await request.get(`/records/listWithCategoryName/${userId.value}`, { params })
       if (response.data) {
-        records.value = response.data.map(record => ({
+        allRecords.value = response.data.map(record => ({
           id: record.id,
           type: record.type === '支出' ? 'expense' : 'income',
           amount: record.amount,
@@ -69,11 +71,11 @@ export function useRecord() {
           note: record.notes
         }))
 
-        pagination.value.total = records.value.length
+        pagination.value.total = allRecords.value.length
 
         const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
         const end = start + pagination.value.pageSize
-        records.value = records.value.slice(start, end)
+        records.value = allRecords.value.slice(start, end)
 
         // 获取统计数据
         await fetchRecordsSummary()
@@ -199,16 +201,23 @@ export function useRecord() {
   // 分页处理
   const handleCurrentChange = async (val) => {
     pagination.value.currentPage = val
-    await fetchRecords()
+    // await fetchRecords()
+    const start = (val - 1) * pagination.value.pageSize
+    const end = start + pagination.value.pageSize
+    records.value = allRecords.value.slice(start, end)
   }
 
   const handleSizeChange = async (val) => {
     pagination.value.pageSize = val
     pagination.value.currentPage = 1
-    await fetchRecords()
+    // await fetchRecords()
+    const start = 0
+    const end = val
+    records.value = allRecords.value.slice(start, end)
   }
 
   return {
+    allRecords,
     records,
     newRecord,
     loading,

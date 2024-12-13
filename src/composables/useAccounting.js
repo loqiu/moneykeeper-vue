@@ -20,7 +20,7 @@ export function useAccounting() {
 
   // 图表配置
   const pieOption = computed(() => {
-    const categoryData = record.records.value
+    const categoryData = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {
         acc[record.category] = (acc[record.category] || 0) + record.amount
