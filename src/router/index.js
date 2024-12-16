@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import AccountingPage from '@/views/AccountingPage.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import { useUserStore } from '@/stores/user'
+import PaymentSuccessPage from '@/views/PaymentSuccessPage.vue'
+import PaymentCancelPage from '@/views/PaymentCancelPage.vue'
 
 const routes = [
   {
@@ -18,6 +20,21 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import('@/views/StripeCheckoutPage.vue')
+  },
+  {
+    path: '/payment/success',
+    name: 'PaymentSuccess',
+    component: PaymentSuccessPage
+  },
+  {
+    path: '/payment/cancel',
+    name: 'PaymentCancel',
+    component: PaymentCancelPage
   }
 ]
 

@@ -1,0 +1,66 @@
+.payment-result-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.result-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  text-align: center;
+}
+
+.card-header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.result-content {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* 成功图标样式 */
+.success-icon {
+  font-size: 64px;
+  color: #67C23A;
+  margin-bottom: 20px;
+}
+
+/* 取消图标样式 */
+.cancel-icon {
+  font-size: 64px;
+  color: #F56C6C;
+  margin-bottom: 20px;
+}
+
+.result-content h2 {
+  margin: 20px 0;
+  color: #2c3e50;
+}
+
+.description {
+  color: #606266;
+  margin-bottom: 20px;
+}
+
+.session-id {
+  color: #909399;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.action-buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.action-buttons .el-button {
+  min-width: 120px;
+} 

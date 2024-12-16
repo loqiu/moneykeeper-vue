@@ -393,6 +393,33 @@
   margin: 0 !important;
 }
 
+.subscription-row {
+  margin-bottom: 20px;
+}
+
+.subscription-link {
+  text-decoration: none;
+}
+
+.upgrade-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(45deg, #4B79A1, #283E51);
+  border: none;
+  padding: 8px 16px;
+  transition: transform 0.2s;
+}
+
+.upgrade-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.upgrade-icon {
+  font-size: 16px;
+  color: #FFD700;
+}
 
 /* 响应式设计 */
 @media (max-width: 768px) {

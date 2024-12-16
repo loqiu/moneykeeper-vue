@@ -9,6 +9,7 @@ import '@/assets/styles/global.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { useUserStore } from './stores/user'
+import { Check } from '@element-plus/icons-vue'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -28,5 +29,7 @@ app.use(ElementPlus, {
 // 初始化用户token
 const userStore = useUserStore()
 userStore.initializeFromStorage()
+
+app.component('CheckIcon', Check)
 
 app.mount('#app')

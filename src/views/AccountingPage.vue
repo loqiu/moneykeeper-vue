@@ -1,5 +1,17 @@
 <template>
     <div class="accounting-container">
+      <!-- 添加订阅链接 -->
+      <el-row class="subscription-row">
+        <el-col :span="24">
+          <router-link to="/checkout" class="subscription-link">
+            <el-button type="primary" size="small" class="upgrade-button">
+              <el-icon class="upgrade-icon"><Star /></el-icon>
+              升级到专业版
+            </el-button>
+          </router-link>
+        </el-col>
+      </el-row>
+      
       <!-- 原有内容不需要 v-if="isLoggedIn" 包裹 -->
       <el-row>
         <el-col :span="24">
@@ -413,6 +425,7 @@
 <style lang="scss">
   @import '@/assets/styles/accounting.css';
   @import '@/assets/styles/downloadExcel.css';
+
 </style>
 
   <script setup>
@@ -436,7 +449,7 @@
   import VChart from 'vue-echarts'
   import * as ElementPlusIconsVue from '@element-plus/icons-vue'
   import { h } from 'vue'
-  import { Close, Plus, Download } from '@element-plus/icons-vue'
+  import { Close, Plus, Download, Star } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
   import { useUserStore } from '@/stores/user'
   import { downloadExcel } from '@/utils/downloadExcel'
