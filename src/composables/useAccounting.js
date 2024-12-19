@@ -30,7 +30,7 @@ export function useAccounting() {
     return {
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: ¥{c} ({d}%)'
+        formatter: '{b}: £{c} ({d}%)'
       },
       legend: {
         orient: 'vertical',
@@ -48,7 +48,7 @@ export function useAccounting() {
         },
         label: {
           show: true,
-          formatter: '{b}: ¥{c}'
+          formatter: '{b}: £{c}'
         },
         data: Object.entries(categoryData).map(([name, value]) => ({
           name,
@@ -59,7 +59,7 @@ export function useAccounting() {
   })
 
   const lineOption = computed(() => {
-    const dateMap = record.records.value
+    const dateMap = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {
         acc[record.date] = (acc[record.date] || 0) + record.amount
@@ -72,7 +72,7 @@ export function useAccounting() {
     return {
       tooltip: {
         trigger: 'axis',
-        formatter: '{b}<br />支出: ¥{c}'
+        formatter: '{b}<br />支出: £{c}'
       },
       xAxis: {
         type: 'category',
@@ -84,7 +84,7 @@ export function useAccounting() {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: '¥{value}'
+          formatter: '£{value}'
         }
       },
       series: [{
@@ -97,7 +97,7 @@ export function useAccounting() {
   })
 
   const barOption = computed(() => {
-    const timeData = record.records.value.reduce((acc, record) => {
+    const timeData = record.allRecords.value.reduce((acc, record) => {
       const date = new Date(record.date)
       let key
       
@@ -131,8 +131,8 @@ export function useAccounting() {
         trigger: 'axis',
         formatter: function(params) {
           return `${params[0].name}<br/>
-                 收入: ¥${params[0].value}<br/>
-                 支出: ¥${params[1].value}`
+                 收入: £${params[0].value}<br/>
+                 支出: £${params[1].value}`
         }
       },
       legend: {
@@ -148,7 +148,7 @@ export function useAccounting() {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: '¥{value}'
+          formatter: '£{value}'
         }
       },
       series: [
