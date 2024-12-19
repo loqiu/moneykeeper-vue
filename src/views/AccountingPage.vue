@@ -248,7 +248,7 @@
       </el-card>
     
       <!-- 数据可视化部分 -->
-      <el-row :gutter="20" class="charts-section">
+      <el-row :gutter="20" class="charts-section" v-if="!loading">
         <!-- 分类饼图 -->
         <el-col :span="8">
           <el-card class="chart-card" :body-style="{ padding: '20px' }">
@@ -292,7 +292,15 @@
           </el-card>
         </el-col>
       </el-row>
-    
+
+      <el-row v-else>
+        <el-col :span="24">
+          <div class="loading-container">
+            <el-loading :visible="true" />
+          </div>
+        </el-col>
+      </el-row>
+      
       <!-- 添加修改记录的对话框 -->
       <el-dialog
         v-model="showEditDialog"

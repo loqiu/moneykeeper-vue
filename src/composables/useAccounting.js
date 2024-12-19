@@ -1,4 +1,4 @@
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
 import { useUserStore } from '@/stores/user'
@@ -7,6 +7,7 @@ export function useAccounting() {
   const category = useCategory()
   const record = useRecord()
   const userStore = useUserStore()
+  const timeUnit = ref('month')
 
   // 监听用户登录状态
   watch(() => userStore.userId, async (newUserId) => {
@@ -20,6 +21,8 @@ export function useAccounting() {
 
   // 图表配置
   const pieOption = computed(() => {
+    if (!record.allRecords.value) return {} // 添加空值检查
+
     const categoryData = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {
@@ -30,7 +33,11 @@ export function useAccounting() {
     return {
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: £{c} ({d}%)'
+        formatter: (params) => {
+          // 格式化金额，保留2位小数
+          const amount = Number(params.value).toFixed(2)
+          return `${params.name}: £${amount} (${params.percent}%)`
+        }
       },
       legend: {
         orient: 'vertical',
@@ -48,7 +55,11 @@ export function useAccounting() {
         },
         label: {
           show: true,
-          formatter: '{b}: £{c}'
+          formatter: (params) => {
+            // 格式化金额，保留2位小数
+            const amount = Number(params.value).toFixed(2)
+            return `${params.name}: £${amount} (${params.percent}%)`
+          }
         },
         data: Object.entries(categoryData).map(([name, value]) => ({
           name,
@@ -59,6 +70,8 @@ export function useAccounting() {
   })
 
   const lineOption = computed(() => {
+    if (!record.allRecords.value) return {} // 添加空值检查
+
     const dateMap = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {
@@ -97,11 +110,12 @@ export function useAccounting() {
   })
 
   const barOption = computed(() => {
+    if (!record.allRecords.value) return {} // 添加空值检查
     const timeData = record.allRecords.value.reduce((acc, record) => {
       const date = new Date(record.date)
       let key
       
-      switch(record.timeUnit) {
+      switch(timeUnit.value) {
         case 'year':
           key = date.getFullYear().toString()
           break
@@ -109,6 +123,9 @@ export function useAccounting() {
           key = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`
           break
         case 'day':
+          key = record.date
+          break
+        default:
           key = record.date
           break
       }
@@ -175,6 +192,7 @@ export function useAccounting() {
   return {
     ...category,
     ...record,
+    timeUnit,
     pieOption,
     lineOption,
     barOption

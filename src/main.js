@@ -10,6 +10,26 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { useUserStore } from './stores/user'
 import { Check } from '@element-plus/icons-vue'
+import { use } from 'echarts/core'
+import { CanvasRenderer } from 'echarts/renderers'
+import { PieChart, LineChart, BarChart } from 'echarts/charts'
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  TitleComponent
+} from 'echarts/components'
+// 注册 ECharts 组件
+use([
+  CanvasRenderer,
+  PieChart,
+  LineChart,
+  BarChart,
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  TitleComponent
+])
 
 const app = createApp(App)
 const pinia = createPinia()
