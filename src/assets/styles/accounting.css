@@ -421,6 +421,37 @@
   color: #FFD700;
 }
 
+.top-actions {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome-text {
+  color: #606266;
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.upgrade-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.upgrade-icon {
+  color: #FFD700;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .form-content {
@@ -445,4 +476,23 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+}
+
+/* 登出按钮样式 */
+.logout-button.el-button {
+  padding: 6px 12px;
+  font-size: 12px;
+  background-color: rgba(64, 158, 255, 0.1);
+  border: 1px solid rgba(64, 158, 255, 0.2);
+  color: #409EFF;
+}
+
+.logout-button.el-button:hover {
+  background-color: rgba(64, 158, 255, 0.2);
+  border-color: rgba(64, 158, 255, 0.3);
+}
+
+.logout-button .el-icon {
+  font-size: 12px;
+  margin-right: 4px;
 }

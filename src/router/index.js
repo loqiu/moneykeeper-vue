@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AccountingPage from '@/views/AccountingPage.vue'
-import LoginPage from '@/views/LoginPage.vue'
 import { useUserStore } from '@/stores/user'
-import PaymentSuccessPage from '@/views/PaymentSuccessPage.vue'
-import PaymentCancelPage from '@/views/PaymentCancelPage.vue'
 
 const routes = [
   {
@@ -19,7 +16,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: LoginPage
+    component: () => import('@/views/LoginPage.vue')
   },
   {
     path: '/checkout',
@@ -29,22 +26,23 @@ const routes = [
   {
     path: '/payment/success',
     name: 'PaymentSuccess',
-    component: PaymentSuccessPage
+    component: () => import('@/views/PaymentSuccessPage.vue')
   },
   {
     path: '/payment/cancel',
     name: 'PaymentCancel',
-    component: PaymentCancelPage
+    component: () => import('@/views/PaymentCancelPage.vue')
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 
 // 全局路由守卫
 router.beforeEach(async (to, from, next) => {
+  console.log('路由跳转:', { to, from })
   const userStore = useUserStore()
   
   if (to.matched.some(record => record.meta.requiresAuth)) {

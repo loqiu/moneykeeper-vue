@@ -71,7 +71,7 @@ export function useAccounting() {
 
   const lineOption = computed(() => {
     if (!record.allRecords.value) return {} // 添加空值检查
-
+    
     const dateMap = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {

@@ -1,8 +1,8 @@
 <template>
     <div class="accounting-container">
-      <!-- 添加订阅链接 -->
-      <el-row class="subscription-row">
-        <el-col :span="24">
+            <!-- 添加顶部操作栏 -->
+      <el-row class="top-actions" justify="space-between" align="middle">
+        <el-col :span="12">
           <router-link to="/checkout" class="subscription-link">
             <el-button type="primary" size="small" class="upgrade-button">
               <el-icon class="upgrade-icon"><Star /></el-icon>
@@ -10,6 +10,17 @@
             </el-button>
           </router-link>
         </el-col>
+        <div class="user-actions" align="middle">
+          <span class="welcome-text">欢迎，{{ username }}</span>
+          <el-button 
+            class="logout-button"
+            size="small"
+            @click="handleLogout"
+          >
+            <el-icon><SwitchButton /></el-icon>
+            退出登录
+          </el-button>
+        </div>
       </el-row>
       
       <!-- 原有内容不需要 v-if="isLoggedIn" 包裹 -->
@@ -433,11 +444,10 @@
 <style lang="scss">
   @import '@/assets/styles/accounting.css';
   @import '@/assets/styles/downloadExcel.css';
-
 </style>
 
   <script setup>
-  import { onMounted } from 'vue'
+  import { onMounted, computed } from 'vue'
   import { useAccounting } from '@/composables/useAccounting'
   import '@/assets/styles/accounting.css'
   import '@/assets/styles/downloadExcel.css'
@@ -457,10 +467,11 @@
   import VChart from 'vue-echarts'
   import * as ElementPlusIconsVue from '@element-plus/icons-vue'
   import { h } from 'vue'
-  import { Close, Plus, Download, Star } from '@element-plus/icons-vue'
+  import { Close, Plus, Download, SwitchButton } from '@element-plus/icons-vue'
   import { ElMessage } from 'element-plus'
   import { useUserStore } from '@/stores/user'
   import { downloadExcel } from '@/utils/downloadExcel'
+  import { useRouter } from 'vue-router'
   
   // 注册必需的 ECharts 组件
   use([
@@ -515,6 +526,8 @@
   } = useAccounting()
 
   const userStore = useUserStore()
+  const username = computed(() => userStore.username)
+  const router = useRouter()
 
   // 修改页面加载时的逻辑
   onMounted(async () => {
@@ -550,5 +563,10 @@
       return
     }
     downloadExcel(userStore.userId)
+  }
+
+  const handleLogout = () => {
+    userStore.clearUserInfo()
+    router.push('/login')
   }
   </script>
