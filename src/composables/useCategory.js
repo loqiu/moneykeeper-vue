@@ -59,17 +59,13 @@ export function useCategory() {
   }
 
   // 删除分类
-  const deleteCategory = async (index, type) => {
+  const deleteCategory = async ({ category, type }) => {
     if (!userStore.userId) {
       ElMessage.warning('请先登录')
       return
     }
 
     try {
-      const category = type === 'expense' 
-        ? expenseCategories.value[index]
-        : incomeCategories.value[index]
-
       await ElMessageBox.confirm(
         `确定要删除${type === 'expense' ? '支出' : '收入'}分类"${category.name}"吗？`,
         '删除确认',
@@ -112,30 +108,22 @@ export function useCategory() {
 
   // 添加分类
   const addCategory = async (category) => {
+    console.log("addCategory: ", category)
     if (!userStore.userId) {
       ElMessage.warning('请先登录')
       return
     }
 
-    if (!category.name || !category.icon) {
+    if (!category.name || !category.icon || !category.color) {
       ElMessage.warning('请填写完整的分类信息')
       return
     }
 
-    const bgColors = [
-      '#fef0f0', '#f0f9eb', '#f5f7fa', '#ecf5ff', '#fdf6ec',
-      '#f5f5f5', '#e8f4d9', '#fdf1f1', '#f0f7ff', '#fef7e6'
-    ]
-    const randomBgColor = bgColors[Math.floor(Math.random() * bgColors.length)]
-
     try {
-      const iconObj = availableIcons.find(icon => icon.label === category.icon)
-      const iconName = iconObj ? iconObj.value : 'More'
-
       const response = await request.post(`/categories/${userStore.userId}`, {
         name: category.name,
-        icon: iconName,
-        color: randomBgColor,
+        icon: category.icon,
+        color: category.color,
         type: categoryType.value === 'expense' ? '支出' : '收入'
       })
 

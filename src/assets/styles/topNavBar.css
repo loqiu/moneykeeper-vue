@@ -1,0 +1,38 @@
+.top-actions {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.subscription-link {
+  text-decoration: none;
+}
+
+.upgrade-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.upgrade-icon {
+  color: #ffd700;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.welcome-text {
+  font-size: 14px;
+  color: #606266;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+} 

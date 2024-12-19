@@ -1,0 +1,25 @@
+.category-icons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.icon-button {
+  width: 40px !important;
+  height: 40px !important;
+  font-size: 20px;
+}
+
+.icon-button.active {
+  background-color: var(--el-color-primary-light-9) !important;
+  color: var(--el-color-primary);
+  border: 2px solid var(--el-color-primary-light-5);
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+} 

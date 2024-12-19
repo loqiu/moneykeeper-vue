@@ -67,6 +67,7 @@ export function useRecord() {
           type: record.type === '支出' ? 'expense' : 'income',
           amount: record.amount,
           category: record.categoryName,
+          categoryId: record.categoryId,
           date: record.transactionDate,
           note: record.notes
         }))
@@ -159,7 +160,13 @@ export function useRecord() {
 
   // 编辑记录相关方法
   const startEdit = (record) => {
-    editingRecord.value = { ...record }
+    // console.log("startEdit: ", record)
+    editingRecord.value = {
+      ...record,
+      categoryId: record.categoryId || record.category,
+      type: record.type === "expense" ? 'expense' : 'income'  // 确保类型格式正确
+    }
+    // console.log('开始编辑的记录：', editingRecord.value) // 调试用
   }
 
   const cancelEdit = () => {
@@ -168,6 +175,7 @@ export function useRecord() {
 
   // 保存修改
   const saveEdit = async () => {
+    console.log("saveEdit: ", editingRecord.value)
     if (!editingRecord.value) return
 
     if (!editingRecord.value.amount || !editingRecord.value.category) {
@@ -182,6 +190,8 @@ export function useRecord() {
       }
 
       const updateData = {
+        categoryId: Number(editingRecord.value.category),
+        type: editingRecord.value.type === 'expense' ? '支出' : '收入',
         amount: Number(editingRecord.value.amount),
         transactionDate: editingRecord.value.date,
         notes: editingRecord.value.note || ''

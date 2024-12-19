@@ -135,10 +135,15 @@
 }
 
 /* 图表相关样式 */
+.chart-card {
+  height: 400px;
+  margin-bottom: 20px;
+}
+
 .chart-container {
-  height: 300px;
-  width: 100%;
-  margin: 10px 0;
+  height: calc(100% - 57px);
+  padding: 20px;
+  position: relative;
 }
 
 .chart {
@@ -150,23 +155,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ebeef5;
 }
 
 .chart-header h3 {
   margin: 0;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.charts-section {
-  margin-top: 20px;
+/* 确保卡片内容区域高度正确 */
+.el-card.chart-card .el-card__body {
+  height: calc(100% - 57px);
+  padding: 0;
 }
 
-.chart-card {
-  height: 100%;
-  margin-bottom: 20px;
-}
-
-:deep(.el-card__body) {
-  height: calc(100% - 60px);
+/* 图表容器响应式 */
+@media (max-width: 768px) {
+  .chart-card {
+    height: 300px;
+  }
 }
 
 .dialog-footer {
@@ -276,7 +285,7 @@
   height: 60px !important;
 }
 
-/* 下拉选项样式 */
+/* 下拉选项���式 */
 .el-select-dropdown__item {
   padding: 8px 12px !important;
 }
@@ -418,37 +427,6 @@
 
 .upgrade-icon {
   font-size: 16px;
-  color: #FFD700;
-}
-
-.top-actions {
-  margin-bottom: 20px;
-  padding: 10px 20px;
-  background-color: transparent;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.welcome-text {
-  color: #606266;
-  font-size: 14px;
-  margin-right: 4px;
-}
-
-.upgrade-button {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.upgrade-icon {
   color: #FFD700;
 }
 

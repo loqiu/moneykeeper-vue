@@ -1,4 +1,4 @@
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref,  nextTick } from 'vue' //onMounted, onUnmounted,
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
 import { useUserStore } from '@/stores/user'
@@ -18,6 +18,9 @@ export function useAccounting() {
       ])
     }
   })
+
+  // 添加选中的分类状态
+  const selectedCategory = ref(null)
 
   // 图表配置
   const pieOption = computed(() => {
@@ -58,15 +61,46 @@ export function useAccounting() {
           formatter: (params) => {
             // 格式化金额，保留2位小数
             const amount = Number(params.value).toFixed(2)
-            return `${params.name}: £${amount} (${params.percent}%)`
+            return `${params.name}: £${amount}`
           }
         },
         data: Object.entries(categoryData).map(([name, value]) => ({
           name,
           value
-        }))
+        })),
+        // 添加点击事件
+        emphasis: {
+          scale: true,
+          scaleSize: 10
+        }
       }]
     }
+  })
+
+  // 处理饼图点击
+  const handlePieClick = (params) => {
+    const categoryData = record.allRecords.value
+      .find(record => record.categoryName === params.name)
+    
+    if (categoryData) {
+      if (categoryData.category === selectedCategory.value) {
+        // 如果点击已选中的分类，取消筛选
+        selectedCategory.value = null
+      } else {
+        // 选中新的分类，存储分类ID
+        selectedCategory.value = categoryData.category
+      }
+    }
+  }
+
+  // 修改记录列表，添加筛选
+  const filteredRecords = computed(() => {
+    if (!selectedCategory.value || !record.records.value) {
+      return record.records.value
+    }
+    return record.records.value.filter(item => 
+      item.category === selectedCategory.value
+    )
   })
 
   const lineOption = computed(() => {
@@ -189,12 +223,49 @@ export function useAccounting() {
     }
   })
 
+  const pieChartRef = ref(null)
+  const lineChartRef = ref(null)
+  const barChartRef = ref(null)
+
+  // 监听窗口大小变化
+  // const handleResize = () => {
+  //   nextTick(() => {
+  //     pieChartRef.value?.resize()
+  //     lineChartRef.value?.resize()
+  //     barChartRef.value?.resize()
+  //   })
+  // }
+
+  // 监听数据变化，手动更新图表
+  watch([pieOption, lineOption, barOption], () => {
+    nextTick(() => {
+      pieChartRef.value?.setOption(pieOption.value)
+      lineChartRef.value?.setOption(lineOption.value)
+      barChartRef.value?.setOption(barOption.value)
+    })
+  }, { deep: true })
+
+  // onMounted(() => {
+  //   window.addEventListener('resize', handleResize)
+  //   handleResize() // 初始化时调用一次
+  // })
+
+  // onUnmounted(() => {
+  //   window.removeEventListener('resize', handleResize)
+  // })
+
   return {
     ...category,
     ...record,
     timeUnit,
     pieOption,
     lineOption,
-    barOption
+    barOption,
+    filteredRecords,
+    handlePieClick,
+    selectedCategory,
+    pieChartRef,
+    lineChartRef,
+    barChartRef
   }
 }
