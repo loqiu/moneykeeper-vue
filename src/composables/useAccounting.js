@@ -7,7 +7,7 @@ export function useAccounting() {
   const category = useCategory()
   const record = useRecord()
   const userStore = useUserStore()
-  const timeUnit = ref('month')
+  const timeUnit = ref('day')
 
   // 监听用户登录状态
   watch(() => userStore.userId, async (newUserId) => {
