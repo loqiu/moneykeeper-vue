@@ -14,6 +14,7 @@
         class="logout-button"
         size="small"
         @click="handleLogout"
+        :loading="loading"
       >
         <el-icon><SwitchButton /></el-icon>
         退出登录
@@ -24,18 +25,14 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { Star, SwitchButton } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
+import { useLogin } from '@/composables/useLogin' 
 
 const userStore = useUserStore()
-const router = useRouter()
 const username = computed(() => userStore.username)
+const { handleLogout, loading } = useLogin()
 
-const handleLogout = () => {
-  userStore.clearUserInfo()
-  router.push('/login')
-}
 </script>
 
 <style src="@/assets/styles/topNavBar.css" scoped></style> 
