@@ -35,14 +35,16 @@ export function useLogin() {
         loading.value = true
         try {
           const response = await axios.post('/auth/login', loginForm.value)
-          
-          if (response.data) {
+          console.log("login response.data: ",response.data)
+          console.log("login response.data.data.userPin: ",response.data.data.userPin)
+          if (response.data.data) {
             userStore.setUserInfo({
-              userId: response.data.userId,
-              username: response.data.username,
-              token: response.data.token
+              userPin: response.data.data.userPin,
+              userId: response.data.data.userId,
+              username: response.data.data.username,
+              token: response.data.data.token
             })
-            
+            console.log("login userStore.userId: ",userStore.userId)
             ElMessage.success('登录成功')
             const redirectPath = route.query.redirect || '/accounting'
             router.push(redirectPath)

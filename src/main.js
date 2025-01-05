@@ -10,7 +10,8 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { useUserStore } from './stores/user'
 import { Check } from '@element-plus/icons-vue'
-import { use } from 'echarts/core'
+import '@fortawesome/fontawesome-free/css/all.css'
+import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { PieChart, LineChart, BarChart } from 'echarts/charts'
 import {
@@ -19,8 +20,12 @@ import {
   LegendComponent,
   TitleComponent
 } from 'echarts/components'
-// 注册 ECharts 组件
-use([
+
+const app = createApp(App)
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+echarts.use([
   CanvasRenderer,
   PieChart,
   LineChart,
@@ -31,11 +36,6 @@ use([
   TitleComponent
 ])
 
-const app = createApp(App)
-const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)
-
-// 注册所有图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
@@ -46,10 +46,9 @@ app.use(ElementPlus, {
   locale: zhCn,
 })
 
-// 初始化用户token
+app.component('CheckIcon', Check)
+
 const userStore = useUserStore()
 userStore.initializeFromStorage()
-
-app.component('CheckIcon', Check)
 
 app.mount('#app')

@@ -7,6 +7,7 @@ let reconnectTimeout = null
 
 export const useUserStore = defineStore('user', {
   state: () => ({
+    userPin: null,
     userId: null,
     username: '',
     token: null,
@@ -154,6 +155,7 @@ export const useUserStore = defineStore('user', {
 
     checkConnection() {
       console.log('SSE连接状态:', {
+        userPin: this.userPin,
         userId: this.userId,
         isConnecting: this.isConnecting,
         isConnected: this.isConnected,
@@ -162,11 +164,13 @@ export const useUserStore = defineStore('user', {
     },
 
     setUserInfo(userInfo) {
+      this.userPin = userInfo.userPin
       this.userId = Number(userInfo.userId)
       this.username = userInfo.username
       this.token = userInfo.token
       // 保存用户信息到localStorage
       localStorage.setItem('userInfo', JSON.stringify({
+        userPin: this.userPin,
         userId: this.userId,
         username: this.username,
         token: this.token
@@ -180,6 +184,7 @@ export const useUserStore = defineStore('user', {
     clearUserInfo() {
       // 登出时关闭SSE连接
       this.closeSSE()
+      this.userPin = null
       this.userId = null
       this.username = ''
       this.token = null
@@ -191,6 +196,7 @@ export const useUserStore = defineStore('user', {
       const userInfo = localStorage.getItem('userInfo')
       if (userInfo) {
         const parsedInfo = JSON.parse(userInfo)
+        this.userPin = parsedInfo.userPin
         this.userId = Number(parsedInfo.userId)
         this.username = parsedInfo.username
         this.token = parsedInfo.token

@@ -40,6 +40,35 @@
           >
             注册账号
           </el-button>
+          <!-- <el-button
+            class="google-button"
+            @click="handleGoogleLogin"
+          >
+            <i class="fa-brands fa-google"></i>
+            使用Google登录
+          </el-button> -->
+
+        </div>
+        <div class="google-signin-wrapper">
+          <div id="googleButton">
+            <div id="g_id_onload"
+                data-client_id="161545064775-0d898na3c3cgrl8htbsod2o73smjvo3p.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-login_uri="https://cindypig.com"
+                data-callback="handleGoogleCallback"
+                data-itp_support="true">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="pill"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+          </div>
         </div>
       </el-form>
     </el-card>
@@ -135,7 +164,45 @@ import { useRegister } from '@/composables/useRegister'
 import '@/assets/styles/login.css'
 
 onMounted(() => {
-  console.log('LoginPage mounted')
+  console.log('检查 Google 脚本加载状态...')
+  const checkGoogleScript = setInterval(() => {
+    if (typeof window.google !== 'undefined') {
+      console.log('Google 脚本加载完成')
+      clearInterval(checkGoogleScript)
+      
+      try {
+        // 初始化 Google 登录
+        window.google.accounts.id.initialize({
+          client_id: '161545064775-0d898na3c3cgrl8htbsod2o73smjvo3p.apps.googleusercontent.com',
+          callback: window.handleGoogleCallback, // 使用全局回调
+          auto_select: false, // 禁用自动选择
+          cancel_on_tap_outside: true // 允许点击外部取消
+        })
+
+        // 渲染按钮
+        window.google.accounts.id.renderButton(
+          document.getElementById('googleButton'),
+          {
+            theme: 'outline',
+            size: 'large',
+            type: 'standard',
+            shape: 'pill',
+            text: 'signin_with'
+          }
+        )
+        console.log('Google 按钮初始化成功')
+      } catch (error) {
+        console.error('Google 按钮初始化失败:', error)
+      }
+    }
+  }, 100)
+
+  setTimeout(() => {
+    clearInterval(checkGoogleScript)
+    if (typeof window.google === 'undefined') {
+      console.error('Google 脚本加载超时')
+    }
+  }, 5000)
 })
 
 const {

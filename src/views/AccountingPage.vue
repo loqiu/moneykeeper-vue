@@ -57,6 +57,8 @@
       :available-icons="availableIcons"
       @add="addCategory"
     />
+
+    <AiChatBox />
   </div>
 </template>
 
@@ -71,6 +73,7 @@ import AccountingCharts from '@/components/AccountingCharts.vue'
 import { useUserStore } from '@/stores/user'
 import EditRecordDialog from '@/components/EditRecordDialog.vue'
 import AddCategoryDialog from '@/components/AddCategoryDialog.vue'
+import AiChatBox from '@/components/AiChatBox.vue'
 
 const userStore = useUserStore()
 
