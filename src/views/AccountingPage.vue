@@ -17,9 +17,14 @@
       @show-add-category-dialog="showAddCategoryDialog"
     />
     
+    <CategoryFilter 
+      @filter-change="onFilterChange"
+      @reset-filter="handleResetFilter" 
+    />
+
     <RecordsList
       :loading="loading"
-      :records="filteredRecords"
+      :records="filterRecordList"
       :total-income="totalIncome"
       :total-expense="totalExpense"
       :balance="balance"
@@ -63,7 +68,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAccounting } from '@/composables/useAccounting'
 import '@/assets/styles/accounting.css'
 import TopNavBar from '@/components/TopNavBar.vue'
@@ -74,6 +79,7 @@ import { useUserStore } from '@/stores/user'
 import EditRecordDialog from '@/components/EditRecordDialog.vue'
 import AddCategoryDialog from '@/components/AddCategoryDialog.vue'
 import AiChatBox from '@/components/AiChatBox.vue'
+import CategoryFilter from '@/components/CategoryFilter.vue'
 
 const userStore = useUserStore()
 
@@ -115,12 +121,27 @@ const handleDeleteCategory = async (payload) => {
   await deleteCategory(payload)
 }
 
+// 新增：用于存储筛选后的记录
+const filterRecordList = ref([])
+
+function onFilterChange(recordList) {
+  // 确保 recordList 一定是数组
+  filterRecordList.value = Array.isArray(recordList) ? recordList : []
+}
+// 新增：重置筛选，查询全部记录
+async function handleResetFilter() {
+  await fetchRecords();
+  filterRecordList.value = filteredRecords.value;
+}
+
 onMounted(async () => {
   if (userStore.userId) {
     await Promise.all([
       fetchRecords(),
       fetchCategories()
     ])
+    // 默认显示全部记录
+    filterRecordList.value = filteredRecords.value
   }
 })
 </script>
