@@ -3,18 +3,28 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     title="修改记录"
-    width="50%"
+    width="500px"
     :close-on-click-modal="false"
+    class="!rounded-2xl"
   >
-    <el-form v-if="record && modelValue" label-width="80px">
+    <el-form v-if="record && modelValue" label-width="60px" class="space-y-4">
       <el-form-item label="类型">
-        <el-select 
-          :model-value="localRecord.type"
-          @update:model-value="updateRecord('type', $event)"
-        >
-          <el-option label="支出" value="expense" />
-          <el-option label="收入" value="income" />
-        </el-select>
+        <div class="flex gap-4 w-full">
+          <div 
+            class="flex-1 cursor-pointer py-2 text-center rounded-lg border transition-all"
+            :class="localRecord.type === 'expense' ? 'bg-red-50 border-red-200 text-red-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'"
+            @click="updateRecord('type', 'expense')"
+          >
+            支出
+          </div>
+          <div 
+            class="flex-1 cursor-pointer py-2 text-center rounded-lg border transition-all"
+            :class="localRecord.type === 'income' ? 'bg-green-50 border-green-200 text-green-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'"
+            @click="updateRecord('type', 'income')"
+          >
+            收入
+          </div>
+        </div>
       </el-form-item>
 
       <el-form-item label="金额">
@@ -24,46 +34,46 @@
           :min="0" 
           :precision="2" 
           :step="0.01"
+          class="!w-full"
+          :controls="false"
         />
       </el-form-item>
 
       <el-form-item label="分类">
-        <div class="category-icons">
+        <div class="grid grid-cols-5 gap-3 w-full max-h-[200px] overflow-y-auto p-1">
           <template v-if="localRecord.type === 'expense'">
-            <el-tooltip
+            <div
               v-for="(item, index) in expenseCategories"
               :key="index"
-              :content="item.name"
-              placement="top"
+              class="flex flex-col items-center gap-1 cursor-pointer group"
+              @click="updateRecord('category', item.id)"
             >
-              <el-button
-                :class="{ active: Number(localRecord.category) === Number(item.id) }"
-                class="icon-button"
-                circle
-                @click="updateRecord('category', item.id)"
-                :style="{ backgroundColor: item.bgColor || '#f5f5f5' }"
+              <div 
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm"
+                :class="Number(localRecord.category) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
+                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.category) === Number(item.id) ? '#fff' : '#4b5563' }"
               >
-                <el-icon><Icon :icon="item.icon" /></el-icon>
-              </el-button>
-            </el-tooltip>
+                <el-icon :size="20"><Icon :icon="item.icon" /></el-icon>
+              </div>
+              <span class="text-xs text-gray-500 truncate w-full text-center">{{ item.name }}</span>
+            </div>
           </template>
           <template v-else>
-            <el-tooltip
+            <div
               v-for="(item, index) in incomeCategories"
               :key="index"
-              :content="item.name"
-              placement="top"
+              class="flex flex-col items-center gap-1 cursor-pointer group"
+              @click="updateRecord('category', item.id)"
             >
-              <el-button
-                :class="{ active: Number(localRecord.category) === Number(item.id) }"
-                class="icon-button"
-                circle
-                @click="updateRecord('category', item.id)"
-                :style="{ backgroundColor: item.bgColor || '#f5f5f5' }"
+              <div 
+                class="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm"
+                :class="Number(localRecord.category) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
+                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.category) === Number(item.id) ? '#fff' : '#4b5563' }"
               >
-                <el-icon><Icon :icon="item.icon" /></el-icon>
-              </el-button>
-            </el-tooltip>
+                <el-icon :size="20"><Icon :icon="item.icon" /></el-icon>
+              </div>
+              <span class="text-xs text-gray-500 truncate w-full text-center">{{ item.name }}</span>
+            </div>
           </template>
         </div>
       </el-form-item>
@@ -76,6 +86,7 @@
           placeholder="选择日期"
           format="YYYY-MM-DD"
           value-format="YYYY-MM-DD"
+          class="!w-full"
         />
       </el-form-item>
 
@@ -86,16 +97,20 @@
           placeholder="请输入备注"
           maxlength="255"
           show-word-limit
+          type="textarea"
+          :rows="2"
+          resize="none"
         />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="$emit('cancel')">取消</el-button>
+        <el-button @click="$emit('cancel')" class="!rounded-lg">取消</el-button>
         <el-button 
           type="primary" 
           @click="$emit('save', localRecord)"
           :disabled="!record"
+          class="!rounded-lg !bg-indigo-600 !border-indigo-600 hover:!bg-indigo-700"
         >
           确定
         </el-button>
@@ -163,4 +178,12 @@ const updateRecord = (field, value) => {
 }
 </script>
 
-<style src="@/assets/styles/editRecordDialog.css" scoped></style> 
+<style scoped>
+/* TailwindCSS handles styling */
+:deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 1px #e5e7eb inset;
+}
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 2px #6366f1 inset !important;
+}
+</style>

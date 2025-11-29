@@ -10,13 +10,18 @@ export function useRecord() {
   const { userId } = storeToRefs(userStore)
 
   // 响应式数据
-  const records = ref([])
   const loading = ref(false)
   const timeUnit = ref('month')
   const pagination = ref({
     currentPage: 1,
     pageSize: 10,
     total: 0
+  })
+
+  // 筛选状态
+  const filterState = ref({
+    type: '',
+    category: ''
   })
 
   // 新记录表单
@@ -42,6 +47,25 @@ export function useRecord() {
   const balance = ref(0)
   // 所有记录
   const allRecords = ref([])
+
+  // 过滤后的所有记录
+  const filteredAllRecords = computed(() => {
+    return allRecords.value.filter(record => {
+      const matchType = !filterState.value.type || record.type === (filterState.value.type === 'expense' ? 'expense' : 'income')
+      const matchCategory = !filterState.value.category || record.category === filterState.value.category
+      return matchType && matchCategory
+    })
+  })
+
+  // 分页后的记录（当前显示的记录）
+  const records = computed(() => {
+    const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
+    const end = start + pagination.value.pageSize
+    return filteredAllRecords.value.slice(start, end)
+  })
+
+  // 更新分页总数
+  const totalRecords = computed(() => filteredAllRecords.value.length)
 
   // 新增获取统计数据的方法
   const fetchRecordsSummary = async () => {
@@ -72,12 +96,6 @@ export function useRecord() {
           note: record.notes
         }))
 
-        pagination.value.total = allRecords.value.length
-
-        const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
-        const end = start + pagination.value.pageSize
-        records.value = allRecords.value.slice(start, end)
-
         // 获取统计数据
         await fetchRecordsSummary()
 
@@ -86,11 +104,17 @@ export function useRecord() {
     } catch (error) {
       console.error('获取记录列表失败:', error)
       ElMessage.error('获取记录列表失败')
-      records.value = []
-      pagination.value.total = 0
+      allRecords.value = []
     } finally {
       loading.value = false
     }
+  }
+
+  // 设置筛选条件
+  const setFilter = (type, category) => {
+    filterState.value.type = type
+    filterState.value.category = category
+    pagination.value.currentPage = 1 // 重置页码
   }
 
   // 添加记录
@@ -160,13 +184,11 @@ export function useRecord() {
 
   // 编辑记录相关方法
   const startEdit = (record) => {
-    // console.log("startEdit: ", record)
     editingRecord.value = {
       ...record,
       categoryId: record.categoryId || record.category,
       type: record.type === "expense" ? 'expense' : 'income'  // 确保类型格式正确
     }
-    // console.log('开始编辑的记录：', editingRecord.value) // 调试用
   }
 
   const cancelEdit = () => {
@@ -175,7 +197,6 @@ export function useRecord() {
 
   // 保存修改
   const saveEdit = async () => {
-    console.log("saveEdit: ", editingRecord.value)
     if (!editingRecord.value) return
 
     if (!editingRecord.value.amount || !editingRecord.value.category) {
@@ -198,7 +219,7 @@ export function useRecord() {
       }
 
       await request.put(`/records/${recordId}`, updateData)
-      
+
       await fetchRecords()
       ElMessage.success('修改成功')
       editingRecord.value = null
@@ -209,30 +230,22 @@ export function useRecord() {
   }
 
   // 分页处理
-  const handleCurrentChange = async (val) => {
+  const handleCurrentChange = (val) => {
     pagination.value.currentPage = val
-    // await fetchRecords()
-    const start = (val - 1) * pagination.value.pageSize
-    const end = start + pagination.value.pageSize
-    records.value = allRecords.value.slice(start, end)
   }
 
-  const handleSizeChange = async (val) => {
+  const handleSizeChange = (val) => {
     pagination.value.pageSize = val
     pagination.value.currentPage = 1
-    // await fetchRecords()
-    const start = 0
-    const end = val
-    records.value = allRecords.value.slice(start, end)
   }
 
   return {
     allRecords,
-    records,
+    records, // 现在是 computed
     newRecord,
     loading,
     timeUnit,
-    pagination,
+    pagination: computed(() => ({ ...pagination.value, total: totalRecords.value })), // 动态更新 total
     editingRecord,
     showEditDialog,
     fetchRecords,
@@ -245,6 +258,8 @@ export function useRecord() {
     handleSizeChange,
     totalIncome,
     totalExpense,
-    balance
+    balance,
+    setFilter,
+    filterState
   }
-} 
+}

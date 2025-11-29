@@ -1,13 +1,9 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import axios from '@/utils/axios'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
 
 export function useRegister() {
 
-  const router = useRouter()
-  const userStore = useUserStore()
   // 控制注册对话框显示
   const registerDialogVisible = ref(false)
   const loading = ref(false)
@@ -52,6 +48,12 @@ export function useRegister() {
     ]
   }
 
+  // 重置表单
+  const resetForm = (formEl) => {
+    if (!formEl) return
+    formEl.resetFields()
+  }
+
   // 处理注册
   const handleRegister = async (formEl) => {
     if (!formEl) return
@@ -61,7 +63,7 @@ export function useRegister() {
         loading.value = true
         try {
           const response = await axios.post('/auth/register', registerForm.value)
-          
+
           if (response.data.data) {
             ElMessage.success('注册成功！请登录')
             registerDialogVisible.value = false
@@ -78,48 +80,10 @@ export function useRegister() {
     })
   }
 
-  // 重置表单
-  const resetForm = (formEl) => {
-    if (!formEl) return
-    formEl.resetFields()
-  }
-
   // 取消注册
   const handleCancel = () => {
     registerDialogVisible.value = false
     resetForm(registerFormRef.value)
-  }
-
-  // 添加 Google 回调函数
-  const handleGoogleCallback = async (response) => {
-    console.log('Google 回调函数被触发', response) // 添加调试日志
-
-    if (response.credential) {
-      loading.value = true
-      try {
-        // 发送 ID token 到后端验证
-        const result = await axios.post('/auth/google', {
-          idToken: response.credential
-        })
-        console.log("result.data: ",result.data)
-        if (result.data) {
-          ElMessage.success('Google 登录成功！')
-          // 存储用户信息
-          userStore.setUserInfo(result.data.data)
-          // 跳转到主页
-          router.push('/accounting')
-        }
-      } catch (error) {
-        console.error('Google 登录验证失败:', error)
-        ElMessage.error('登录失败，请稍后重试')
-      } finally {
-        loading.value = false
-      }
-    }
-  }
-  // 在组件挂载时设置全局回调
-  if (typeof window !== 'undefined') {
-    window.handleGoogleCallback = handleGoogleCallback
   }
 
   return {
@@ -128,9 +92,8 @@ export function useRegister() {
     registerFormRef,
     loading,
     rules,
-    handleGoogleCallback,
     handleRegister,
     resetForm,
     handleCancel
   }
-} 
+}

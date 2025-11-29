@@ -1,83 +1,75 @@
 <template>
-  <el-row :gutter="20" class="charts-section" v-if="!loading">
-    <!-- 分类饼图 -->
-    <el-col :span="8">
-      <el-card class="chart-card">
-        <template #header>
-          <div class="chart-header">
-            <h3>支出分类占比</h3>
-            <el-button 
-              v-if="selectedCategory"
-              size="small"
-              @click="$emit('update:selectedCategory', null)"
-            >
-              清除筛选
-            </el-button>
-          </div>
-        </template>
-        <div class="chart-container">
+  <div class="space-y-6" v-if="!loading">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 分类饼图 -->
+      <div class="bg-white/50 rounded-xl p-4 shadow-sm border border-white/40">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-gray-700 font-bold">支出分类占比</h3>
+          <el-button 
+            v-if="selectedCategory"
+            size="small"
+            link
+            type="primary"
+            @click="$emit('update:selectedCategory', null)"
+          >
+            清除筛选
+          </el-button>
+        </div>
+        <div class="h-[250px] w-full">
           <v-chart 
             ref="pieChartRef"
             class="chart" 
             :option="pieOption" 
             @click="handlePieClick"
+            autoresize
           />
         </div>
-      </el-card>
-    </el-col>
-    
-    <!-- 支出趋势图 -->
-    <el-col :span="8">
-      <el-card class="chart-card">
-        <template #header>
-          <div class="chart-header">
-            <h3>支出趋势</h3>
-          </div>
-        </template>
-        <div class="chart-container">
+      </div>
+      
+      <!-- 支出趋势图 -->
+      <div class="bg-white/50 rounded-xl p-4 shadow-sm border border-white/40">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-gray-700 font-bold">支出趋势</h3>
+        </div>
+        <div class="h-[250px] w-full">
           <v-chart 
             ref="lineChartRef"
             class="chart" 
             :option="lineOption"
+            autoresize
           />
         </div>
-      </el-card>
-    </el-col>
-    
-    <!-- 月度统计图 -->
-    <el-col :span="8">
-      <el-card class="chart-card" :body-style="{ padding: '20px' }">
-        <template #header>
-          <div class="chart-header">
-            <h3>年度统计</h3>
-            <el-radio-group 
-              :modelValue="timeUnit"
-              @update:modelValue="$emit('update:timeUnit', $event)" 
-              size="small"
-            >
-              <el-radio-button value="year">年</el-radio-button>
-              <el-radio-button value="month">月</el-radio-button>
-              <el-radio-button value="day">日</el-radio-button>
-            </el-radio-group>
-          </div>
-        </template>
-        <div class="chart-container">
+      </div>
+      
+      <!-- 月度统计图 -->
+      <div class="bg-white/50 rounded-xl p-4 shadow-sm border border-white/40">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-gray-700 font-bold">年度统计</h3>
+          <el-radio-group 
+            :modelValue="timeUnit"
+            @update:modelValue="$emit('update:timeUnit', $event)" 
+            size="small"
+          >
+            <el-radio-button value="year">年</el-radio-button>
+            <el-radio-button value="month">月</el-radio-button>
+            <el-radio-button value="day">日</el-radio-button>
+          </el-radio-group>
+        </div>
+        <div class="h-[250px] w-full">
           <v-chart 
             ref="barChartRef"
             class="chart" 
             :option="barOption"
+            autoresize
           />
         </div>
-      </el-card>
-    </el-col>
-  </el-row>
-
-  <el-row v-else>
-    <el-col :span="24">
-      <div class="loading-container" v-loading="true">
       </div>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
+
+  <div v-else class="flex justify-center items-center h-[300px]">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+  </div>
 </template>
 
 <script setup>
@@ -131,4 +123,10 @@ const handlePieClick = (params) => {
 }
 </script>
 
-<style src="@/assets/styles/accountingCharts.css" scoped></style> 
+<style scoped>
+/* TailwindCSS handles styling */
+.chart {
+  height: 100%;
+  width: 100%;
+}
+</style>

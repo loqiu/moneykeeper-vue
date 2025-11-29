@@ -1,4 +1,4 @@
-import { computed, watch, ref,  nextTick } from 'vue' //onMounted, onUnmounted,
+import { computed, watch, ref, nextTick } from 'vue' //onMounted, onUnmounted,
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
 import { useUserStore } from '@/stores/user'
@@ -18,9 +18,6 @@ export function useAccounting() {
       ])
     }
   })
-
-  // 添加选中的分类状态
-  const selectedCategory = ref(null)
 
   // 图表配置
   const pieOption = computed(() => {
@@ -81,31 +78,21 @@ export function useAccounting() {
   const handlePieClick = (params) => {
     const categoryData = record.allRecords.value
       .find(record => record.categoryName === params.name)
-    
+
     if (categoryData) {
-      if (categoryData.category === selectedCategory.value) {
+      if (categoryData.category === record.filterState.value.category) {
         // 如果点击已选中的分类，取消筛选
-        selectedCategory.value = null
+        record.setFilter(record.filterState.value.type, '')
       } else {
         // 选中新的分类，存储分类ID
-        selectedCategory.value = categoryData.category
+        record.setFilter(record.filterState.value.type, categoryData.category)
       }
     }
   }
 
-  // 修改记录列表，添加筛选
-  const filteredRecords = computed(() => {
-    if (!selectedCategory.value || !record.records.value) {
-      return record.records.value
-    }
-    return record.records.value.filter(item => 
-      item.category === selectedCategory.value
-    )
-  })
-
   const lineOption = computed(() => {
     if (!record.allRecords.value) return {} // 添加空值检查
-    
+
     const dateMap = record.allRecords.value
       .filter(record => record.type === 'expense')
       .reduce((acc, record) => {
@@ -148,8 +135,8 @@ export function useAccounting() {
     const timeData = record.allRecords.value.reduce((acc, record) => {
       const date = new Date(record.date)
       let key
-      
-      switch(timeUnit.value) {
+
+      switch (timeUnit.value) {
         case 'year':
           key = date.getFullYear().toString()
           break
@@ -163,7 +150,7 @@ export function useAccounting() {
           key = record.date
           break
       }
-      
+
       if (!acc[key]) acc[key] = { income: 0, expense: 0 }
       if (record.type === 'income') {
         acc[key].income += record.amount
@@ -180,7 +167,7 @@ export function useAccounting() {
     return {
       tooltip: {
         trigger: 'axis',
-        formatter: function(params) {
+        formatter: function (params) {
           return `${params[0].name}<br/>
                  收入: £${params[0].value}<br/>
                  支出: £${params[1].value}`
@@ -261,9 +248,7 @@ export function useAccounting() {
     pieOption,
     lineOption,
     barOption,
-    filteredRecords,
     handlePieClick,
-    selectedCategory,
     pieChartRef,
     lineChartRef,
     barChartRef

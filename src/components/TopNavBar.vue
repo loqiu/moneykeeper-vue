@@ -1,43 +1,43 @@
 <template>
-  <el-row class="top-actions" justify="space-between" align="middle">
-    <el-col :span="12">
-      <router-link to="/checkout" class="subscription-link">
-        <el-button type="primary" size="small" class="upgrade-button">
-          <el-icon class="upgrade-icon"><Star /></el-icon>
+  <div class="flex justify-between items-center py-4 px-6 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg mb-6 border border-white/20">
+    <div class="flex items-center">
+      <router-link to="/checkout" class="no-underline">
+        <el-button 
+          type="warning" 
+          size="default" 
+          class="!rounded-full !font-bold !bg-gradient-to-r !from-amber-400 !to-orange-500 !border-none hover:!scale-105 transition-transform shadow-md"
+        >
+          <el-icon class="mr-1"><Star /></el-icon>
           升级到专业版
         </el-button>
       </router-link>
-    </el-col>
+    </div>
 
-
-
-
-    <div class="user-actions" align="middle">
-      <span class="welcome-text">欢迎，{{ username }}</span>
+    <div class="flex items-center gap-4">
+      <span class="text-white font-medium text-lg drop-shadow-sm">欢迎，{{ username }}</span>
 
       <!-- 添加下拉菜单 -->
       <el-dropdown trigger="click" class="user-dropdown">
-        <el-button size="small">
+        <el-button circle class="!bg-white/20 !border-white/30 !text-white hover:!bg-white/30">
           <el-icon><Setting /></el-icon>
-          设置
         </el-button>
         <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="handleSupport">
+          <el-dropdown-menu class="!rounded-xl !p-2">
+            <el-dropdown-item @click="handleSupport" class="!rounded-lg">
               <el-icon><Message /></el-icon>
               联系支持
             </el-dropdown-item>
 
-            <el-dropdown-item @click="showUserAgreement">
+            <el-dropdown-item @click="showUserAgreement" class="!rounded-lg">
               <el-icon><Document /></el-icon>
               用户协议
             </el-dropdown-item>
-            <el-dropdown-item @click="showPrivacyPolicy">
+            <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-lg">
               <el-icon><Lock /></el-icon>
               隐私政策
             </el-dropdown-item>
 
-            <el-dropdown-item @click="handleDeleteAccount" divided>
+            <el-dropdown-item @click="handleDeleteAccount" divided class="!text-red-500 !rounded-lg hover:!bg-red-50">
               <el-icon><Delete /></el-icon>
               删除账号
             </el-dropdown-item>
@@ -45,18 +45,18 @@
         </template>
       </el-dropdown>
 
-
       <el-button 
-        class="logout-button"
-        size="small"
+        class="!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!text-red-200 transition-colors"
+        size="default"
+        circle
         @click="handleLogout"
         :loading="loading"
+        title="退出登录"
       >
         <el-icon><SwitchButton /></el-icon>
-        退出登录
       </el-button>
     </div>
-  </el-row>
+  </div>
 
     <!-- 用户协议对话框 -->
     <el-dialog
@@ -64,13 +64,14 @@
     title="用户协议"
     width="60%"
     :close-on-click-modal="false"
+    class="!rounded-2xl"
   >
-    <div class="agreement-content">
-      <pre>{{ userAgreementText }}</pre>
+    <div class="p-4 bg-gray-50 rounded-xl max-h-[60vh] overflow-y-auto text-gray-700 leading-relaxed whitespace-pre-wrap">
+      {{ userAgreementText }}
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="userAgreementVisible = false">关闭</el-button>
+        <el-button @click="userAgreementVisible = false" class="!rounded-lg">关闭</el-button>
       </span>
     </template>
   </el-dialog>
@@ -81,13 +82,14 @@
     title="隐私政策"
     width="60%"
     :close-on-click-modal="false"
+    class="!rounded-2xl"
   >
-    <div class="agreement-content">
-      <pre>{{ privacyPolicyText }}</pre>
+    <div class="p-4 bg-gray-50 rounded-xl max-h-[60vh] overflow-y-auto text-gray-700 leading-relaxed whitespace-pre-wrap">
+      {{ privacyPolicyText }}
     </div>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="privacyPolicyVisible = false">关闭</el-button>
+        <el-button @click="privacyPolicyVisible = false" class="!rounded-lg">关闭</el-button>
       </span>
     </template>
   </el-dialog>
@@ -96,7 +98,7 @@
 <script setup>
 import { ref } from 'vue'
 import { computed } from 'vue'
-import { Star, SwitchButton } from '@element-plus/icons-vue'
+import { Star, SwitchButton, Setting, Message, Document, Lock, Delete } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import { useLogin } from '@/composables/useLogin' 
 import { topNavBar } from '@/composables/topNavBar'
@@ -177,4 +179,6 @@ const {
 
 </script>
 
-<style src="@/assets/styles/topNavBar.css" scoped></style> 
+<style scoped>
+/* TailwindCSS handles styling */
+</style>
