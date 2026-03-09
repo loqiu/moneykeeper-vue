@@ -21,17 +21,20 @@ const routes = [
   {
     path: '/checkout',
     name: 'Checkout',
-    component: () => import('@/views/StripeCheckoutPage.vue')
+    component: () => import('@/views/StripeCheckoutPage.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/payment/success',
     name: 'PaymentSuccess',
-    component: () => import('@/views/PaymentSuccessPage.vue')
+    component: () => import('@/views/PaymentSuccessPage.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/payment/cancel',
     name: 'PaymentCancel',
-    component: () => import('@/views/PaymentCancelPage.vue')
+    component: () => import('@/views/PaymentCancelPage.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -40,13 +43,10 @@ const router = createRouter({
   routes
 })
 
-// 全局路由守卫
-router.beforeEach(async (to, from, next) => {
-  console.log('路由跳转:', { to, from })
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
-  
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 需要登录的页面
     if (!userStore.isLoggedIn) {
       next({
         path: '/login',
@@ -55,14 +55,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next()
     }
+  } else if (userStore.isLoggedIn && to.path === '/login') {
+    next('/accounting')
   } else {
-    // 不需要登录的页面
-    if (userStore.isLoggedIn && to.path === '/login') {
-      next('/accounting')
-    } else {
-      next()
-    }
+    next()
   }
 })
 
-export default router 
+export default router

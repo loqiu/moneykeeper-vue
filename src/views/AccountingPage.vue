@@ -2,14 +2,12 @@
   <div class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6">
     <div class="max-w-7xl mx-auto space-y-6">
       <TopNavBar />
-      
+
       <div class="flex items-center justify-between">
         <h1 class="text-3xl font-bold text-white tracking-tight drop-shadow-md">我的记账本</h1>
       </div>
-      
-      <!-- 主要内容区域 -->
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- 左侧：添加记录和筛选 -->
         <div class="lg:col-span-1 space-y-6">
           <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-6 transition-all hover:shadow-2xl hover:bg-white/95">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
@@ -31,13 +29,16 @@
               <el-icon class="text-purple-500"><Filter /></el-icon>
               筛选记录
             </h2>
-            <CategoryFilter />
+            <CategoryFilter
+              :filter-state="filterState"
+              :expense-categories="expenseCategories"
+              :income-categories="incomeCategories"
+              @filter-change="setFilter"
+            />
           </div>
         </div>
 
-        <!-- 右侧：统计图表和列表 -->
         <div class="lg:col-span-2 space-y-6">
-          <!-- 统计卡片 -->
           <div class="grid grid-cols-3 gap-4">
             <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-lg p-4 flex flex-col items-center justify-center hover:scale-105 transition-transform">
               <span class="text-gray-500 text-sm mb-1">总收入</span>
@@ -53,7 +54,6 @@
             </div>
           </div>
 
-          <!-- 图表区域 -->
           <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-6">
             <AccountingCharts
               :loading="loading"
@@ -65,7 +65,6 @@
             />
           </div>
 
-          <!-- 记录列表 -->
           <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl overflow-hidden">
             <RecordsList
               :loading="loading"
@@ -84,7 +83,6 @@
         </div>
       </div>
 
-      <!-- 添加编辑记录对话框 -->
       <EditRecordDialog
         v-model="showEditDialog"
         v-model:record="editingRecord"
@@ -94,32 +92,28 @@
         @save="saveEdit"
       />
 
-      <!-- 添加新分类对话框 -->
       <AddCategoryDialog
         v-model="dialogVisible"
         :category-type="categoryType"
         :available-icons="availableIcons"
         @add="addCategory"
       />
-
-      <AiChatBox />
     </div>
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { useAccounting } from '@/composables/useAccounting'
-import TopNavBar from '@/components/TopNavBar.vue'
-import AddRecordForm from '@/components/AddRecordForm.vue'
-import RecordsList from '@/components/RecordsList.vue'
-import AccountingCharts from '@/components/AccountingCharts.vue'
-import { useUserStore } from '@/stores/user'
-import EditRecordDialog from '@/components/EditRecordDialog.vue'
+import { Filter, Plus } from '@element-plus/icons-vue'
 import AddCategoryDialog from '@/components/AddCategoryDialog.vue'
-import AiChatBox from '@/components/AiChatBox.vue'
+import AddRecordForm from '@/components/AddRecordForm.vue'
+import AccountingCharts from '@/components/AccountingCharts.vue'
 import CategoryFilter from '@/components/CategoryFilter.vue'
-import { Plus, Filter } from '@element-plus/icons-vue'
+import EditRecordDialog from '@/components/EditRecordDialog.vue'
+import RecordsList from '@/components/RecordsList.vue'
+import TopNavBar from '@/components/TopNavBar.vue'
+import { useAccounting } from '@/composables/useAccounting'
+import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
@@ -154,7 +148,9 @@ const {
   loading,
   fetchCategories,
   records,
-  selectedCategory
+  selectedCategory,
+  filterState,
+  setFilter
 } = useAccounting()
 
 const handleDeleteCategory = async (payload) => {
@@ -172,25 +168,26 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* 移除旧的 CSS 引用，使用 TailwindCSS */
 :deep(.el-card) {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-/* 滚动条美化 */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(139, 92, 246, 0.3);
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 92, 246, 0.5);
 }

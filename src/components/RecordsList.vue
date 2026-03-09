@@ -5,8 +5,8 @@
         <el-icon class="text-indigo-500"><List /></el-icon>
         收支明细
       </h2>
-      <el-button 
-        type="primary" 
+      <el-button
+        type="primary"
         @click="handleDownloadExcel"
         size="small"
         class="!rounded-lg !bg-indigo-50 !text-indigo-600 !border-indigo-200 hover:!bg-indigo-100"
@@ -15,19 +15,18 @@
         导出Excel
       </el-button>
     </div>
-    
-    <!-- 使用 v-if 确保数据加载后再渲染表格 -->
+
     <template v-if="!loading">
-      <el-table 
-        :data="records" 
-        style="width: 100%" 
+      <el-table
+        :data="records"
+        style="width: 100%"
         :header-cell-style="{ background: '#f9fafb', color: '#6b7280', fontWeight: '600' }"
         row-class-name="hover:bg-gray-50 transition-colors"
       >
         <el-table-column prop="date" label="日期" width="120" />
         <el-table-column prop="type" label="类型" width="100">
           <template #default="scope">
-            <span 
+            <span
               class="px-2 py-1 rounded-full text-xs font-medium"
               :class="scope.row.type === 'income' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
             >
@@ -35,12 +34,12 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="分类" width="120">
-           <template #default="scope">
-             <div class="flex items-center gap-2">
-               <span class="text-gray-700">{{ scope.row.category }}</span>
-             </div>
-           </template>
+        <el-table-column prop="categoryName" label="分类" width="120">
+          <template #default="scope">
+            <div class="flex items-center gap-2">
+              <span class="text-gray-700">{{ scope.row.categoryName || '-' }}</span>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column prop="amount" label="金额" width="120">
           <template #default="scope">
@@ -80,7 +79,6 @@
         </el-table-column>
       </el-table>
 
-      <!-- 只在有数据时显示分页 -->
       <div class="flex justify-center mt-6" v-if="pagination.total > 0">
         <el-pagination
           background
@@ -94,7 +92,7 @@
           class="!font-normal"
         />
       </div>
-      
+
       <div v-else class="text-center py-10 text-gray-400">
         暂无记录
       </div>
@@ -120,17 +118,22 @@ const props = defineProps({
 
 defineEmits(['edit', 'delete', 'size-change', 'current-change'])
 
-const handleDownloadExcel = () => {
+const handleDownloadExcel = async () => {
   if (!props.records || props.records.length === 0) {
     ElMessage.warning('没有可导出的数据')
     return
   }
-  downloadExcel(props.userId)
+
+  try {
+    await downloadExcel(props.userId)
+  } catch (error) {
+    console.error('导出 Excel 失败:', error)
+    ElMessage.error('导出失败，请稍后重试')
+  }
 }
 </script>
 
 <style scoped>
-/* TailwindCSS handles styling */
 :deep(.el-table) {
   --el-table-border-color: #f3f4f6;
   --el-table-header-bg-color: #f9fafb;

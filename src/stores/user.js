@@ -1,9 +1,67 @@
 import { defineStore } from 'pinia'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { ElNotification } from 'element-plus'
+import {
+  USER_INFO_STORAGE_KEY,
+  normalizeAuthToken,
+  parseStoredUserInfo,
+  sanitizeUserInfo
+} from '@/utils/auth'
+
+const MAX_RECONNECT_ATTEMPTS = 5
+const HEARTBEAT_TIMEOUT = 3600000
+const CONNECTION_TIMEOUT = 60000
 
 let eventSource = null
 let reconnectTimeout = null
+
+const clearReconnectTimeout = () => {
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = null
+  }
+}
+
+const closeEventSource = () => {
+  if (eventSource) {
+    eventSource.close()
+    eventSource = null
+  }
+}
+
+const showNotification = (payload) => {
+  if (!payload) {
+    return
+  }
+
+  if (payload.type === 'heartbeat' || payload.type === 'connect') {
+    return
+  }
+
+  ElNotification({
+    title: payload.title || '新消息',
+    message: payload.message || String(payload),
+    type: payload.type || 'info',
+    position: 'top-right',
+    duration: 4500
+  })
+}
+
+const parseEventPayload = (event) => {
+  if (!event?.data || event.data === 'ping') {
+    return null
+  }
+
+  try {
+    return JSON.parse(event.data)
+  } catch (error) {
+    console.error('消息解析失败:', error, '原始消息:', event.data)
+    return {
+      message: event.data,
+      type: 'info'
+    }
+  }
+}
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -17,196 +75,154 @@ export const useUserStore = defineStore('user', {
   }),
 
   actions: {
-    async initializeSSE() {
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout)
-        reconnectTimeout = null
+    scheduleReconnect() {
+      clearReconnectTimeout()
+
+      if (!this.userId || !this.token) {
+        return
       }
 
-      if (this.userId && !this.isConnecting && !this.isConnected) {
-        console.log('初始化SSE连接')
-        const token = this.token
-        
-        if (eventSource) {
-          this.closeSSE()
+      if (this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+        ElNotification({
+          title: '连接提示',
+          message: '与服务器的连接已断开，请刷新页面重试',
+          type: 'warning',
+          duration: 0
+        })
+        return
+      }
+
+      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
+      this.reconnectAttempts += 1
+
+      reconnectTimeout = setTimeout(() => {
+        this.initializeSSE()
+      }, delay)
+    },
+
+    initializeSSE() {
+      clearReconnectTimeout()
+
+      if (!this.userId || this.isConnecting || this.isConnected) {
+        return
+      }
+
+      const authorization = normalizeAuthToken(this.token)
+      if (!authorization) {
+        return
+      }
+
+      closeEventSource()
+      this.isConnecting = true
+
+      try {
+        eventSource = new EventSourcePolyfill(`/api/notifications/subscribe/${this.userId}`, {
+          headers: {
+            Authorization: authorization
+          },
+          withCredentials: true,
+          heartbeatTimeout: HEARTBEAT_TIMEOUT,
+          connectionTimeout: CONNECTION_TIMEOUT
+        })
+
+        eventSource.onopen = () => {
+          this.isConnecting = false
+          this.isConnected = true
+          this.reconnectAttempts = 0
         }
-        
-        this.isConnecting = true
-        
-        try {
-          const url = `/api/notifications/subscribe/${this.userId}`
-          const options = {
-            headers: {
-              'Authorization': token.startsWith('Bearer ') ? token : `Bearer ${token}`
-            },
-            withCredentials: true,
-            // 心跳时间设置为1小时
-            heartbeatTimeout: 3600000,
-            connectionTimeout: 60000
-          }
-          
-          eventSource = new EventSourcePolyfill(url, options)
 
-          eventSource.onopen = (event) => {
-            console.log('收到SSE消息:', event.data)
-            console.log('SSE连接已建立')
-            this.isConnecting = false
-            this.isConnected = true
-            this.reconnectAttempts = 0
-          }
+        eventSource.addEventListener('heartbeat', () => {
+          this.isConnected = true
+        })
 
-          eventSource.onmessage = (event) => {
-            this.checkConnection()
-            try {
-              console.log('收到SSE消息:', event.data)
-              if (event.type === "HEARTBEAT") {
-                console.log('收到心跳消息:', event.data)
-                return
-              }
-              
-              if (event.type === "CONNECT") {
-                console.log('收到连接成功消息:', event.data)
-                return
-              }
-              
-              const data = JSON.parse(event.data)
-              console.log('收到SSE消息(JSON):', data)
-              
-              ElNotification({
-                title: data.title || '新消息',
-                message: data.message || data.toString(),
-                type: data.type || 'info',
-                position: 'top-right',
-                duration: 4500
-              })
-            } catch (e) {
-              console.error('消息解析失败:', e, '原始消息:', event.data)
-              if (event.data !== 'ping') {
-                ElNotification({
-                  title: '新消息',
-                  message: event.data,
-                  type: 'info',
-                  position: 'top-right',
-                  duration: 4500
-                })
-              }
-            }
-          }
+        eventSource.addEventListener('connect', (event) => {
+          this.isConnected = true
+          this.reconnectAttempts = 0
+          showNotification(parseEventPayload(event))
+        })
 
-          eventSource.onerror = (err) => {
-            console.error('SSE连接错误:', err)
-            this.isConnecting = false
-            this.isConnected = false
-            
-            if (eventSource) {
-              eventSource.close()
-              eventSource = null
-            }
+        eventSource.onmessage = (event) => {
+          this.isConnected = true
+          showNotification(parseEventPayload(event))
+        }
 
-            if (this.userId && this.reconnectAttempts < 5) {
-              const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
-              this.reconnectAttempts++
-              console.log(`第 ${this.reconnectAttempts} 次重连尝试，等待 ${delay/1000} 秒`)
-              
-              reconnectTimeout = setTimeout(() => {
-                this.initializeSSE()
-              }, delay)
-            } else if (this.reconnectAttempts >= 5) {
-              console.log('达到最大重连次数，停止重连')
-              ElNotification({
-                title: '连接提示',
-                message: '与服务器的连接已断开，请刷新页面重试',
-                type: 'warning',
-                duration: 0
-              })
-            }
-          }
-        } catch (err) {
-          console.error('SSE连接失败:', err)
+        eventSource.onerror = (error) => {
+          console.error('SSE连接错误:', error)
           this.isConnecting = false
           this.isConnected = false
-          
-          if (this.userId && !this.isConnected && this.reconnectAttempts < 5) {
-            const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
-            this.reconnectAttempts++
-            
-            reconnectTimeout = setTimeout(() => {
-              this.initializeSSE()
-            }, delay)
-          }
+          closeEventSource()
+          this.scheduleReconnect()
         }
+      } catch (error) {
+        console.error('SSE连接失败:', error)
+        this.isConnecting = false
+        this.isConnected = false
+        closeEventSource()
+        this.scheduleReconnect()
       }
     },
 
     closeSSE() {
-      if (reconnectTimeout) {
-        clearTimeout(reconnectTimeout)
-        reconnectTimeout = null
-      }
-      
-      if (eventSource) {
-        eventSource.close()
-        eventSource = null
-      }
+      clearReconnectTimeout()
+      closeEventSource()
       this.isConnecting = false
       this.isConnected = false
       this.reconnectAttempts = 0
     },
 
     checkConnection() {
-      console.log('SSE连接状态:', {
+      return {
         userPin: this.userPin,
         userId: this.userId,
         isConnecting: this.isConnecting,
         isConnected: this.isConnected,
         hasController: !!eventSource
-      })
+      }
     },
 
     setUserInfo(userInfo) {
-      this.userPin = userInfo.userPin
-      this.userId = Number(userInfo.userId)
-      this.username = userInfo.username
-      this.token = userInfo.token
-      // 保存用户信息到localStorage
-      localStorage.setItem('userInfo', JSON.stringify({
-        userPin: this.userPin,
-        userId: this.userId,
-        username: this.username,
-        token: this.token
-      }))
-      // 确保之前的连接已关闭
+      const sanitizedUserInfo = sanitizeUserInfo(userInfo)
+      if (!sanitizedUserInfo) {
+        console.error('无效的用户信息，无法保存登录状态')
+        return
+      }
+
+      this.userPin = sanitizedUserInfo.userPin
+      this.userId = sanitizedUserInfo.userId
+      this.username = sanitizedUserInfo.username
+      this.token = sanitizedUserInfo.token
+
+      localStorage.setItem(USER_INFO_STORAGE_KEY, JSON.stringify(sanitizedUserInfo))
       this.closeSSE()
-      // 初始化新连接
       this.initializeSSE()
     },
 
     clearUserInfo() {
-      // 登出时关闭SSE连接
       this.closeSSE()
       this.userPin = null
       this.userId = null
       this.username = ''
       this.token = null
-      localStorage.removeItem('userInfo')
+      localStorage.removeItem(USER_INFO_STORAGE_KEY)
     },
 
-    // 初始化时从localStorage恢复用户信息
     initializeFromStorage() {
-      const userInfo = localStorage.getItem('userInfo')
-      if (userInfo) {
-        const parsedInfo = JSON.parse(userInfo)
-        this.userPin = parsedInfo.userPin
-        this.userId = Number(parsedInfo.userId)
-        this.username = parsedInfo.username
-        this.token = parsedInfo.token
-        // 从存储恢复后初始化SSE连接
-        this.initializeSSE()
+      const parsedInfo = parseStoredUserInfo(localStorage.getItem(USER_INFO_STORAGE_KEY))
+
+      if (!parsedInfo) {
+        localStorage.removeItem(USER_INFO_STORAGE_KEY)
+        return
       }
+
+      this.userPin = parsedInfo.userPin
+      this.userId = parsedInfo.userId
+      this.username = parsedInfo.username
+      this.token = parsedInfo.token
+      this.initializeSSE()
     }
   },
 
   getters: {
     isLoggedIn: (state) => !!state.token
   }
-}) 
+})

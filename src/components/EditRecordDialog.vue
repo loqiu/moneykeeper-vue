@@ -10,14 +10,14 @@
     <el-form v-if="record && modelValue" label-width="60px" class="space-y-4">
       <el-form-item label="类型">
         <div class="flex gap-4 w-full">
-          <div 
+          <div
             class="flex-1 cursor-pointer py-2 text-center rounded-lg border transition-all"
             :class="localRecord.type === 'expense' ? 'bg-red-50 border-red-200 text-red-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'"
             @click="updateRecord('type', 'expense')"
           >
             支出
           </div>
-          <div 
+          <div
             class="flex-1 cursor-pointer py-2 text-center rounded-lg border transition-all"
             :class="localRecord.type === 'income' ? 'bg-green-50 border-green-200 text-green-600 font-bold' : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'"
             @click="updateRecord('type', 'income')"
@@ -28,11 +28,11 @@
       </el-form-item>
 
       <el-form-item label="金额">
-        <el-input-number 
+        <el-input-number
           :model-value="localRecord.amount"
           @update:model-value="updateRecord('amount', $event)"
-          :min="0" 
-          :precision="2" 
+          :min="0"
+          :precision="2"
           :step="0.01"
           class="!w-full"
           :controls="false"
@@ -46,12 +46,12 @@
               v-for="(item, index) in expenseCategories"
               :key="index"
               class="flex flex-col items-center gap-1 cursor-pointer group"
-              @click="updateRecord('category', item.id)"
+              @click="handleCategorySelect(item)"
             >
-              <div 
+              <div
                 class="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm"
-                :class="Number(localRecord.category) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
-                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.category) === Number(item.id) ? '#fff' : '#4b5563' }"
+                :class="Number(localRecord.categoryId) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
+                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.categoryId) === Number(item.id) ? '#fff' : '#4b5563' }"
               >
                 <el-icon :size="20"><Icon :icon="item.icon" /></el-icon>
               </div>
@@ -63,12 +63,12 @@
               v-for="(item, index) in incomeCategories"
               :key="index"
               class="flex flex-col items-center gap-1 cursor-pointer group"
-              @click="updateRecord('category', item.id)"
+              @click="handleCategorySelect(item)"
             >
-              <div 
+              <div
                 class="w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm"
-                :class="Number(localRecord.category) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
-                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.category) === Number(item.id) ? '#fff' : '#4b5563' }"
+                :class="Number(localRecord.categoryId) === Number(item.id) ? 'ring-2 ring-indigo-500 ring-offset-2 scale-110' : 'hover:scale-105'"
+                :style="{ backgroundColor: item.bgColor || '#f3f4f6', color: Number(localRecord.categoryId) === Number(item.id) ? '#fff' : '#4b5563' }"
               >
                 <el-icon :size="20"><Icon :icon="item.icon" /></el-icon>
               </div>
@@ -91,7 +91,7 @@
       </el-form-item>
 
       <el-form-item label="备注">
-        <el-input 
+        <el-input
           :model-value="localRecord.note"
           @update:model-value="updateRecord('note', $event)"
           placeholder="请输入备注"
@@ -106,8 +106,8 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="$emit('cancel')" class="!rounded-lg">取消</el-button>
-        <el-button 
-          type="primary" 
+        <el-button
+          type="primary"
           @click="$emit('save', localRecord)"
           :disabled="!record"
           class="!rounded-lg !bg-indigo-600 !border-indigo-600 hover:!bg-indigo-700"
@@ -120,9 +120,8 @@
 </template>
 
 <script setup>
-import { ref, watch,defineEmits, defineProps } from 'vue'
+import { ref, watch, defineEmits, defineProps, h } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { h } from 'vue'
 
 const emit = defineEmits(['update:modelValue', 'cancel', 'save', 'update:record'])
 
@@ -138,7 +137,8 @@ const props = defineProps({
     default: () => ({
       type: 'expense',
       amount: 0,
-      category: '',
+      categoryId: null,
+      categoryName: '',
       date: new Date().toISOString().split('T')[0],
       note: ''
     })
@@ -153,33 +153,39 @@ watch(() => props.record, (newVal) => {
   if (newVal && Object.keys(newVal).length > 0) {
     localRecord.value = {
       ...newVal,
-      category: newVal.categoryId || newVal.category // 确保使用正确的 categoryId
+      categoryId: newVal.categoryId ?? null,
+      categoryName: newVal.categoryName ?? ''
     }
-    // console.log('本地记录：', localRecord.value) // 调试用
   }
 }, { deep: true, immediate: true })
 
 const updateRecord = (field, value) => {
-    // console.log('更新字段:', field, '新值:', value) // 调试用
-  if (field === 'category') {
-    localRecord.value = {
-      ...localRecord.value,
-      category: value,
-      categoryId: value  // 同时更新 categoryId
-    }
-  } else {
-    localRecord.value = {
-      ...localRecord.value,
-      [field]: value
-    }
+  const updatedRecord = {
+    ...localRecord.value,
+    [field]: value
   }
-//   console.log('更新后的记录:', localRecord.value) // 调试用
-  emit('update:record', localRecord.value)
+
+  if (field === 'type') {
+    updatedRecord.categoryId = null
+    updatedRecord.categoryName = ''
+  }
+
+  localRecord.value = updatedRecord
+  emit('update:record', updatedRecord)
+}
+
+const handleCategorySelect = (category) => {
+  const updatedRecord = {
+    ...localRecord.value,
+    categoryId: category.id,
+    categoryName: category.name
+  }
+  localRecord.value = updatedRecord
+  emit('update:record', updatedRecord)
 }
 </script>
 
 <style scoped>
-/* TailwindCSS handles styling */
 :deep(.el-input__wrapper) {
   box-shadow: 0 0 0 1px #e5e7eb inset;
 }

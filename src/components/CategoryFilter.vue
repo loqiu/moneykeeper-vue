@@ -4,13 +4,12 @@
       <el-icon class="text-purple-500"><Filter /></el-icon>
       筛选记录
     </h2>
-    
+
     <div class="space-y-3">
-      <!-- 选择类型（收入/支出） -->
-      <el-select 
-        v-model="selectedType" 
-        placeholder="类型" 
-        @change="handleFilterChange"
+      <el-select
+        v-model="selectedType"
+        placeholder="类型"
+        @change="handleTypeChange"
         class="!w-full"
         clearable
       >
@@ -18,28 +17,28 @@
           v-for="item in typeOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
 
-      <!-- 选择分类 -->
-      <el-select 
-        v-model="selectedCategory" 
-        placeholder="分类" 
-        @change="handleFilterChange"
+      <el-select
+        v-model="selectedCategory"
+        :placeholder="selectedType ? '分类' : '请先选择类型'"
+        @change="handleCategoryChange"
         class="!w-full"
         clearable
+        :disabled="!selectedType"
       >
         <el-option
           v-for="item in categoryList"
           :key="item.id"
           :label="item.name"
-          :value="item.name">
-        </el-option>
+          :value="item.name"
+        />
       </el-select>
-      
-      <el-button 
-        @click="handleReset" 
+
+      <el-button
+        @click="handleReset"
         class="!w-full !rounded-lg !text-gray-600 hover:!bg-gray-100 hover:!text-indigo-600"
       >
         重置筛选
@@ -50,18 +49,31 @@
 
 <script setup>
 import { Filter } from '@element-plus/icons-vue'
-import { useAccounting } from '@/composables/useAccounting'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, defineProps, defineEmits } from 'vue'
 
-const { setFilter, filterState, expenseCategories, incomeCategories } = useAccounting()
+const props = defineProps({
+  filterState: {
+    type: Object,
+    required: true
+  },
+  expenseCategories: {
+    type: Array,
+    default: () => []
+  },
+  incomeCategories: {
+    type: Array,
+    default: () => []
+  }
+})
 
-const selectedType = ref(filterState.value.type)
-const selectedCategory = ref(filterState.value.category)
+const emit = defineEmits(['filter-change'])
 
-// 监听全局筛选状态变化（例如从图表点击触发）
-watch(filterState, (newVal) => {
-  selectedType.value = newVal.type
-  selectedCategory.value = newVal.category
+const selectedType = ref(props.filterState.type || '')
+const selectedCategory = ref(props.filterState.category || '')
+
+watch(() => props.filterState, (newVal) => {
+  selectedType.value = newVal.type || ''
+  selectedCategory.value = newVal.category || ''
 }, { deep: true })
 
 const typeOptions = [
@@ -71,24 +83,37 @@ const typeOptions = [
 
 const categoryList = computed(() => {
   if (selectedType.value === 'income') {
-    return incomeCategories.value
+    return props.incomeCategories
   }
-  return expenseCategories.value
+  if (selectedType.value === 'expense') {
+    return props.expenseCategories
+  }
+  return []
 })
 
-const handleFilterChange = () => {
-  setFilter(selectedType.value, selectedCategory.value)
+const emitFilterChange = () => {
+  emit('filter-change', selectedType.value, selectedCategory.value)
+}
+
+const handleTypeChange = (value) => {
+  selectedType.value = value || ''
+  selectedCategory.value = ''
+  emitFilterChange()
+}
+
+const handleCategoryChange = (value) => {
+  selectedCategory.value = value || ''
+  emitFilterChange()
 }
 
 const handleReset = () => {
   selectedType.value = ''
   selectedCategory.value = ''
-  setFilter('', '')
+  emit('filter-change', '', '')
 }
 </script>
 
 <style scoped>
-/* TailwindCSS handles styling */
 :deep(.el-input__wrapper) {
   box-shadow: 0 0 0 1px #e5e7eb inset;
 }

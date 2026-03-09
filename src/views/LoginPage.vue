@@ -3,7 +3,7 @@
     <div class="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl p-8 space-y-6 transition-all duration-300 hover:shadow-purple-500/20">
       <div class="text-center space-y-2">
         <h1 class="text-3xl font-bold text-gray-800 tracking-tight">欢迎回来</h1>
-        <p class="text-gray-500 text-sm">请登录您的账号以继续</p>
+        <p class="text-gray-500 text-sm">请登录您的账户以继续</p>
       </div>
 
       <el-form
@@ -15,14 +15,14 @@
         size="large"
       >
         <el-form-item label="用户名" prop="username" class="!mb-4">
-          <el-input 
+          <el-input
             v-model="loginForm.username"
             placeholder="请输入用户名"
             :prefix-icon="User"
             class="!h-12"
           />
         </el-form-item>
-        
+
         <el-form-item label="密码" prop="password" class="!mb-6">
           <el-input
             v-model="loginForm.password"
@@ -42,11 +42,11 @@
             class="!w-full !h-12 !text-lg !rounded-lg !bg-gradient-to-r !from-indigo-600 !to-purple-600 !border-none hover:!opacity-90 transition-opacity shadow-lg shadow-indigo-500/30"
             @click="handleLogin(loginFormRef)"
           >
-            登 录
+            登录
           </el-button>
-          
+
           <div class="flex items-center justify-between text-sm">
-            <span class="text-gray-500">还没有账号？</span>
+            <span class="text-gray-500">还没有账户？</span>
             <el-button
               link
               type="primary"
@@ -73,10 +73,9 @@
       </el-form>
     </div>
 
-    <!-- 注册对话框 -->
     <el-dialog
       v-model="registerDialogVisible"
-      title="注册新账号"
+      title="注册新账户"
       width="90%"
       class="max-w-lg !rounded-xl"
       :close-on-click-modal="false"
@@ -91,9 +90,9 @@
         class="mt-4"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input 
+          <el-input
             v-model="registerForm.username"
-            placeholder="3-50个字符"
+            placeholder="3-50 个字符"
             maxlength="50"
             show-word-limit
           />
@@ -103,7 +102,7 @@
           <el-input
             v-model="registerForm.password"
             type="password"
-            placeholder="6位以上"
+            placeholder="至少 6 位"
             show-password
           />
         </el-form-item>
@@ -137,7 +136,7 @@
         <el-form-item label="手机号" prop="phoneNumber">
           <el-input
             v-model="registerForm.phoneNumber"
-            placeholder="可选"
+            placeholder="请输入手机号"
             maxlength="20"
           />
         </el-form-item>
@@ -162,14 +161,15 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import { User, Lock } from '@element-plus/icons-vue'
+import { Lock, User } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
+import { googleLogin } from '@/api/modules/auth'
+import { getApiErrorMessage } from '@/api/response'
+import { useGoogleLogin } from '@/composables/useGoogleLogin'
 import { useLogin } from '@/composables/useLogin'
 import { useRegister } from '@/composables/useRegister'
-import { useGoogleLogin } from '@/composables/useGoogleLogin'
-import { ElMessage } from 'element-plus'
-import axios from '@/utils/axios'
 import { useUserStore } from '@/stores/user'
-import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
@@ -177,36 +177,14 @@ const userStore = useUserStore()
 
 const handleGoogleSuccess = async (response) => {
   try {
-    console.log('Google Login Success:', response)
-    
-    // 调用后端 Google 登录接口
-    const res = await axios.post('/auth/google', { 
-      idToken: response.credential 
-    })
+    const loginData = await googleLogin(response.credential)
+    userStore.setUserInfo(loginData)
+    ElMessage.success('Google 登录成功')
 
-    if (res.data.code === 200) {
-      const loginData = res.data.data
-      
-      // 存储用户信息
-      userStore.setUserInfo({
-        userPin: loginData.userPin,
-        userId: loginData.userId,
-        username: loginData.username,
-        token: loginData.token
-      })
-
-      ElMessage.success('Google 登录成功')
-      
-      // 跳转到主页或重定向页面
-      const redirectPath = route.query.redirect || '/accounting'
-      router.push(redirectPath)
-    } else {
-      ElMessage.error(res.data.message || 'Google 登录失败')
-    }
-    
+    const redirectPath = route.query.redirect || '/accounting'
+    router.push(redirectPath)
   } catch (error) {
-    console.error('Google login error:', error)
-    ElMessage.error(error.response?.data?.message || 'Google 登录失败')
+    ElMessage.error(getApiErrorMessage(error, 'Google 登录失败'))
   }
 }
 
@@ -214,7 +192,7 @@ const { renderGoogleButton } = useGoogleLogin(handleGoogleSuccess)
 
 onMounted(() => {
   renderGoogleButton('google-btn', {
-    width: '250' // 自定义宽度
+    width: '250'
   })
 })
 
@@ -238,7 +216,6 @@ const {
 </script>
 
 <style scoped>
-/* 覆盖 Element Plus 的一些默认样式以更好地适配 */
 :deep(.el-input__wrapper) {
   box-shadow: 0 0 0 1px #e5e7eb inset;
   padding: 8px 12px;
@@ -253,3 +230,4 @@ const {
   color: #374151;
 }
 </style>
+

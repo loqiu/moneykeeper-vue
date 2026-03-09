@@ -1,18 +1,22 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '@/stores/user'
+import { jwtDecode } from 'jwt-decode'
 import router from '@/router'
-import { jwtDecode } from "jwt-decode";
+import { useUserStore } from '@/stores/user'
+import { normalizeAuthToken, stripBearerPrefix } from '@/utils/auth'
 
-// 检查token是否过期
+const LOGIN_ROUTE = '/login'
+
 const isTokenExpired = (token) => {
-  // console.log('检查token是否过期', token)
-  if (!token) return true
-  
+  const rawToken = stripBearerPrefix(token)
+  if (!rawToken) return true
+
   try {
-    const decoded = jwtDecode(token)
-    // exp 是 Unix 时间戳（秒），需要转换为毫秒
-    // 提前5分钟判定过期，给续期留出时间
+    const decoded = jwtDecode(rawToken)
+    if (!decoded.exp) {
+      return false
+    }
+
     return (decoded.exp * 1000) <= (Date.now() + 5 * 60 * 1000)
   } catch (error) {
     console.error('Token解析失败:', error)
@@ -20,32 +24,40 @@ const isTokenExpired = (token) => {
   }
 }
 
-// 创建axios实例
+const redirectToLogin = () => {
+  if (router.currentRoute.value.path !== LOGIN_ROUTE) {
+    router.push(LOGIN_ROUTE)
+  }
+}
+
+const handleUnauthorized = (userStore, message = '登录已过期，请重新登录') => {
+  if (userStore.token) {
+    userStore.clearUserInfo()
+    ElMessage.error(message)
+  }
+  redirectToLogin()
+}
+
 const instance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
   timeout: 10000
 })
 
-// 请求拦截器
 instance.interceptors.request.use(
-  async (config) => {
+  (config) => {
     const userStore = useUserStore()
     const token = userStore.token
-    
+
     if (token) {
-      // 检查token是否过期
       if (isTokenExpired(token)) {
-        // token过期，清除用户信息并跳转到登录页
-        userStore.clearUserInfo()
-        ElMessage.error('登录已过期，请重新登录')
-        router.push('/login')
+        handleUnauthorized(userStore)
         return Promise.reject(new Error('Token expired'))
       }
-      
-      // token未过期，添加到请求头
-      config.headers.Authorization = token.startsWith('Bearer ') ? token : `Bearer ${token}`
+
+      config.headers = config.headers || {}
+      config.headers.Authorization = normalizeAuthToken(token)
     }
-    
+
     return config
   },
   (error) => {
@@ -54,46 +66,37 @@ instance.interceptors.request.use(
   }
 )
 
-// 响应拦截器
 instance.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
       const userStore = useUserStore()
-      
+      const backendMessage = error.response.data?.message
+
       switch (error.response.status) {
         case 401:
-          // 未授权，可能是token无效或过期
-          userStore.clearUserInfo()
-          ElMessage.error('登录已过期，请重新登录')
-          router.push('/login')
+          handleUnauthorized(userStore, backendMessage || '登录已过期，请重新登录')
           break
-          
         case 403:
-          ElMessage.error('没有权限进行此操作')
+          ElMessage.error(backendMessage || '没有权限进行此操作')
           break
-          
         case 404:
-          ElMessage.error('请求的资源不存在')
+          ElMessage.error(backendMessage || '请求的资源不存在')
           break
-          
         case 500:
-          ElMessage.error('服务器内部错误')
+          ElMessage.error(backendMessage || '服务器内部错误')
           break
-          
         default:
-          ElMessage.error(error.response.data?.message || '请求失败')
+          ElMessage.error(backendMessage || '请求失败')
       }
     } else if (error.request) {
       ElMessage.error('网络请求失败，请检查网络连接')
-    } else {
-      ElMessage.error('请求配置错误')
+    } else if (error.message !== 'Token expired') {
+      ElMessage.error(error.message || '请求配置错误')
     }
-    
+
     return Promise.reject(error)
   }
 )
 
-export default instance 
+export default instance

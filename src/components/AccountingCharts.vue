@@ -115,9 +115,7 @@ defineProps({
 const emit = defineEmits(['update:timeUnit', 'update:selectedCategory'])
 
 // 处理饼图点击
-const handlePieClick = (params) => {
-  console.log('饼图点击参数：', params)
-  if (params.data) {
+const handlePieClick = (params) => {  if (params.data) {
     emit('update:selectedCategory', params.data.name)
   }
 }

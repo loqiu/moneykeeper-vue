@@ -24,14 +24,12 @@
   text-align: center;
 }
 
-/* 成功图标样式 */
 .success-icon {
   font-size: 64px;
   color: #67C23A;
   margin-bottom: 20px;
 }
 
-/* 取消图标样式 */
 .cancel-icon {
   font-size: 64px;
   color: #F56C6C;
@@ -46,6 +44,11 @@
 .description {
   color: #606266;
   margin-bottom: 20px;
+}
+
+.result-alert {
+  margin: 0 auto 20px;
+  text-align: left;
 }
 
 .session-id {
@@ -63,4 +66,23 @@
 
 .action-buttons .el-button {
   min-width: 120px;
-} 
+}
+
+@media (max-width: 640px) {
+  .payment-result-container {
+    margin: 20px auto;
+  }
+
+  .result-content {
+    padding: 28px 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .action-buttons .el-button {
+    width: 100%;
+  }
+}
