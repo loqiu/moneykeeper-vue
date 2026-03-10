@@ -1,184 +1,247 @@
 <template>
-  <div class="flex justify-between items-center py-4 px-6 bg-white/10 backdrop-blur-md rounded-2xl shadow-lg mb-6 border border-white/20">
-    <div class="flex items-center">
-      <router-link to="/checkout" class="no-underline">
-        <el-button 
-          type="warning" 
-          size="default" 
-          class="!rounded-full !font-bold !bg-gradient-to-r !from-amber-400 !to-orange-500 !border-none hover:!scale-105 transition-transform shadow-md"
-        >
-          <el-icon class="mr-1"><Star /></el-icon>
-          升级到专业版
-        </el-button>
-      </router-link>
-    </div>
+  <div class="rounded-[32px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_55px_rgba(148,163,184,0.14)] backdrop-blur sm:p-5">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+        <div class="flex items-center gap-4">
+          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-lg font-semibold text-white shadow-sm">
+            MK
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">MoneyKeeper</p>
+            <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">账户中心</h2>
+            <p class="mt-1 text-sm text-slate-500">升级、支持与账户设置都收在这里。</p>
+          </div>
+        </div>
 
-    <div class="flex items-center gap-4">
-      <span class="text-white font-medium text-lg drop-shadow-sm">欢迎，{{ username }}</span>
+        <div class="flex flex-wrap items-center gap-2 lg:ml-4">
+          <span class="rounded-full border px-3 py-1 text-xs font-medium" :class="connectionBadgeClass">
+            <span class="mr-1 inline-block h-2 w-2 rounded-full" :class="connectionDotClass"></span>
+            {{ connectionLabel }}
+          </span>
+          <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+            当前用户：{{ displayName }}
+          </span>
+        </div>
+      </div>
 
-      <!-- 添加下拉菜单 -->
-      <el-dropdown trigger="click" class="user-dropdown">
-        <el-button circle class="!bg-white/20 !border-white/30 !text-white hover:!bg-white/30">
-          <el-icon><Setting /></el-icon>
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu class="!rounded-xl !p-2">
-            <el-dropdown-item @click="handleSupport" class="!rounded-lg">
-              <el-icon><Message /></el-icon>
-              联系支持
-            </el-dropdown-item>
+      <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <router-link to="/billing" class="no-underline">
+          <button
+            type="button"
+            class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-w-[260px]"
+          >
+            <div>
+              <div class="text-sm font-semibold text-slate-900">升级到专业版</div>
+              <div class="mt-1 text-xs text-slate-500">查看支付状态并解锁后续能力。</div>
+            </div>
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400 text-slate-900">
+              <el-icon :size="20"><Star /></el-icon>
+            </div>
+          </button>
+        </router-link>
 
-            <el-dropdown-item @click="showUserAgreement" class="!rounded-lg">
-              <el-icon><Document /></el-icon>
-              用户协议
-            </el-dropdown-item>
-            <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-lg">
-              <el-icon><Lock /></el-icon>
-              隐私政策
-            </el-dropdown-item>
+        <div class="flex items-center justify-between gap-3 rounded-[28px] border border-slate-200 bg-slate-900 px-4 py-3 text-white shadow-sm sm:justify-start">
+          <div class="flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-white backdrop-blur">
+              {{ userInitial }}
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-white">{{ displayName }}</div>
+              <div class="mt-1 text-xs text-slate-300">{{ connectionDetail }}</div>
+            </div>
+          </div>
 
-            <el-dropdown-item @click="handleDeleteAccount" divided class="!text-red-500 !rounded-lg hover:!bg-red-50">
-              <el-icon><Delete /></el-icon>
-              删除账号
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+          <div class="flex items-center gap-2">
+            <el-dropdown trigger="click" class="user-dropdown" popper-class="topbar-menu">
+              <el-button circle class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15">
+                <el-icon><MoreFilled /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu class="!rounded-2xl !p-2">
+                  <el-dropdown-item @click="handleSupport" class="!rounded-xl">
+                    <el-icon><Message /></el-icon>
+                    联系支持
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="showUserAgreement" class="!rounded-xl">
+                    <el-icon><Document /></el-icon>
+                    用户协议
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-xl">
+                    <el-icon><Lock /></el-icon>
+                    隐私政策
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="handleDeleteAccount" divided class="!rounded-xl !text-rose-300 hover:!text-rose-200">
+                    <el-icon><Delete /></el-icon>
+                    删除账号
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
 
-      <el-button 
-        class="!bg-white/20 !border-white/30 !text-white hover:!bg-white/30 hover:!text-red-200 transition-colors"
-        size="default"
-        circle
-        @click="handleLogout"
-        :loading="loading"
-        title="退出登录"
-      >
-        <el-icon><SwitchButton /></el-icon>
-      </el-button>
+            <el-button
+              circle
+              class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15 hover:!text-rose-200"
+              :loading="loading"
+              title="退出登录"
+              @click="handleLogout"
+            >
+              <el-icon><SwitchButton /></el-icon>
+            </el-button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-    <!-- 用户协议对话框 -->
-    <el-dialog
+  <el-dialog
     v-model="userAgreementVisible"
-    title="用户协议"
-    width="60%"
+    width="720px"
     :close-on-click-modal="false"
-    class="!rounded-2xl"
+    destroy-on-close
+    class="policy-dialog"
   >
-    <div class="p-4 bg-gray-50 rounded-xl max-h-[60vh] overflow-y-auto text-gray-700 leading-relaxed whitespace-pre-wrap">
+    <template #header>
+      <div class="space-y-2 pr-8">
+        <h2 class="text-xl font-semibold text-slate-900">用户协议</h2>
+        <p class="text-sm text-slate-500">使用前请确认你已阅读并理解以下条款内容。</p>
+      </div>
+    </template>
+
+    <div class="max-h-[60vh] overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700 whitespace-pre-wrap">
       {{ userAgreementText }}
     </div>
+
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="userAgreementVisible = false" class="!rounded-lg">关闭</el-button>
-      </span>
+      <div class="flex justify-end">
+        <el-button class="!rounded-full !px-5" @click="userAgreementVisible = false">关闭</el-button>
+      </div>
     </template>
   </el-dialog>
 
-  <!-- 隐私政策对话框 -->
   <el-dialog
     v-model="privacyPolicyVisible"
-    title="隐私政策"
-    width="60%"
+    width="720px"
     :close-on-click-modal="false"
-    class="!rounded-2xl"
+    destroy-on-close
+    class="policy-dialog"
   >
-    <div class="p-4 bg-gray-50 rounded-xl max-h-[60vh] overflow-y-auto text-gray-700 leading-relaxed whitespace-pre-wrap">
+    <template #header>
+      <div class="space-y-2 pr-8">
+        <h2 class="text-xl font-semibold text-slate-900">隐私政策</h2>
+        <p class="text-sm text-slate-500">以下内容说明了应用如何处理和保护你的数据。</p>
+      </div>
+    </template>
+
+    <div class="max-h-[60vh] overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700 whitespace-pre-wrap">
       {{ privacyPolicyText }}
     </div>
+
     <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="privacyPolicyVisible = false" class="!rounded-lg">关闭</el-button>
-      </span>
+      <div class="flex justify-end">
+        <el-button class="!rounded-full !px-5" @click="privacyPolicyVisible = false">关闭</el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { computed } from 'vue'
-import { Star, SwitchButton, Setting, Message, Document, Lock, Delete } from '@element-plus/icons-vue'
+import { computed, ref } from 'vue'
+import { Delete, Document, Lock, Message, MoreFilled, Star, SwitchButton } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
-import { useLogin } from '@/composables/useLogin' 
+import { useLogin } from '@/composables/useLogin'
 import { topNavBar } from '@/composables/topNavBar'
 
 const userStore = useUserStore()
-const username = computed(() => userStore.username)
 const { handleLogout, loading } = useLogin()
+const { handleDeleteAccount } = topNavBar()
 
-// 对话框显示状态
 const userAgreementVisible = ref(false)
 const privacyPolicyVisible = ref(false)
+const userAgreementText = ref('')
+const privacyPolicyText = ref('')
 
-// 用户协议文本
-const userAgreementText = `欢迎使用 MoneyKeeper（以下简称"本应用"）。为了保障您的合法权益，请在使用本应用前仔细阅读并充分理解以下条款。
+const displayName = computed(() => userStore.username || '当前用户')
+const userInitial = computed(() => displayName.value.trim().slice(0, 1).toUpperCase())
+const connectionLabel = computed(() => userStore.isConnected ? '实时连接正常' : '等待连接服务')
+const connectionDetail = computed(() => userStore.isConnected ? '通知与状态更新已开启' : '当前可能处于离线或重连状态')
+const connectionBadgeClass = computed(() => {
+  return userStore.isConnected
+    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+    : 'border-amber-200 bg-amber-50 text-amber-700'
+})
+const connectionDotClass = computed(() => {
+  return userStore.isConnected ? 'bg-emerald-500' : 'bg-amber-500'
+})
 
-一、服务内容
-记账功能：本应用为用户提供记账与统计的功能，便于用户跟踪日常开支或收入情况。
-统计参考：本应用提供的统计和分析结果仅供参考，不构成任何投资、理财或税务建议。
+const loadLegalTexts = async () => {
+  if (userAgreementText.value && privacyPolicyText.value) {
+    return
+  }
 
-二、用户责任
-信息真实性：用户须对自身输入的记账信息真实性和合法性负责。本应用对用户数据不进行核实或审计，也不承担由此造成的一切后果或责任。
-守法合规：用户不得利用本应用记录或传播违法、违规或涉嫌侵权的内容，若因此导致损失或纠纷，责任由用户自行承担。
-数据备份：本应用当前不提供云端同步功能，用户对本地数据应自行进行必要的备份操作。若因用户误删、设备损坏或其他原因导致数据丢失，开发者不承担任何责任。
+  const module = await import('@/constants/legalTexts')
+  userAgreementText.value = module.userAgreementText
+  privacyPolicyText.value = module.privacyPolicyText
+}
 
-三、开发者责任
-数据用途：我们不会使用或分析用户的任何记账数据，也不会将用户数据用于与本应用无关的任何用途。
-第三方共享：我们不会与任何第三方共享用户数据，也不会向任何第三方出售、转让或泄露用户数据。
-功能稳定：我们将尽力维护本应用的正常运行，但因不可抗力或技术限制导致的中断、数据丢失或错误不承担任何赔偿责任。
-
-四、协议变更
-我们保留在必要时修改、更新或终止本协议条款的权利。
-若本协议发生重大变更，我们将在本应用内予以公告。若您在变更生效后继续使用本应用，则视为同意并接受新的协议内容。`
-
-// 隐私政策文本
-const privacyPolicyText = `我们非常重视您的隐私，以下为我们在收集、使用和保护用户信息方面的原则与措施。
-
-一、信息收集范围
-主动提供信息：本应用仅收集用户在使用时主动输入的记账信息，包括账目金额、类别、时间等。
-不收集个人信息：本应用不收集任何个人身份信息，例如姓名、身份证号、联系方式等。
-不收集图片：本应用暂不支持上传图片或访问设备相机、相册等功能。
-
-二、信息的使用
-核心功能：用户输入的记账数据，仅用于实现本应用的基础功能（如统计、展示、筛选等），不会被用作任何与本应用无关的用途。
-不共享/不出售：我们不会将用户的记账数据向任何第三方披露、共享或出售。
-数据分析：本应用不会针对用户提供的记账数据进行任何形式的外部分析或商业化处理。
-
-三、数据存储与安全
-本地存储：所有记账数据均存储在用户本地设备中，不会同步到云端。
-安全措施：我们对本地应用进行基本安全防护，但由于技术所限，无法保证在极端情况下的数据绝对安全。请您妥善保管好个人设备，以减少数据被非法获取的风险。
-
-四、用户权利
-数据修改/删除：用户可随时在本应用中修改或删除其输入的任何记账信息。
-卸载风险：若用户卸载本应用，存储在本地设备中的全部记账数据可能被同时删除且无法恢复。
-
-五、隐私政策更新
-更新权限：我们保留随时更新本隐私政策的权利，届时将在本应用内公告或提示。
-继续使用的默认同意：若您在更新内容发布后继续使用本应用，则视为同意并接受最新的隐私政策。
-不同意条款：如果您对更新后的隐私政策条款有异议，可停止使用本应用并通过联系我们以寻求解决。`
-
-// 显示用户协议
-const showUserAgreement = () => {
+const showUserAgreement = async () => {
+  await loadLegalTexts()
   userAgreementVisible.value = true
 }
 
-// 显示隐私政策
-const showPrivacyPolicy = () => {
+const showPrivacyPolicy = async () => {
+  await loadLegalTexts()
   privacyPolicyVisible.value = true
 }
-
-// 处理联系支持按钮点击
 const handleSupport = () => {
   window.location.href = 'mailto:rochelle.wang1116@gmail.com'
 }
-
-const {
-  handleDeleteAccount
-} = topNavBar()
-
 </script>
 
 <style scoped>
-/* TailwindCSS handles styling */
+button {
+  outline: none;
+}
+
+:deep(.topbar-menu.el-popper) {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+:deep(.topbar-menu .el-popper__arrow::before) {
+  background: rgba(15, 23, 42, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:deep(.topbar-menu .el-dropdown-menu) {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 8px;
+}
+
+:deep(.topbar-menu .el-dropdown-menu__item) {
+  min-width: 180px;
+  border-radius: 16px;
+  color: #e2e8f0;
+}
+
+:deep(.topbar-menu .el-dropdown-menu__item:hover) {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+:deep(.topbar-menu .el-dropdown-menu__item.is-divided) {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+:deep(.topbar-menu .el-dropdown-menu__item .el-icon) {
+  color: inherit;
+}
+
+:deep(.policy-dialog .el-dialog) {
+  border-radius: 28px;
+}
 </style>

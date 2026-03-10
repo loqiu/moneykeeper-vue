@@ -1,15 +1,13 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import axios from '@/utils/axios'
+import { register as registerUser } from '@/api/modules/auth'
+import { getApiErrorMessage } from '@/api/response'
 
 export function useRegister() {
-
-  // 控制注册对话框显示
   const registerDialogVisible = ref(false)
   const loading = ref(false)
   const registerFormRef = ref(null)
 
-  // 注册表单数据
   const registerForm = ref({
     username: '',
     password: '',
@@ -19,7 +17,6 @@ export function useRegister() {
     phoneNumber: ''
   })
 
-  // 表单验证规则
   const rules = {
     username: [
       { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -48,39 +45,37 @@ export function useRegister() {
     ]
   }
 
-  // 重置表单
   const resetForm = (formEl) => {
-    if (!formEl) return
+    if (!formEl) {
+      return
+    }
+
     formEl.resetFields()
   }
 
-  // 处理注册
   const handleRegister = async (formEl) => {
-    if (!formEl) return
+    if (!formEl) {
+      return
+    }
 
-    await formEl.validate(async (valid) => {
-      if (valid) {
-        loading.value = true
-        try {
-          const response = await axios.post('/auth/register', registerForm.value)
+    const isValid = await formEl.validate().catch(() => false)
+    if (!isValid) {
+      return
+    }
 
-          if (response.data.data) {
-            ElMessage.success('注册成功！请登录')
-            registerDialogVisible.value = false
-            // 清空表单
-            resetForm(formEl)
-          }
-        } catch (error) {
-          const errorMsg = error.response?.data?.message || '注册失败，请稍后重试'
-          ElMessage.error(errorMsg)
-        } finally {
-          loading.value = false
-        }
-      }
-    })
+    loading.value = true
+    try {
+      await registerUser(registerForm.value)
+      ElMessage.success('注册成功，请登录')
+      registerDialogVisible.value = false
+      resetForm(formEl)
+    } catch (error) {
+      ElMessage.error(getApiErrorMessage(error, '注册失败，请稍后重试'))
+    } finally {
+      loading.value = false
+    }
   }
 
-  // 取消注册
   const handleCancel = () => {
     registerDialogVisible.value = false
     resetForm(registerFormRef.value)

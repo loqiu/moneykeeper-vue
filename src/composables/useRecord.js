@@ -1,163 +1,147 @@
 import { ref, computed } from 'vue'
-import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import request from '@/utils/axios'
-import axios from 'axios'
+import { useUserStore } from '@/stores/user'
+import {
+  createRecord,
+  deleteRecord,
+  fetchRecordsSummary,
+  fetchRecordsWithCategoryName,
+  updateRecord
+} from '@/api/modules/records'
+import { getApiErrorMessage } from '@/api/response'
 
 export function useRecord() {
-  const userStore = useUserStore()
-  const { userId } = storeToRefs(userStore)
+  const { userId } = storeToRefs(useUserStore())
 
-  // 响应式数据
   const loading = ref(false)
-  const timeUnit = ref('month')
   const pagination = ref({
     currentPage: 1,
     pageSize: 10,
     total: 0
   })
 
-  // 筛选状态
   const filterState = ref({
     type: '',
     category: ''
   })
 
-  // 新记录表单
   const newRecord = ref({
     type: 'expense',
     amount: 0,
-    category: '',
+    categoryId: null,
     categoryName: '',
     note: '',
     date: new Date().toISOString().split('T')[0]
   })
 
-  // 编辑相关
   const editingRecord = ref(null)
   const showEditDialog = computed({
     get: () => editingRecord.value !== null,
-    set: (value) => { if (!value) editingRecord.value = null }
+    set: (value) => {
+      if (!value) {
+        editingRecord.value = null
+      }
+    }
   })
 
-  // 新增统计数据的响应式引用
   const totalIncome = ref(0)
   const totalExpense = ref(0)
   const balance = ref(0)
-  // 所有记录
   const allRecords = ref([])
 
-  // 过滤后的所有记录
   const filteredAllRecords = computed(() => {
-    return allRecords.value.filter(record => {
-      const matchType = !filterState.value.type || record.type === (filterState.value.type === 'expense' ? 'expense' : 'income')
-      const matchCategory = !filterState.value.category || record.category === filterState.value.category
+    return allRecords.value.filter((record) => {
+      const matchType = !filterState.value.type || record.type === filterState.value.type
+      const matchCategory = !filterState.value.category || record.categoryName === filterState.value.category
       return matchType && matchCategory
     })
   })
 
-  // 分页后的记录（当前显示的记录）
   const records = computed(() => {
     const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
     const end = start + pagination.value.pageSize
     return filteredAllRecords.value.slice(start, end)
   })
 
-  // 更新分页总数
   const totalRecords = computed(() => filteredAllRecords.value.length)
 
-  // 新增获取统计数据的方法
-  const fetchRecordsSummary = async () => {
+  const loadSummary = async (params = {}) => {
+    if (!userId.value) {
+      totalIncome.value = 0
+      totalExpense.value = 0
+      balance.value = 0
+      return
+    }
+
     try {
-      const response = await axios.get(`/api/records/summary/${userStore.userId}`)
-      totalIncome.value = response.data.totalIncome
-      totalExpense.value = response.data.totalExpense
-      balance.value = response.data.balance
+      const summary = await fetchRecordsSummary(userId.value, params)
+      totalIncome.value = summary.totalIncome
+      totalExpense.value = summary.totalExpense
+      balance.value = summary.balance
     } catch (error) {
-      console.error('获取统计数据失败:', error)
-      ElMessage.error('获取统计数据失败')
+      ElMessage.error(getApiErrorMessage(error, '获取统计数据失败'))
     }
   }
 
-  // 获取记录列表
   const fetchRecords = async (params = {}) => {
+    if (!userId.value) {
+      allRecords.value = []
+      return []
+    }
+
     loading.value = true
     try {
-      const response = await request.get(`/records/listWithCategoryName/${userId.value}`, { params })
-      if (response.data) {
-        allRecords.value = response.data.map(record => ({
-          id: record.id,
-          type: record.type === '支出' ? 'expense' : 'income',
-          amount: record.amount,
-          category: record.categoryName,
-          categoryId: record.categoryId,
-          date: record.transactionDate,
-          note: record.notes
-        }))
-
-        // 获取统计数据
-        await fetchRecordsSummary()
-
-        return response.data
-      }
+      const data = await fetchRecordsWithCategoryName(userId.value, params)
+      allRecords.value = data
+      await loadSummary(params)
+      return data
     } catch (error) {
-      console.error('获取记录列表失败:', error)
-      ElMessage.error('获取记录列表失败')
+      ElMessage.error(getApiErrorMessage(error, '获取记录列表失败'))
       allRecords.value = []
+      return []
     } finally {
       loading.value = false
     }
   }
 
-  // 设置筛选条件
   const setFilter = (type, category) => {
     filterState.value.type = type
     filterState.value.category = category
-    pagination.value.currentPage = 1 // 重置页码
+    pagination.value.currentPage = 1
   }
 
-  // 添加记录
+  const resetNewRecord = () => {
+    newRecord.value = {
+      type: 'expense',
+      amount: 0,
+      categoryId: null,
+      categoryName: '',
+      note: '',
+      date: new Date().toISOString().split('T')[0]
+    }
+  }
+
   const addRecord = async (record) => {
-    if (!record.amount || !record.category) {
+    if (!record.amount || !record.categoryId) {
       ElMessage.warning('请填写完整的记账信息')
       return
     }
 
     try {
-      const response = await request.post(`/records`, {
-        userId: userId.value,
-        categoryId: Number(record.category),
-        type: record.type === 'expense' ? '支出' : '收入',
-        amount: Number(record.amount),
-        transactionDate: record.date,
-        notes: record.note || ''
-      })
-
-      if (response.data) {
-        await fetchRecords()
-        // 清空表单
-        newRecord.value = {
-          type: 'expense',
-          amount: 0,
-          category: '',
-          categoryName: '',
-          note: '',
-          date: new Date().toISOString().split('T')[0]
-        }
-        ElMessage.success('添加成功')
-      }
+      await createRecord(userId.value, record)
+      await fetchRecords()
+      resetNewRecord()
+      ElMessage.success('添加成功')
     } catch (error) {
-      console.error('添加记录失败:', error)
-      ElMessage.error('添加失败')
+      ElMessage.error(getApiErrorMessage(error, '添加失败'))
     }
   }
 
-  // 删除记录
-  const deleteRecord = async (id) => {
+  const deleteRecordItem = async (id) => {
     try {
       const recordId = Number(id)
-      if (isNaN(recordId)) {
+      if (Number.isNaN(recordId)) {
         throw new Error('Invalid record ID')
       }
 
@@ -171,23 +155,21 @@ export function useRecord() {
         }
       )
 
-      await request.delete(`/records/${recordId}`)
+      await deleteRecord(recordId)
       await fetchRecords()
       ElMessage.success('删除成功')
     } catch (error) {
       if (error !== 'cancel') {
-        console.error('删除记录失败:', error)
-        ElMessage.error('删除失败')
+        ElMessage.error(getApiErrorMessage(error, '删除失败'))
       }
     }
   }
 
-  // 编辑记录相关方法
   const startEdit = (record) => {
     editingRecord.value = {
       ...record,
-      categoryId: record.categoryId || record.category,
-      type: record.type === "expense" ? 'expense' : 'income'  // 确保类型格式正确
+      categoryId: record.categoryId ?? null,
+      categoryName: record.categoryName ?? ''
     }
   }
 
@@ -195,41 +177,31 @@ export function useRecord() {
     editingRecord.value = null
   }
 
-  // 保存修改
   const saveEdit = async () => {
-    if (!editingRecord.value) return
+    if (!editingRecord.value) {
+      return
+    }
 
-    if (!editingRecord.value.amount || !editingRecord.value.category) {
+    if (!editingRecord.value.amount || !editingRecord.value.categoryId) {
       ElMessage.warning('请填写完整的记账信息')
       return
     }
 
     try {
       const recordId = Number(editingRecord.value.id)
-      if (isNaN(recordId)) {
+      if (Number.isNaN(recordId)) {
         throw new Error('Invalid record ID')
       }
 
-      const updateData = {
-        categoryId: Number(editingRecord.value.category),
-        type: editingRecord.value.type === 'expense' ? '支出' : '收入',
-        amount: Number(editingRecord.value.amount),
-        transactionDate: editingRecord.value.date,
-        notes: editingRecord.value.note || ''
-      }
-
-      await request.put(`/records/${recordId}`, updateData)
-
+      await updateRecord(recordId, editingRecord.value)
       await fetchRecords()
       ElMessage.success('修改成功')
       editingRecord.value = null
     } catch (error) {
-      console.error('修改记录失败:', error)
-      ElMessage.error('修改失败')
+      ElMessage.error(getApiErrorMessage(error, '修改失败'))
     }
   }
 
-  // 分页处理
   const handleCurrentChange = (val) => {
     pagination.value.currentPage = val
   }
@@ -241,16 +213,15 @@ export function useRecord() {
 
   return {
     allRecords,
-    records, // 现在是 computed
+    records,
     newRecord,
     loading,
-    timeUnit,
-    pagination: computed(() => ({ ...pagination.value, total: totalRecords.value })), // 动态更新 total
+    pagination: computed(() => ({ ...pagination.value, total: totalRecords.value })),
     editingRecord,
     showEditDialog,
     fetchRecords,
     addRecord,
-    deleteRecord,
+    deleteRecord: deleteRecordItem,
     startEdit,
     cancelEdit,
     saveEdit,

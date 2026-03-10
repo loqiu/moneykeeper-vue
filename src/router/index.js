@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccountingPage from '@/views/AccountingPage.vue'
 import { useUserStore } from '@/stores/user'
 
 const routes = [
@@ -10,7 +9,7 @@ const routes = [
   {
     path: '/accounting',
     name: 'Accounting',
-    component: AccountingPage,
+    component: () => import('@/views/AccountingPage.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -19,19 +18,34 @@ const routes = [
     component: () => import('@/views/LoginPage.vue')
   },
   {
+    path: '/billing',
+    name: 'Billing',
+    component: () => import('@/views/StripeCheckoutPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/checkout',
-    name: 'Checkout',
-    component: () => import('@/views/StripeCheckoutPage.vue')
+    redirect: '/billing'
+  },
+  {
+    path: '/billing/success',
+    name: 'BillingSuccess',
+    component: () => import('@/views/PaymentSuccessPage.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/payment/success',
-    name: 'PaymentSuccess',
-    component: () => import('@/views/PaymentSuccessPage.vue')
+    redirect: '/billing/success'
+  },
+  {
+    path: '/billing/cancel',
+    name: 'BillingCancel',
+    component: () => import('@/views/PaymentCancelPage.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/payment/cancel',
-    name: 'PaymentCancel',
-    component: () => import('@/views/PaymentCancelPage.vue')
+    redirect: '/billing/cancel'
   }
 ]
 
@@ -40,13 +54,10 @@ const router = createRouter({
   routes
 })
 
-// 全局路由守卫
-router.beforeEach(async (to, from, next) => {
-  console.log('路由跳转:', { to, from })
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
-  
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 需要登录的页面
     if (!userStore.isLoggedIn) {
       next({
         path: '/login',
@@ -55,14 +66,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       next()
     }
+  } else if (userStore.isLoggedIn && to.path === '/login') {
+    next('/accounting')
   } else {
-    // 不需要登录的页面
-    if (userStore.isLoggedIn && to.path === '/login') {
-      next('/accounting')
-    } else {
-      next()
-    }
+    next()
   }
 })
 
-export default router 
+export default router
