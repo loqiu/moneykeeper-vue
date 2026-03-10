@@ -7,36 +7,11 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@/assets/styles/global.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { useUserStore } from './stores/user'
-import * as echarts from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
-import { PieChart, LineChart, BarChart } from 'echarts/charts'
-import {
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  TitleComponent
-} from 'echarts/components'
 
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
-
-echarts.use([
-  CanvasRenderer,
-  PieChart,
-  LineChart,
-  BarChart,
-  GridComponent,
-  TooltipComponent,
-  LegendComponent,
-  TitleComponent
-])
-
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 
 app.use(pinia)
 app.use(router)

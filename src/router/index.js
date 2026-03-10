@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccountingPage from '@/views/AccountingPage.vue'
 import { useUserStore } from '@/stores/user'
 
 const routes = [
@@ -10,7 +9,7 @@ const routes = [
   {
     path: '/accounting',
     name: 'Accounting',
-    component: AccountingPage,
+    component: () => import('@/views/AccountingPage.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -19,22 +18,34 @@ const routes = [
     component: () => import('@/views/LoginPage.vue')
   },
   {
-    path: '/checkout',
-    name: 'Checkout',
+    path: '/billing',
+    name: 'Billing',
     component: () => import('@/views/StripeCheckoutPage.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/payment/success',
-    name: 'PaymentSuccess',
+    path: '/checkout',
+    redirect: '/billing'
+  },
+  {
+    path: '/billing/success',
+    name: 'BillingSuccess',
     component: () => import('@/views/PaymentSuccessPage.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/payment/cancel',
-    name: 'PaymentCancel',
+    path: '/payment/success',
+    redirect: '/billing/success'
+  },
+  {
+    path: '/billing/cancel',
+    name: 'BillingCancel',
     component: () => import('@/views/PaymentCancelPage.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/payment/cancel',
+    redirect: '/billing/cancel'
   }
 ]
 
