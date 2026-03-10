@@ -144,7 +144,6 @@
               <div class="flex flex-col items-center gap-3 text-center">
                 <div class="text-sm font-medium text-slate-700">第三方登录</div>
                 <div id="google-btn" class="google-button-shell min-h-[44px] w-full max-w-[320px]"></div>
-                <p class="text-xs leading-5 text-slate-500">如果后端已绑定 Google 登录接口，这里会直接复用同一套用户会话。</p>
               </div>
             </div>
           </el-form>

@@ -162,15 +162,85 @@ const privacyPolicyText = ref('')
 
 const displayName = computed(() => userStore.username || '当前用户')
 const userInitial = computed(() => displayName.value.trim().slice(0, 1).toUpperCase())
-const connectionLabel = computed(() => userStore.isConnected ? '实时连接正常' : '等待连接服务')
-const connectionDetail = computed(() => userStore.isConnected ? '通知与状态更新已开启' : '当前可能处于离线或重连状态')
-const connectionBadgeClass = computed(() => {
-  return userStore.isConnected
-    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-    : 'border-amber-200 bg-amber-50 text-amber-700'
+
+const connectionState = computed(() => {
+  if (userStore.isConnected) {
+    return 'connected'
+  }
+
+  if (userStore.isConnecting && userStore.reconnectAttempts > 0) {
+    return 'reconnecting'
+  }
+
+  if (userStore.isConnecting) {
+    return 'connecting'
+  }
+
+  if (userStore.reconnectAttempts > 0) {
+    return 'error'
+  }
+
+  return 'idle'
 })
+
+const connectionLabel = computed(() => {
+  switch (connectionState.value) {
+    case 'connected':
+      return '实时通知正常'
+    case 'connecting':
+      return '正在连接通知'
+    case 'reconnecting':
+      return '正在重新连接'
+    case 'error':
+      return '通知连接异常'
+    default:
+      return '通知未连接'
+  }
+})
+
+const connectionDetail = computed(() => {
+  switch (connectionState.value) {
+    case 'connected':
+      return '通知与状态更新已开启'
+    case 'connecting':
+      return '正在建立实时通知连接'
+    case 'reconnecting':
+      return `正在尝试恢复实时通知（第 ${userStore.reconnectAttempts} 次）`
+    case 'error':
+      return '当前未连上实时通知，可稍后刷新页面重试'
+    default:
+      return '当前尚未建立实时通知连接'
+  }
+})
+
+const connectionBadgeClass = computed(() => {
+  switch (connectionState.value) {
+    case 'connected':
+      return 'border-emerald-200 bg-emerald-50 text-emerald-700'
+    case 'connecting':
+      return 'border-sky-200 bg-sky-50 text-sky-700'
+    case 'reconnecting':
+      return 'border-amber-200 bg-amber-50 text-amber-700'
+    case 'error':
+      return 'border-rose-200 bg-rose-50 text-rose-700'
+    default:
+      return 'border-slate-200 bg-slate-50 text-slate-600'
+  }
+})
+
 const connectionDotClass = computed(() => {
-  return userStore.isConnected ? 'bg-emerald-500' : 'bg-amber-500'
+  switch (connectionState.value) {
+    case 'connected':
+      return 'bg-emerald-500'
+    case 'connecting':
+      return 'bg-sky-500'
+    case 'reconnecting':
+      return 'bg-amber-500'
+    case 'error':
+      return 'bg-rose-500'
+    default:
+      return 'bg-slate-400'
+  }
 })
 
 const loadLegalTexts = async () => {
@@ -192,6 +262,7 @@ const showPrivacyPolicy = async () => {
   await loadLegalTexts()
   privacyPolicyVisible.value = true
 }
+
 const handleSupport = () => {
   window.location.href = 'mailto:rochelle.wang1116@gmail.com'
 }
