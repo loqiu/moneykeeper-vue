@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
 import { normalizeAuthToken, stripBearerPrefix } from '@/utils/auth'
+import { getApiBaseUrl } from '@/utils/runtimeConfig'
 
 const LOGIN_ROUTE = '/login'
 
@@ -19,7 +20,7 @@ const isTokenExpired = (token) => {
 
     return (decoded.exp * 1000) <= (Date.now() + 5 * 60 * 1000)
   } catch (error) {
-    console.error('Token解析失败:', error)
+    console.error('Token 解析失败:', error)
     return true
   }
 }
@@ -39,7 +40,7 @@ const handleUnauthorized = (userStore, message = '登录已过期，请重新登
 }
 
 const instance = axios.create({
-  baseURL: process.env.VUE_APP_API_URL,
+  baseURL: getApiBaseUrl(),
   timeout: 10000
 })
 

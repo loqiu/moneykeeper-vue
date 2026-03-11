@@ -7,6 +7,7 @@ import {
   parseStoredUserInfo,
   sanitizeUserInfo
 } from '@/utils/auth'
+import { getSseSubscribeUrl } from '@/utils/runtimeConfig'
 
 const MAX_RECONNECT_ATTEMPTS = 5
 const HEARTBEAT_TIMEOUT = 3600000
@@ -85,7 +86,7 @@ export const useUserStore = defineStore('user', {
       if (this.reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
         ElNotification({
           title: '连接提示',
-          message: '与服务器的连接已断开，请刷新页面重试',
+          message: '与实时通知服务的连接已断开，请刷新页面重试',
           type: 'warning',
           duration: 0
         })
@@ -116,11 +117,10 @@ export const useUserStore = defineStore('user', {
       this.isConnecting = true
 
       try {
-        eventSource = new EventSourcePolyfill(`/api/notifications/subscribe/${this.userId}`, {
+        eventSource = new EventSourcePolyfill(getSseSubscribeUrl(this.userId), {
           headers: {
             Authorization: authorization
           },
-          withCredentials: true,
           heartbeatTimeout: HEARTBEAT_TIMEOUT,
           connectionTimeout: CONNECTION_TIMEOUT
         })
@@ -147,14 +147,14 @@ export const useUserStore = defineStore('user', {
         }
 
         eventSource.onerror = (error) => {
-          console.error('SSE连接错误:', error)
+          console.error('SSE 连接错误:', error)
           this.isConnecting = false
           this.isConnected = false
           closeEventSource()
           this.scheduleReconnect()
         }
       } catch (error) {
-        console.error('SSE连接失败:', error)
+        console.error('SSE 连接失败:', error)
         this.isConnecting = false
         this.isConnected = false
         closeEventSource()
