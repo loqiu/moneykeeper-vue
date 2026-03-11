@@ -28,7 +28,7 @@ module.exports = defineConfig({
       '/api': {
         target: process.env.NODE_ENV === 'development' 
           ? 'http://localhost:8081'
-          : 'http://8.208.121.218:8080/moneykeeper-back-0.0.1-SNAPSHOT',
+          : 'https://api.money-keeper.com',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api'
