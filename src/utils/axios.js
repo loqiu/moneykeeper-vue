@@ -79,7 +79,7 @@ instance.interceptors.response.use(
           handleUnauthorized(userStore, backendMessage || '登录已过期，请重新登录')
           break
         case 403:
-          ElMessage.error(backendMessage || '没有权限进行此操作')
+          ElMessage.error(backendMessage || '没有权限执行此操作')
           break
         case 404:
           ElMessage.error(backendMessage || '请求的资源不存在')
