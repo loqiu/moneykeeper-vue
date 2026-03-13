@@ -1,33 +1,72 @@
 # MoneyKeeper Frontend / 钱管家前端
 
-MoneyKeeper is a Vue 3 single-page application for personal finance tracking.
-MoneyKeeper 是一个基于 Vue 3 的个人记账单页应用。
+[![CI](https://img.shields.io/github/actions/workflow/status/loqiu/moneykeeper-vue/node.js.yml?branch=main&label=CI)](https://github.com/loqiu/moneykeeper-vue/actions/workflows/node.js.yml)
+[![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Pinia](https://img.shields.io/badge/Pinia-2-f7c942?logo=pinia&logoColor=black)](https://pinia.vuejs.org/)
+[![Vue Router](https://img.shields.io/badge/Vue_Router-4-334155)](https://router.vuejs.org/)
+[![Element Plus](https://img.shields.io/badge/Element_Plus-2-409eff)](https://element-plus.org/)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-f38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![License](https://img.shields.io/github/license/loqiu/moneykeeper-vue)](./LICENSE)
 
-It currently supports record management, category management, charts, authentication, Google sign-in, billing pages, Excel export, and SSE-based realtime notifications.
-当前项目已经支持记账记录管理、分类管理、图表分析、账号认证、Google 登录、订阅支付页面、Excel 导出，以及基于 SSE 的实时通知。
+MoneyKeeper Frontend is a Vue 3 single-page application for ledger-based personal finance workflows, including record keeping, budgets, search, notifications, export jobs, statistics, collaboration, and billing.
 
-## Overview / 项目概览
+钱管家前端是一个基于 Vue 3 的账本型个人财务单页应用，当前已经覆盖记账、预算、搜索、通知、导出任务、统计分析、协作成员与订阅页面。
 
-### What This Project Does / 项目功能
-- Track income and expense records / 记录收入与支出
-- Manage custom categories, colors, and icons / 管理自定义分类、颜色与图标
-- Visualize financial data with charts / 使用图表展示收支数据
-- Authenticate users with username/password and Google sign-in / 支持用户名密码与 Google 登录
-- Display billing and payment flows / 提供订阅与支付流程页面
-- Export records to Excel / 导出记录为 Excel
-- Receive realtime notifications through SSE / 通过 SSE 接收实时通知
+## What's New / 最新功能
 
-### Current Runtime Architecture / 当前运行架构
-- Frontend framework: Vue 3 / 前端框架：Vue 3
-- State management: Pinia / 状态管理：Pinia
-- Routing: Vue Router with history mode / 路由：Vue Router history 模式
-- UI library: Element Plus / UI 组件库：Element Plus
-- Charts: ECharts + vue-echarts / 图表：ECharts + vue-echarts
-- HTTP client: Axios / HTTP 客户端：Axios
-- Build tool: Vue CLI / 构建工具：Vue CLI
-- Styling: Tailwind CSS + Sass / 样式：Tailwind CSS + Sass
-- Production static hosting: Cloudflare Workers static assets / 生产静态托管：Cloudflare Workers 静态资源
-- Secondary container path: Docker image built in GitHub Actions / 补充容器链路：GitHub Actions 构建 Docker 镜像
+- Added a ledger-scoped platform workspace instead of keeping every feature inside one accounting page.  
+  新增了账本维度的平台工作台，不再把所有功能都塞进单一记账页。
+- Added real pages for budgets, notifications, export jobs, statistics, search, and ledger members.  
+  新增了预算、通知中心、导出任务、统计分析、记录搜索和账本成员等真实页面。
+- Introduced ledger context state and platform navigation so pages work around the current ledger.  
+  引入账本上下文状态和平台导航，让页面都围绕当前账本运行。
+- Connected SSE notifications into a visible notification center instead of toast-only feedback.  
+  将 SSE 实时通知接入通知中心，不再只靠 toast 提示。
+- Updated budget API handling to support the backend's raw ledger budget responses.  
+  修正了预算接口解析，兼容后端账本预算接口返回的裸数组 / 裸 DTO。
+
+## Product Scope / 产品范围
+
+### Current user-facing areas / 当前用户侧功能
+
+- Record accounting dashboard and quick entry / 记账主页与快速录入
+- Ledger center and current-ledger context / 账本中心与当前账本上下文
+- Category management / 分类管理
+- Budget workspace with rules / 预算中心与阈值规则
+- Search and filtering / 搜索与高级筛选
+- Notification center with SSE updates / SSE 驱动的通知中心
+- Export jobs and download flow / 导出任务与下载流程
+- Statistics and chart views / 统计与图表分析
+- Ledger members and invites / 账本成员与邀请协作
+- Login, Google sign-in, billing, and subscription flow / 登录、Google 登录、支付与订阅流程
+
+## Route Map / 页面地图
+
+| Route | Page | Purpose |
+| --- | --- | --- |
+| `/accounting` | Accounting Dashboard / 记账主页 | Quick record entry, record list, charts, dashboard summary |
+| `/ledgers` | Ledger Center / 账本中心 | Ledger list, context switching, ledger overview |
+| `/ledgers/:ledgerId/members` | Ledger Members / 账本成员 | Members, invites, invite acceptance |
+| `/categories` | Categories / 分类管理 | Ledger category list and maintenance |
+| `/budgets` | Budgets / 预算中心 | Monthly budgets, thresholds, alerts |
+| `/statistics` | Statistics / 统计分析 | Period summary, trend buckets, category mix |
+| `/search` | Search / 记录搜索 | Keyword search and advanced filters |
+| `/exports` | Export Jobs / 导出任务 | Create export jobs, poll status, download |
+| `/notifications` | Notification Center / 通知中心 | Read, filter, and manage notification history |
+| `/billing` | Billing / 订阅与支付 | Subscription status and Stripe flow |
+
+## Tech Stack / 技术栈
+
+- Vue 3
+- Pinia
+- Vue Router 4
+- Element Plus
+- Axios
+- ECharts + `vue-echarts`
+- Tailwind CSS + Sass
+- Vue CLI
+- Cloudflare Workers static assets
+- GitHub Actions + Docker build pipeline
 
 ## Repository Layout / 仓库结构
 
@@ -39,33 +78,35 @@ moneykeeper-vue/
 |   |-- assets/             # Images and styles / 图片与样式
 |   |-- components/         # Reusable UI components / 可复用组件
 |   |-- composables/        # Composition API feature logic / 组合式逻辑
-|   |-- constants/          # Shared constants and legal texts / 常量与文案
+|   |-- constants/          # Shared constants and copy / 常量与共享文案
 |   |-- router/             # Route definitions and guards / 路由定义与守卫
-|   |-- stores/             # Pinia stores / Pinia 状态
-|   |-- utils/              # Shared utilities / 工具函数
+|   |-- stores/             # Pinia stores / Pinia 状态层
+|   |-- utils/              # Shared runtime helpers / 工具与运行时配置
 |   |-- views/              # Page-level components / 页面组件
 |   |-- App.vue             # Root component / 根组件
 |   `-- main.js             # App bootstrap / 应用入口
 |-- .github/workflows/      # CI workflows / CI 工作流
-|-- Dockerfile              # Docker build for nginx image / Docker 镜像构建文件
-|-- nginx.conf              # nginx config for container deployment / 容器 nginx 配置
-|-- wrangler.jsonc          # Cloudflare Workers static asset config / Cloudflare Workers 配置
-`-- PROJECT_DETAILS.md      # Frontend-to-backend coordination note / 前后端联调说明
+|-- Dockerfile              # Docker image build / Docker 镜像构建
+|-- nginx.conf              # Container nginx config / 容器 nginx 配置
+|-- wrangler.jsonc          # Cloudflare Workers config / Cloudflare Workers 配置
+|-- PROJECT_DETAILS.md      # Frontend/backend coordination notes / 前后端联调说明
+`-- FRONTEND_EXPANSION_PLAN.md # Platform expansion notes / 平台扩展方案
 ```
 
 ## Getting Started / 快速开始
 
 ### Prerequisites / 环境要求
-- Node.js 18 or newer / Node.js 18 或以上
-- npm 9 or newer / npm 9 或以上
 
-### Install / 安装依赖
+- Node.js 18+
+- npm 9+
+
+### Install dependencies / 安装依赖
 
 ```bash
 npm ci
 ```
 
-### Start Local Development / 本地开发
+### Start local development / 启动本地开发
 
 ```bash
 npm run serve
@@ -77,128 +118,113 @@ npm run serve
 npm run lint
 ```
 
-### Build for Production / 生产构建
+### Build / 生产构建
 
 ```bash
 npm run build
 ```
 
-## Useful Scripts / 常用脚本
+## Scripts / 常用脚本
 
-- `npm run serve`: start the Vue CLI dev server / 启动本地开发服务
-- `npm run build`: build the production bundle / 构建生产包
+- `npm run serve`: start the local Vue CLI dev server / 启动本地开发服务
 - `npm run lint`: run ESLint / 运行 ESLint
-- `npm run test`: currently mapped to lint / 当前等同于 lint
+- `npm run build`: build the production bundle / 构建生产包
+- `npm run test`: currently maps to lint / 当前等同于 lint
+- `npm run preview`: build and run local Wrangler preview / 构建并运行 Wrangler 本地预览
 - `npm run deploy`: build and run Wrangler deploy / 构建并执行 Wrangler 部署
-- `npm run preview`: build and run Wrangler dev preview / 构建并执行 Wrangler 本地预览
 
-## Environment Configuration / 环境变量说明
+## Runtime Configuration / 运行时配置
 
 ### Development / 开发环境
+
 - `VUE_APP_API_URL=/api`
 - `VUE_APP_SSE_BASE_URL=/api`
 
 ### Production / 生产环境
-- REST API: `https://api.money-keeper.com/api`
-- SSE base URL: `https://api.money-keeper.com/api`
-- Cloudflare Worker config is defined in `wrangler.jsonc` / Cloudflare Worker 配置在 `wrangler.jsonc`
 
-## Deployment Paths / 部署方式
+- REST API base: `https://api.money-keeper.com/api`
+- SSE base: `https://api.money-keeper.com/api`
+- Web origin: `https://money-keeper.com`
 
-### Cloudflare Workers (Current Static Hosting) / Cloudflare Workers（当前静态托管方式）
-The project currently uses `wrangler.jsonc` for Worker asset routing and SPA fallback.
-当前项目使用 `wrangler.jsonc` 管理 Worker 静态资源与 SPA 路由回退。
+The current runtime helpers are implemented in `src/utils/runtimeConfig.js`.  
+当前运行时地址逻辑集中在 `src/utils/runtimeConfig.js`。
 
-Important note:
-重要说明：
-- When Cloudflare builds directly from Git, local `wrangler deploy` is not required for normal Git-based production releases.
-- 如果 Cloudflare 直接从 Git 构建发布，正常的 Git 触发生产发布不依赖本地 `wrangler deploy`。
-- When deploying manually from a local or remote shell, Wrangler needs `CLOUDFLARE_API_TOKEN`.
-- 如果从本地或远程 Shell 手动部署，Wrangler 需要 `CLOUDFLARE_API_TOKEN`。
+## Deployment / 部署说明
 
-### Docker Image Path / Docker 镜像链路
-GitHub Actions also builds a Docker image and pushes it to Docker Hub.
-GitHub Actions 同时还会构建 Docker 镜像并推送到 Docker Hub。
+### Cloudflare Workers / Cloudflare Workers
 
-These files are still in use:
-以下文件当前仍在使用：
+This project is currently hosted as Cloudflare Workers static assets with SPA fallback defined in `wrangler.jsonc`.
+
+当前项目使用 Cloudflare Workers 静态资源托管，SPA 路由回退配置定义在 `wrangler.jsonc`。
+
+Important notes / 重要说明：
+
+- Git-based Cloudflare builds do not require manual local deployment for normal releases.  
+  如果 Cloudflare 直接从 Git 构建，日常发布不需要本地手工部署。
+- Manual `wrangler deploy` requires `CLOUDFLARE_API_TOKEN`.  
+  手动执行 `wrangler deploy` 需要 `CLOUDFLARE_API_TOKEN`。
+
+### Docker image pipeline / Docker 镜像链路
+
+GitHub Actions also builds and pushes a Docker image based on:
+
+GitHub Actions 同时会基于以下文件构建并推送 Docker 镜像：
+
 - `Dockerfile`
 - `nginx.conf`
 - `.dockerignore`
 
-The Docker workflow does not deploy directly to the physical machine; it publishes an image that a server can later pull and run.
-Docker 工作流不会直接把程序部署到物理机，而是发布镜像，后续由服务器去拉取并运行。
+This Docker pipeline publishes an image to Docker Hub; it does not directly deploy to the physical server.  
+这条 Docker 流水线会把镜像发布到 Docker Hub，不会直接部署到物理机。
 
-## Backend Contract Rule / 后端接口联调规则
+## Backend Contract Notes / 后端接口联调说明
 
-Before changing frontend API integration, always review:
-修改前端接口相关逻辑前，请先检查：
+Before changing frontend API integration, review the backend contract first:
+
+修改前端接口逻辑前，请先阅读后端接口文档：
 
 - `C:\WorkSpace\Java\moneykeeper-back\FRONTEND_API.md`
 
-See [PROJECT_DETAILS.md](./PROJECT_DETAILS.md) for the local coordination rule.
-本地联调约定请查看 [PROJECT_DETAILS.md](./PROJECT_DETAILS.md)。
+Additional local coordination notes:
+
+补充本地联调说明：
+
+- [PROJECT_DETAILS.md](./PROJECT_DETAILS.md)
 
 ## Development Workflow / 开发流程建议
 
-- Use `codex/test` or another working branch for ongoing development / 日常开发优先使用 `codex/test` 或其它工作分支
-- Merge into `main` only after verification / 验证通过后再合并到 `main`
-- Let Cloudflare build from `main` for production / 生产环境由 Cloudflare 从 `main` 自动构建
+- Use `codex/test` or another working branch for feature work.  
+  日常功能开发优先使用 `codex/test` 或其它工作分支。
+- Merge into `main` only after verification.  
+  验证通过后再合并到 `main`。
+- Let Cloudflare build from `main` for production releases.  
+  生产环境由 Cloudflare 从 `main` 自动构建发布。
 
-## Internationalization Plan / 国际化 i18n 计划
+## Current Platform Delivery Status / 当前平台化交付状态
 
-### Goal / 目标
-Make the frontend support at least Simplified Chinese and English without duplicating page logic.
-让前端至少支持简体中文与英文，并且不复制页面逻辑。
+Completed pages and modules in the latest platform handoff:
 
-### Current Gaps / 当前缺口
-- Many UI strings are hardcoded in components and composables / 许多界面文案直接硬编码在组件与 composable 中
-- Error and validation messages are not centralized / 错误提示和校验文案没有集中管理
-- Some files still contain text encoding issues / 部分文件仍有编码问题
-- Currency, date, and number formatting are not locale-aware / 金额、日期、数字格式尚未国际化
+本轮平台化交付已经完成的页面与模块：
 
-### Recommended Roadmap / 推荐路线图
+- Ledger center / 账本中心
+- Categories page / 分类管理
+- Budgets page / 预算中心
+- Notifications page / 通知中心
+- Export jobs page / 导出任务
+- Statistics page / 统计分析
+- Search page / 记录搜索
+- Ledger members page / 账本成员与邀请
+- Shared platform state cards / 统一平台状态卡
+- Ledger-scoped navigation and stores / 账本上下文导航与状态层
 
-#### Phase 1: Prepare the foundation / 第一阶段：打基础
-- Add `vue-i18n` / 引入 `vue-i18n`
-- Create locale files such as `src/locales/zh-CN.json` and `src/locales/en-GB.json` / 创建语言包
-- Add a single i18n bootstrap file and register it in `main.js` / 在 `main.js` 中注册统一的 i18n 入口
-- Decide the default locale and fallback locale / 明确默认语言与回退语言
+## Future Work / 后续方向
 
-#### Phase 2: Centralize visible copy / 第二阶段：集中管理界面文案
-- Replace hardcoded page titles, button labels, form labels, placeholders, empty states, and dialog text / 替换页面标题、按钮、表单、占位符、空态、弹窗文案
-- Move validation messages into translation keys / 将表单校验文案转成翻译 key
-- Move notification copy into shared translation usage / 将通知提示文案迁移到统一翻译调用
-
-#### Phase 3: Locale-aware formatting / 第三阶段：格式国际化
-- Use `Intl.DateTimeFormat` for dates / 使用 `Intl.DateTimeFormat` 处理日期
-- Use `Intl.NumberFormat` for amount and chart labels / 使用 `Intl.NumberFormat` 处理金额与图表数值
-- Support locale-aware currency display / 支持按语言环境显示货币格式
-
-#### Phase 4: API and error mapping / 第四阶段：接口与错误映射
-- Keep backend response codes stable and map them to frontend translation keys / 保持后端业务码稳定，并在前端映射到翻译 key
-- Do not render raw backend messages directly in the UI unless used as fallback / 非必要不要直接把后端原始 message 直接显示给用户
-- Introduce a shared error translation layer in `src/api/response.js` or a dedicated helper / 在统一响应层处理可翻译错误
-
-#### Phase 5: Language switching and persistence / 第五阶段：语言切换与持久化
-- Add a language switcher in the account area or top navigation / 在账户区或顶栏加入语言切换入口
-- Store the selected locale in local storage or user settings / 将选择的语言保存到本地或用户设置
-- Detect browser language on first visit / 首次访问时可根据浏览器语言自动选择
-
-#### Phase 6: QA and rollout / 第六阶段：测试与发布
-- Add smoke tests for both locales / 为中英文增加基本回归测试
-- Add a missing-key check in CI / 在 CI 中增加缺失翻译 key 检查
-- Review layout overflow in longer English strings / 检查英文较长文案导致的布局溢出
-- Verify charts, billing pages, and auth flows under both locales / 验证图表、支付页、登录流程在双语下的表现
-
-### Suggested First i18n Task / 建议的第一个 i18n 任务
-Start by introducing `vue-i18n` and migrating the login page, top navigation, and accounting dashboard summary cards.
-建议先引入 `vue-i18n`，然后优先迁移登录页、顶部导航、以及记账首页摘要卡片的文案。
-
-This gives the project a reusable i18n foundation while touching the most visible user-facing surfaces first.
-这样既能先建立可复用的 i18n 基础设施，也能优先覆盖用户最常见的核心界面。
+- i18n infrastructure / 国际化 i18n
+- Better frontend error-code mapping / 更统一的前端错误码映射
+- Bundle size optimization / 包体积优化
+- Deeper permission and empty-state polish / 更细的权限态和空态打磨
 
 ## License / 许可证
 
-This project is distributed under the MIT License.
+This project is distributed under the MIT License.  
 本项目采用 MIT 许可证。
