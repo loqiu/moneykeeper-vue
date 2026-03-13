@@ -43,21 +43,13 @@
             @action="refreshLedgers"
           />
 
-          <div v-if="false && errorMessage" class="hidden mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-            {{ errorMessage }}
-          </div>
-
           <PlatformStateCard
-            v-if="isLoading"
+            v-else-if="isLoading"
             variant="loading"
             compact
             title="正在加载账本列表..."
             description="系统正在同步你当前可访问的账本和默认上下文。"
           />
-
-          <div v-if="isLoading" class="hidden mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-10 text-center text-sm text-slate-500">
-            正在加载账本列表...
-          </div>
 
           <PlatformStateCard
             v-else-if="!ledgerList.length"
@@ -67,12 +59,7 @@
             description="可以先创建一个 shared、family 或 project 类型的账本。"
           />
 
-          <div v-if="false" class="hidden mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center">
-            <p class="text-base font-medium text-slate-900">还没有可用账本</p>
-            <p class="mt-2 text-sm text-slate-500">可以先创建一个 shared / family / project 类型的账本。</p>
-          </div>
-
-          <div v-if="!isLoading && ledgerList.length" class="mt-5 grid gap-4 md:grid-cols-2">
+          <div v-else class="mt-5 grid gap-4 md:grid-cols-2">
             <article
               v-for="ledger in ledgerList"
               :key="ledger.id"

@@ -129,6 +129,26 @@
         <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
           当前没有待接受的邀请。
         </div>
+
+        <div v-if="resolvedMyInvites.length" class="mt-4 space-y-3">
+          <div
+            v-for="invite in resolvedMyInvites"
+            :key="`resolved-${invite.id}`"
+            class="rounded-[22px] border border-slate-200 bg-white/80 p-4"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold text-slate-900">{{ invite.ledgerName || `账本 #${invite.ledgerId}` }}</div>
+                <div class="mt-2 text-xs text-slate-500">
+                  {{ invite.invitedEmail }} · {{ inviteStatusLabel(invite.status) }}
+                </div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
+                {{ inviteStatusLabel(invite.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
       </article>
     </template>
 
@@ -167,7 +187,7 @@
       />
 
       <PlatformStateCard
-        v-if="!hasTargetLedger"
+        v-else-if="!hasTargetLedger"
         variant="warning"
         title="当前账本不在你的可访问列表中"
         description="可以先回到账本中心刷新列表，或者确认你已经接受对应邀请。"
@@ -189,22 +209,7 @@
         description="系统正在同步成员列表、账本邀请和当前账号待接受邀请。"
       />
 
-      <section
-        v-if="false && !hasTargetLedger"
-        class="hidden rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center"
-      >
-        <p class="text-base font-medium text-slate-900">当前账本不在你的可访问列表中</p>
-        <p class="mt-2 text-sm text-slate-500">可以先回到账本中心刷新列表，或确认你已经接受对应邀请。</p>
-      </section>
-
-      <section
-        v-else-if="false && isLoading"
-        class="hidden rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500"
-      >
-        正在加载成员与邀请信息...
-      </section>
-
-      <section v-else-if="hasTargetLedger && !isLoading" class="grid gap-6 xl:grid-cols-2">
+      <section v-else class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
@@ -281,7 +286,7 @@
             </button>
           </div>
 
-          <div v-else-if="filteredLedgerInvites.length" class="mt-5 space-y-3">
+          <div v-if="canManageInvites && filteredLedgerInvites.length" class="mt-5 space-y-3">
             <div
               v-for="invite in filteredLedgerInvites"
               :key="invite.id"
@@ -300,7 +305,22 @@
                   </div>
                 </div>
 
-                <el-button class="!rounded-full !px-4" @click="copyInviteCode(invite.inviteCode)">复制邀请码</el-button>
+                <div class="flex flex-wrap justify-end gap-2">
+                  <el-button
+                    v-if="invite.status === 'pending'"
+                    class="!rounded-full !px-4"
+                    @click="copyInviteCode(invite.inviteCode)"
+                  >
+                    复制邀请码
+                  </el-button>
+                  <el-button
+                    v-if="invite.status === 'expired'"
+                    class="!rounded-full !px-4"
+                    @click="handleReinvite(invite)"
+                  >
+                    重新邀请
+                  </el-button>
+                </div>
               </div>
 
               <div v-if="invite.status === 'expired'" class="mt-3">
@@ -316,8 +336,8 @@
             </div>
           </div>
 
-          <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
-            当前账本还没有邀请记录。
+          <div v-else-if="canManageInvites" class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
+            {{ ledgerInvites.length ? '当前筛选下没有匹配的邀请' : '当前账本还没有邀请记录。' }}
           </div>
         </article>
       </section>
