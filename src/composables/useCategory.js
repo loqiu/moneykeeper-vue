@@ -18,6 +18,8 @@ const ADD_CATEGORY_ERROR_MESSAGE = '添加分类失败'
 const DELETE_CATEGORY_ERROR_MESSAGE = '删除分类失败'
 const INVALID_CATEGORY_MESSAGE = '请填写完整的分类信息'
 
+const CATEGORY_PERMISSION_MESSAGE = '当前角色只能查看分类，需要 owner 或 admin 才能维护'
+
 export function useCategory() {
   const userStore = useUserStore()
   const ledgerStore = useLedgerStore()
@@ -30,7 +32,11 @@ export function useCategory() {
     icon: 'ShoppingCart'
   })
 
-  const ensureLedgerContext = () => {
+  const canManageCategories = () => {
+    return ['owner', 'admin'].includes(ledgerStore.currentLedgerRole || ledgerStore.currentLedger?.memberRole || '')
+  }
+
+  const ensureLedgerContext = ({ requireManage = false } = {}) => {
     if (!userStore.userId) {
       ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
       return false
@@ -38,6 +44,11 @@ export function useCategory() {
 
     if (!ledgerStore.currentLedgerId) {
       ElMessage.warning(LEDGER_REQUIRED_MESSAGE)
+      return false
+    }
+
+    if (requireManage && !canManageCategories()) {
+      ElMessage.warning(CATEGORY_PERMISSION_MESSAGE)
       return false
     }
 
@@ -62,7 +73,7 @@ export function useCategory() {
   }
 
   const showAddCategoryDialog = (type) => {
-    if (!ensureLedgerContext()) {
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 
@@ -71,7 +82,7 @@ export function useCategory() {
   }
 
   const deleteCategoryItem = async ({ category, type }) => {
-    if (!ensureLedgerContext()) {
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 
@@ -104,7 +115,7 @@ export function useCategory() {
   }
 
   const addCategory = async (category) => {
-    if (!ensureLedgerContext()) {
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 

@@ -32,20 +32,47 @@
             </el-button>
           </div>
 
-          <div v-if="errorMessage" class="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          <PlatformStateCard
+            v-if="errorMessage"
+            variant="error"
+            compact
+            :centered="false"
+            title="账本列表加载失败"
+            :description="errorMessage"
+            action-label="重试"
+            @action="refreshLedgers"
+          />
+
+          <div v-if="false && errorMessage" class="hidden mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {{ errorMessage }}
           </div>
 
-          <div v-if="isLoading" class="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-10 text-center text-sm text-slate-500">
+          <PlatformStateCard
+            v-if="isLoading"
+            variant="loading"
+            compact
+            title="正在加载账本列表..."
+            description="系统正在同步你当前可访问的账本和默认上下文。"
+          />
+
+          <div v-if="isLoading" class="hidden mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-10 text-center text-sm text-slate-500">
             正在加载账本列表...
           </div>
 
-          <div v-else-if="!ledgerList.length" class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center">
+          <PlatformStateCard
+            v-else-if="!ledgerList.length"
+            variant="empty"
+            compact
+            title="还没有可用账本"
+            description="可以先创建一个 shared、family 或 project 类型的账本。"
+          />
+
+          <div v-if="false" class="hidden mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-10 text-center">
             <p class="text-base font-medium text-slate-900">还没有可用账本</p>
             <p class="mt-2 text-sm text-slate-500">可以先创建一个 shared / family / project 类型的账本。</p>
           </div>
 
-          <div v-else class="mt-5 grid gap-4 md:grid-cols-2">
+          <div v-if="!isLoading && ledgerList.length" class="mt-5 grid gap-4 md:grid-cols-2">
             <article
               v-for="ledger in ledgerList"
               :key="ledger.id"
@@ -154,6 +181,7 @@ import { computed, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { useLedgerStore } from '@/stores/ledger'
 import { getApiErrorMessage } from '@/api/response'
 

@@ -29,10 +29,10 @@
         </div>
 
         <div class="flex flex-wrap gap-3">
-          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" @click="showAddCategoryDialog('expense')">
+          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext || !canManageCategories" @click="showAddCategoryDialog('expense')">
             新增支出分类
           </el-button>
-          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" @click="showAddCategoryDialog('income')">
+          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext || !canManageCategories" @click="showAddCategoryDialog('income')">
             新增收入分类
           </el-button>
           <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" @click="fetchCategories">
@@ -40,6 +40,33 @@
           </el-button>
         </div>
       </section>
+
+      <PlatformStateCard
+        v-if="!hasLedgerContext"
+        variant="warning"
+        compact
+        :centered="false"
+        title="请先选择账本"
+        description="分类管理已经切到账本维度，先选择目标账本再维护收入和支出分类。"
+      >
+        <template #actions>
+          <router-link
+            to="/ledgers"
+            class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+          >
+            前往账本中心
+          </router-link>
+        </template>
+      </PlatformStateCard>
+
+      <PlatformStateCard
+        v-else-if="!canManageCategories"
+        variant="info"
+        compact
+        :centered="false"
+        title="当前角色为只读"
+        description="你仍然可以查看当前账本的分类结构，但新增和删除分类需要 owner 或 admin 权限。"
+      />
 
       <section class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
@@ -58,7 +85,8 @@
               v-for="item in expenseCategories"
               :key="item.id"
               type="button"
-              class="group rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white"
+              :disabled="!canManageCategories"
+              class="group rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:border-slate-200 disabled:hover:bg-slate-50"
               @click="handleDeleteCategory({ category: item, type: 'expense' })"
             >
               <div class="flex items-start justify-between gap-3">
@@ -97,7 +125,8 @@
               v-for="item in incomeCategories"
               :key="item.id"
               type="button"
-              class="group rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white"
+              :disabled="!canManageCategories"
+              class="group rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-left transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:border-slate-200 disabled:hover:bg-slate-50"
               @click="handleDeleteCategory({ category: item, type: 'income' })"
             >
               <div class="flex items-start justify-between gap-3">
@@ -136,6 +165,7 @@ import { computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import AddCategoryDialog from '@/components/AddCategoryDialog.vue'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { resolveCategoryIcon, resolveCategoryIconClass } from '@/constants/categoryIcons'
 import { useCategory } from '@/composables/useCategory'
 import { useLedgerStore } from '@/stores/ledger'
@@ -156,6 +186,7 @@ const {
 } = useCategory()
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
+const canManageCategories = computed(() => ['owner', 'admin'].includes(currentLedger.value?.memberRole || ''))
 const currentLedgerTitle = computed(() => currentLedger.value?.name || '请先选择账本')
 
 watch(
