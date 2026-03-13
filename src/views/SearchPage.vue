@@ -106,7 +106,7 @@
             </el-select>
           </el-form-item>
 
-          <div class="flex gap-3">
+        <div class="flex gap-3">
             <el-button
               type="primary"
               class="!flex-1 !rounded-full !border-0 !bg-slate-900 !py-6 hover:!bg-slate-800 disabled:!bg-slate-300"
@@ -116,7 +116,7 @@
             >
               开始搜索
             </el-button>
-            <el-button class="!rounded-full !px-5" @click="resetFilters">重置</el-button>
+            <el-button class="!rounded-full !px-5" @click="resetFilters">重置并刷新</el-button>
           </div>
         </el-form>
       </article>
@@ -156,8 +156,8 @@
       </section>
 
       <section v-else-if="!results.length" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <p class="text-base font-medium text-slate-900">当前没有匹配结果</p>
-        <p class="mt-2 text-sm text-slate-500">可以尝试放宽日期范围、清空分类限制，或者稍后再试一次。</p>
+        <p class="text-base font-medium text-slate-900">{{ emptyStateTitle }}</p>
+        <p class="mt-2 text-sm text-slate-500">{{ emptyStateDescription }}</p>
       </section>
 
       <section v-else class="space-y-4">
@@ -224,6 +224,7 @@ const ledgerStore = useLedgerStore()
 const { currentLedgerId, currentLedger } = storeToRefs(ledgerStore)
 
 const isLoading = ref(false)
+const hasLoadedResults = ref(false)
 const errorMessage = ref('')
 const results = ref([])
 const categoryList = ref([])
@@ -249,8 +250,41 @@ const typeOptions = [
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const hasActiveFilters = computed(() => {
+  return Boolean(
+    filters.query.trim() ||
+      filters.userId ||
+      filters.type ||
+      filters.categoryId ||
+      filters.categoryName.trim() ||
+      filters.startDate ||
+      filters.endDate
+  )
+})
 const topScore = computed(() => {
   return results.value.length ? formatScore(results.value[0].score) : '0.00'
+})
+const emptyStateTitle = computed(() => {
+  if (!hasLoadedResults.value) {
+    return '输入条件后开始搜索'
+  }
+
+  if (hasActiveFilters.value) {
+    return '当前没有匹配结果'
+  }
+
+  return '当前账本还没有可展示的搜索结果'
+})
+const emptyStateDescription = computed(() => {
+  if (!hasLoadedResults.value) {
+    return '可以输入关键字，也可以直接按成员、分类、日期和类型组合筛选。'
+  }
+
+  if (hasActiveFilters.value) {
+    return '可以尝试放宽日期范围、清空分类限制，或者稍后再试一次。'
+  }
+
+  return '可以先新增记录，或者输入关键字缩小范围后再试。'
 })
 
 const buildQuery = () => {
@@ -320,6 +354,7 @@ const loadSearchResults = async () => {
 
       return new Date(right.updatedAt || 0).getTime() - new Date(left.updatedAt || 0).getTime()
     })
+    hasLoadedResults.value = true
   } catch (error) {
     errorMessage.value = getApiErrorMessage(error, '搜索记录失败')
   } finally {
@@ -327,8 +362,9 @@ const loadSearchResults = async () => {
   }
 }
 
-const resetFilters = () => {
+const resetFilters = async () => {
   Object.assign(filters, defaultFilters())
+  await loadSearchResults()
 }
 
 const formatCurrency = (value) => currencyFormatter.format(Number(value) || 0)
@@ -354,6 +390,7 @@ watch(
     if (!ledgerId) {
       categoryList.value = []
       results.value = []
+      hasLoadedResults.value = false
       return
     }
 

@@ -33,6 +33,13 @@
           </p>
         </div>
 
+        <div
+          v-if="hasLedgerContext && !canManageCrossMemberExports"
+          class="mt-5 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-5 text-sm leading-6 text-slate-600"
+        >
+          当前角色可以创建自己的导出任务，但如果要按其他成员 ID 导出，需要 owner / admin 权限。
+        </div>
+
         <el-form class="mt-5 space-y-4" label-position="top" @submit.prevent>
           <el-form-item label="记录类型">
             <el-select v-model="form.type" clearable class="w-full" placeholder="全部类型">
@@ -126,6 +133,10 @@
             <el-switch v-model="autoRefreshEnabled" />
           </div>
         </div>
+
+        <p class="mt-4 text-sm text-slate-500">
+          当前状态：{{ pollingStatusLabel }}
+        </p>
       </section>
 
       <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
@@ -236,6 +247,7 @@ const { currentLedgerId, currentLedger } = storeToRefs(ledgerStore)
 const isLoading = ref(false)
 const isSubmitting = ref(false)
 const downloadingJobId = ref(null)
+const isPolling = ref(false)
 const errorMessage = ref('')
 const jobs = ref([])
 const autoRefreshEnabled = ref(true)
@@ -261,8 +273,24 @@ const typeOptions = [
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const canManageCrossMemberExports = computed(() => ['owner', 'admin'].includes(currentLedger.value?.memberRole || ''))
 const activeJobCount = computed(() => jobs.value.filter((job) => ['pending', 'running'].includes(job.status)).length)
 const completedJobCount = computed(() => jobs.value.filter((job) => job.status === 'completed').length)
+const pollingStatusLabel = computed(() => {
+  if (!hasLedgerContext.value) {
+    return '请先选择账本'
+  }
+
+  if (!autoRefreshEnabled.value) {
+    return '自动轮询已关闭'
+  }
+
+  if (activeJobCount.value === 0) {
+    return '当前没有处理中任务'
+  }
+
+  return isPolling.value ? '正在轮询处理中任务' : '已开启自动轮询'
+})
 
 const buildQuery = () => ({
   limit: filters.limit
@@ -273,6 +301,8 @@ const stopPolling = () => {
     clearInterval(pollTimer.value)
     pollTimer.value = null
   }
+
+  isPolling.value = false
 }
 
 const maybeStartPolling = () => {
@@ -288,6 +318,10 @@ const maybeStartPolling = () => {
   }
 
   pollTimer.value = setInterval(() => {
+    if (isPolling.value) {
+      return
+    }
+
     loadJobs({ silent: true })
   }, POLL_INTERVAL)
 }
@@ -321,6 +355,9 @@ const loadJobs = async ({ silent = false } = {}) => {
   if (!silent) {
     isLoading.value = true
   }
+  if (silent) {
+    isPolling.value = true
+  }
   errorMessage.value = ''
 
   try {
@@ -333,6 +370,9 @@ const loadJobs = async ({ silent = false } = {}) => {
     if (!silent) {
       isLoading.value = false
     }
+    if (silent) {
+      isPolling.value = false
+    }
   }
 }
 
@@ -344,6 +384,11 @@ const handleCreateExportJob = async () => {
 
   if (form.startDate && form.endDate && form.endDate < form.startDate) {
     ElMessage.warning('结束日期不能早于开始日期')
+    return
+  }
+
+  if (form.userId && !canManageCrossMemberExports.value) {
+    ElMessage.warning('当前角色只能创建自己的导出任务')
     return
   }
 

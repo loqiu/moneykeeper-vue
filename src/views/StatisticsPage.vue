@@ -120,6 +120,11 @@
         正在加载统计结果...
       </section>
 
+      <section v-else-if="!hasStatisticsData" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+        <p class="text-base font-medium text-slate-900">当前窗口还没有统计数据</p>
+        <p class="mt-2 text-sm text-slate-500">可以切换周期、调整锚点日期，或者先在当前账本补充记录后再回来查看。</p>
+      </section>
+
       <section v-else class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-start justify-between gap-3">
@@ -297,6 +302,14 @@ const periodLabelMap = {
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
 const granularityLabel = computed(() => (statistics.value.bucketGranularity === 'month' ? '月' : '日'))
+const hasStatisticsData = computed(() => {
+  return Boolean(
+    statistics.value.recordCount ||
+      statistics.value.buckets.length ||
+      statistics.value.expenseCategories.length ||
+      statistics.value.incomeCategories.length
+  )
+})
 const maxBucketAmount = computed(() => {
   return Math.max(
     1,

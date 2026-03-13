@@ -72,6 +72,7 @@
           <el-button
             type="primary"
             class="!mt-2 !w-full !rounded-full !border-0 !bg-slate-900 !py-6 hover:!bg-slate-800 disabled:!bg-slate-300"
+            :disabled="!hasTargetLedger"
             :loading="isCreatingInvite"
             @click="handleCreateInvite"
           >
@@ -91,9 +92,9 @@
           <el-button class="!rounded-full !px-4" @click="loadPendingInvites">刷新</el-button>
         </div>
 
-        <div v-if="myPendingInvites.length" class="mt-5 space-y-3">
+        <div v-if="visiblePendingInvites.length" class="mt-5 space-y-3">
           <div
-            v-for="invite in myPendingInvites"
+            v-for="invite in visiblePendingInvites"
             :key="`pending-${invite.id}`"
             class="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4"
           >
@@ -105,6 +106,7 @@
                 </div>
               </div>
               <el-button
+                v-if="invite.status === 'pending'"
                 class="!rounded-full !px-4"
                 :loading="acceptingInviteCode === invite.inviteCode"
                 @click="handleAcceptInvite(invite)"
@@ -134,7 +136,7 @@
           <div class="flex flex-wrap gap-3">
             <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadPageData">刷新页面</el-button>
             <el-button
-              v-if="Number(route.params.ledgerId) !== currentLedgerId"
+              v-if="hasTargetLedger && Number(route.params.ledgerId) !== currentLedgerId"
               class="!rounded-full !px-4"
               @click="setAsCurrentContext"
             >
@@ -148,7 +150,18 @@
         {{ errorMessage }}
       </section>
 
-      <section v-if="isLoading" class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
+      <section
+        v-if="!hasTargetLedger"
+        class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center"
+      >
+        <p class="text-base font-medium text-slate-900">当前账本不在你的可访问列表中</p>
+        <p class="mt-2 text-sm text-slate-500">可以先回到账本中心刷新列表，或确认你已经接受对应邀请。</p>
+      </section>
+
+      <section
+        v-else-if="isLoading"
+        class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500"
+      >
         正在加载成员与邀请信息...
       </section>
 
@@ -287,8 +300,14 @@ const targetLedger = computed(() => {
   return ledgerList.value.find((item) => Number(item.id) === targetLedgerId.value) || null
 })
 const currentRole = computed(() => targetLedger.value?.memberRole || '')
+const hasTargetLedger = computed(() => Boolean(targetLedger.value))
 const canManageInvites = computed(() => ['owner', 'admin'].includes(currentRole.value))
 const ledgerTitle = computed(() => targetLedger.value?.name || `账本 #${targetLedgerId.value}`)
+const visiblePendingInvites = computed(() => myPendingInvites.value.filter((item) => item.status === 'pending'))
+
+const isValidEmail = (value) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+}
 
 const resetInviteForm = () => {
   inviteForm.invitedEmail = ''
@@ -354,7 +373,7 @@ const loadPendingInvites = async () => {
 }
 
 const loadPageData = async () => {
-  if (!targetLedgerId.value) {
+  if (!targetLedgerId.value || !hasTargetLedger.value) {
     return
   }
 
@@ -388,6 +407,11 @@ const handleCreateInvite = async () => {
     return
   }
 
+  if (!isValidEmail(inviteForm.invitedEmail.trim())) {
+    ElMessage.warning('请输入有效的邮箱地址')
+    return
+  }
+
   isCreatingInvite.value = true
   try {
     const createdInvite = await createLedgerInvite(targetLedgerId.value, inviteForm)
@@ -402,6 +426,11 @@ const handleCreateInvite = async () => {
 }
 
 const handleAcceptInvite = async (invite) => {
+  if (invite.status !== 'pending') {
+    ElMessage.warning('当前邀请已经不可接受')
+    return
+  }
+
   acceptingInviteCode.value = invite.inviteCode
 
   try {
@@ -426,6 +455,11 @@ const handleAcceptInvite = async (invite) => {
 }
 
 const copyInviteCode = async (inviteCode) => {
+  if (!inviteCode) {
+    ElMessage.warning('当前邀请没有可复制的邀请码')
+    return
+  }
+
   try {
     await navigator.clipboard.writeText(inviteCode)
     ElMessage.success('邀请码已复制')
@@ -435,12 +469,17 @@ const copyInviteCode = async (inviteCode) => {
 }
 
 const setAsCurrentContext = () => {
+  if (!hasTargetLedger.value) {
+    ElMessage.warning('当前账本不在你的可访问列表中')
+    return
+  }
+
   ledgerStore.selectLedger(targetLedgerId.value)
   ElMessage.success('已切换当前账本上下文')
 }
 
 watch(
-  () => [targetLedgerId.value, currentRole.value],
+  () => [targetLedgerId.value, currentRole.value, hasTargetLedger.value],
   async () => {
     if (targetLedgerId.value) {
       await loadPageData()

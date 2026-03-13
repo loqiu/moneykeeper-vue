@@ -36,8 +36,8 @@
 
           <div class="flex flex-wrap gap-3">
             <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadNotifications">刷新列表</el-button>
-            <el-button class="!rounded-full !px-4" :disabled="!unreadCount" @click="handleMarkAllAsRead">
-              全部标记为已读
+            <el-button class="!rounded-full !px-4" :disabled="!filteredUnreadCount" @click="handleMarkAllAsRead">
+              标记当前筛选为已读
             </el-button>
           </div>
         </div>
@@ -70,6 +70,13 @@
 
       <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
         {{ errorMessage }}
+      </section>
+
+      <section
+        v-if="!userStore.isConnected"
+        class="rounded-[24px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900"
+      >
+        {{ connectionHint }}
       </section>
 
       <section v-if="isLoading" class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
@@ -162,6 +169,7 @@ const typeLabelMap = {
 }
 
 const notifications = computed(() => items.value)
+const filteredUnreadCount = computed(() => notifications.value.filter((item) => !item.read).length)
 
 const connectionLabel = computed(() => {
   if (userStore.isConnected) {
@@ -181,6 +189,21 @@ const connectionLabel = computed(() => {
   }
 
   return '通知未连接'
+})
+const connectionHint = computed(() => {
+  if (userStore.isConnecting && userStore.reconnectAttempts > 0) {
+    return '通知流正在重连中。历史列表仍然可用，但新的实时消息可能会稍有延迟。'
+  }
+
+  if (userStore.isConnecting) {
+    return '通知流正在建立连接。若列表正常加载，可稍等几秒让实时消息恢复。'
+  }
+
+  if (userStore.reconnectAttempts > 0) {
+    return '通知流当前未连上，建议稍后刷新页面或检查网络。历史通知不会丢失。'
+  }
+
+  return '通知流尚未连接，当前页面仍可查看历史通知。'
 })
 
 const buildQuery = () => {
@@ -219,8 +242,14 @@ const handleMarkAsRead = async (notification) => {
 
 const handleMarkAllAsRead = async () => {
   try {
+    const unreadBeforeUpdate = filteredUnreadCount.value
+    if (!unreadBeforeUpdate) {
+      ElMessage.info('当前筛选下没有未读通知')
+      return
+    }
+
     await notificationStore.markAllAsRead(filters.type || undefined)
-    ElMessage.success('已更新通知状态')
+    ElMessage.success('已更新当前筛选通知状态')
   } catch (error) {
     ElMessage.error(getApiErrorMessage(error, '批量标记已读失败'))
   }

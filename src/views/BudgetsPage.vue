@@ -33,6 +33,13 @@
           </p>
         </div>
 
+        <div
+          v-if="hasLedgerContext && !canManageBudgets"
+          class="mt-5 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-5 text-sm leading-6 text-slate-600"
+        >
+          当前角色可以查看预算，但不能新增、删除预算或修改阈值规则。需要 owner / admin 权限。
+        </div>
+
         <el-form class="mt-5 space-y-4" label-position="top" @submit.prevent>
           <el-form-item label="预算名称">
             <el-input v-model="form.name" maxlength="50" placeholder="例如：本月餐饮预算" />
@@ -104,7 +111,7 @@
           <el-button
             type="primary"
             class="!mt-2 !w-full !rounded-full !border-0 !bg-slate-900 !py-6 hover:!bg-slate-800 disabled:!bg-slate-300"
-            :disabled="!hasLedgerContext"
+            :disabled="!hasLedgerContext || !canManageBudgets"
             :loading="isSubmitting"
             @click="handleCreateBudget"
           >
@@ -127,6 +134,9 @@
           <div class="flex flex-wrap gap-3">
             <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" :loading="isLoading" @click="loadBudgetWorkspace">
               刷新预算
+            </el-button>
+            <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" @click="resetFilters">
+              重置筛选
             </el-button>
           </div>
         </div>
@@ -201,7 +211,7 @@
               </p>
             </div>
 
-            <el-button class="!rounded-full !px-4" @click="handleDeleteBudget(budget)">删除</el-button>
+            <el-button class="!rounded-full !px-4" :disabled="!canManageBudgets" @click="handleDeleteBudget(budget)">删除</el-button>
           </div>
 
           <div class="mt-5 grid gap-3 sm:grid-cols-3">
@@ -255,7 +265,7 @@
                 <h4 class="text-sm font-semibold text-slate-900">提醒规则</h4>
                 <p class="mt-1 text-sm text-slate-500">后端会根据阈值回流通知日志和预算命中状态。</p>
               </div>
-              <el-button class="!rounded-full !px-4" @click="openRuleDialog(budget)">新增规则</el-button>
+              <el-button class="!rounded-full !px-4" :disabled="!canManageBudgets" @click="openRuleDialog(budget)">新增规则</el-button>
             </div>
 
             <div v-if="budget.rules.length" class="mt-4 space-y-3">
@@ -278,7 +288,7 @@
                   <p class="mt-1 text-sm text-slate-500">{{ rule.notificationMessage }}</p>
                 </div>
 
-                <el-button class="!rounded-full !px-4" @click="handleDeleteRule(budget, rule)">删除</el-button>
+                <el-button class="!rounded-full !px-4" :disabled="!canManageBudgets" @click="handleDeleteRule(budget, rule)">删除</el-button>
               </div>
             </div>
 
@@ -371,6 +381,7 @@ const typeOptions = [
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const canManageBudgets = computed(() => ['owner', 'admin'].includes(currentLedger.value?.memberRole || ''))
 
 const createCategoryOptions = computed(() => {
   return categoryList.value.filter((item) => item.type === form.type)
@@ -439,6 +450,13 @@ const usageTextClass = (usagePercentage, exceeded) => {
   }
 
   return 'font-semibold text-emerald-700'
+}
+
+const resetFilters = () => {
+  filters.year = currentYear
+  filters.month = currentMonth
+  filters.type = ''
+  filters.categoryId = ''
 }
 
 const resetBudgetForm = () => {
@@ -530,6 +548,11 @@ const handleCreateBudget = async () => {
 }
 
 const handleDeleteBudget = async (budget) => {
+  if (!canManageBudgets.value) {
+    ElMessage.warning('当前角色不能删除预算')
+    return
+  }
+
   try {
     await ElMessageBox.confirm(`确认删除预算“${budget.name}”吗？`, '删除预算', {
       type: 'warning'
@@ -548,6 +571,11 @@ const handleDeleteBudget = async (budget) => {
 }
 
 const openRuleDialog = (budget) => {
+  if (!canManageBudgets.value) {
+    ElMessage.warning('当前角色不能新增预算规则')
+    return
+  }
+
   activeBudgetForRule.value = budget
   ruleDialogVisible.value = true
 }
@@ -573,6 +601,11 @@ const handleCreateRule = async (payload) => {
 }
 
 const handleDeleteRule = async (budget, rule) => {
+  if (!canManageBudgets.value) {
+    ElMessage.warning('当前角色不能删除预算规则')
+    return
+  }
+
   try {
     await ElMessageBox.confirm(`确认删除 ${rule.thresholdPercentage}% 阈值规则吗？`, '删除规则', {
       type: 'warning'
@@ -607,6 +640,14 @@ watch(
     if (selectedCategory && type && selectedCategory.type !== type) {
       filters.categoryId = ''
     }
+  }
+)
+
+watch(
+  () => [filters.year, filters.month],
+  ([year, month]) => {
+    form.budgetYear = year
+    form.budgetMonth = month
   }
 )
 
