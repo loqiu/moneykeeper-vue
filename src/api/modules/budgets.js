@@ -1,8 +1,9 @@
 import request from '@/utils/axios'
-import { unwrapMkApiResponse } from '@/api/response'
+import { unwrapResponseData } from '@/api/response'
 import {
   mapBudgetDto,
   mapBudgetPayload,
+  mapBudgetRuleDto,
   mapBudgetRulePayload
 } from '@/api/mappers/budgetMapper'
 
@@ -12,17 +13,17 @@ const mapBudgetList = (payload) => {
 
 export const fetchLedgerBudgets = async (ledgerId, params = {}) => {
   const response = await request.get(`/ledgers/${ledgerId}/budgets`, { params })
-  return mapBudgetList(unwrapMkApiResponse(response, '获取预算列表失败'))
+  return mapBudgetList(unwrapResponseData(response, '获取预算列表失败'))
 }
 
 export const createLedgerBudget = async (ledgerId, budget) => {
   const response = await request.post(`/ledgers/${ledgerId}/budgets`, mapBudgetPayload(budget))
-  return mapBudgetDto(unwrapMkApiResponse(response, '创建预算失败'))
+  return mapBudgetDto(unwrapResponseData(response, '创建预算失败'))
 }
 
 export const deleteLedgerBudget = async (ledgerId, budgetId) => {
   const response = await request.delete(`/ledgers/${ledgerId}/budgets/${budgetId}`)
-  unwrapMkApiResponse(response, '删除预算失败', { allowUndefinedData: true })
+  unwrapResponseData(response, '删除预算失败', { allowUndefinedData: true })
 }
 
 export const createLedgerBudgetRule = async (ledgerId, budgetId, rule) => {
@@ -31,10 +32,10 @@ export const createLedgerBudgetRule = async (ledgerId, budgetId, rule) => {
     mapBudgetRulePayload(rule)
   )
 
-  return unwrapMkApiResponse(response, '创建预算规则失败', { allowUndefinedData: true })
+  return mapBudgetRuleDto(unwrapResponseData(response, '创建预算规则失败'))
 }
 
 export const deleteLedgerBudgetRule = async (ledgerId, budgetId, ruleId) => {
   const response = await request.delete(`/ledgers/${ledgerId}/budgets/${budgetId}/rules/${ruleId}`)
-  unwrapMkApiResponse(response, '删除预算规则失败', { allowUndefinedData: true })
+  unwrapResponseData(response, '删除预算规则失败', { allowUndefinedData: true })
 }
