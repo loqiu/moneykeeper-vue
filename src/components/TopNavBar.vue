@@ -102,12 +102,20 @@
               <p class="mt-2 text-sm leading-6 text-slate-500">{{ ledgerDescription }}</p>
             </div>
 
-            <router-link
-              to="/ledgers"
-              class="inline-flex shrink-0 items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
-            >
-              账本中心
-            </router-link>
+            <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
+              <router-link
+                to="/accounting"
+                class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
+              >
+                主页面
+              </router-link>
+              <router-link
+                to="/ledgers"
+                class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
+              >
+                账本中心
+              </router-link>
+            </div>
           </div>
         </section>
 
