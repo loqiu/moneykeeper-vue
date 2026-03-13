@@ -10,7 +10,7 @@
             <div>
               <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">MoneyKeeper</p>
               <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">平台工作台</h2>
-              <p class="mt-1 text-sm text-slate-500">账本、预算、通知、导出和订阅都会从这里展开。</p>
+              <p class="mt-1 text-sm text-slate-500">账本、预算、通知、导出和订阅入口都在这里。</p>
             </div>
           </div>
 
@@ -95,14 +95,14 @@
 
       <div class="grid gap-4 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
         <section class="rounded-[28px] border border-slate-200 bg-slate-50/85 p-5">
-          <div class="flex items-start justify-between gap-4">
+          <div class="flex flex-col gap-5">
             <div>
               <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Ledger Context</p>
               <h3 class="mt-2 text-xl font-semibold text-slate-900">{{ ledgerTitle }}</h3>
               <p class="mt-2 text-sm leading-6 text-slate-500">{{ ledgerDescription }}</p>
             </div>
 
-            <div class="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <div class="flex flex-wrap items-center gap-2 sm:justify-end">
               <router-link
                 to="/accounting"
                 class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"

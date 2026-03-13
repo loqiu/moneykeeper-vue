@@ -36,6 +36,19 @@ export function useCategory() {
     return ['owner', 'admin'].includes(ledgerStore.currentLedgerRole || ledgerStore.currentLedger?.memberRole || '')
   }
 
+  const appendCategoryIfMissing = (category) => {
+    if (!category?.id) {
+      return
+    }
+
+    const targetList = category.type === 'income' ? incomeCategories : expenseCategories
+    const alreadyExists = targetList.value.some((item) => Number(item.id) === Number(category.id))
+
+    if (!alreadyExists) {
+      targetList.value = [category, ...targetList.value]
+    }
+  }
+
   const ensureLedgerContext = ({ requireManage = false } = {}) => {
     if (!userStore.userId) {
       ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
@@ -55,11 +68,11 @@ export function useCategory() {
     return true
   }
 
-  const fetchCategories = async () => {
+  const fetchCategories = async ({ notifyError = true } = {}) => {
     if (!userStore.userId || !ledgerStore.currentLedgerId) {
       expenseCategories.value = []
       incomeCategories.value = []
-      return
+      return []
     }
 
     try {
@@ -67,8 +80,12 @@ export function useCategory() {
       const grouped = splitCategoriesByType(categories)
       expenseCategories.value = grouped.expenseCategories
       incomeCategories.value = grouped.incomeCategories
+      return categories
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, FETCH_CATEGORY_ERROR_MESSAGE))
+      if (notifyError) {
+        ElMessage.error(getApiErrorMessage(error, FETCH_CATEGORY_ERROR_MESSAGE))
+      }
+      return null
     }
   }
 
@@ -125,11 +142,19 @@ export function useCategory() {
     }
 
     try {
-      await createLedgerCategory(ledgerStore.currentLedgerId, category, categoryType.value)
-      await fetchCategories()
+      const createdCategory = await createLedgerCategory(ledgerStore.currentLedgerId, category, categoryType.value)
+      const refreshedCategories = await fetchCategories({ notifyError: false })
+
+      if (!refreshedCategories) {
+        appendCategoryIfMissing(createdCategory)
+        ElMessage.warning('分类已创建，但列表刷新失败，请手动刷新')
+      } else {
+        appendCategoryIfMissing(createdCategory)
+        ElMessage.success('添加分类成功')
+      }
+
       dialogVisible.value = false
       newCategory.value = { name: '', icon: 'ShoppingCart' }
-      ElMessage.success('添加分类成功')
     } catch (error) {
       ElMessage.error(getApiErrorMessage(error, ADD_CATEGORY_ERROR_MESSAGE))
     }

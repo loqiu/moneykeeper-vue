@@ -50,14 +50,15 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="成员 ID">
-              <el-input-number
-                v-model="filters.userId"
-                :min="1"
-                controls-position="right"
-                class="!w-full"
-                placeholder="可选"
-              />
+            <el-form-item label="成员">
+              <el-select v-model="filters.userId" clearable class="w-full" placeholder="全部成员">
+                <el-option
+                  v-for="member in memberOptions"
+                  :key="member.userId"
+                  :label="member.label"
+                  :value="member.userId"
+                />
+              </el-select>
             </el-form-item>
           </div>
 
@@ -208,7 +209,7 @@
 
               <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500">
                 <span>记录 ID：{{ item.id }}</span>
-                <span>成员：{{ item.userId }}</span>
+                <span>成员：{{ getMemberDisplayName(item.userId) }}</span>
                 <span>日期：{{ item.transactionDate || '-' }}</span>
                 <span>更新：{{ formatDateTime(item.updatedAt) }}</span>
               </div>
@@ -234,6 +235,7 @@ import { storeToRefs } from 'pinia'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { fetchLedgerCategories } from '@/api/modules/categories'
+import { fetchLedgerMembers } from '@/api/modules/ledgers'
 import { searchLedgerRecords } from '@/api/modules/search'
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
@@ -252,6 +254,7 @@ const hasLoadedResults = ref(false)
 const errorMessage = ref('')
 const results = ref([])
 const categoryList = ref([])
+const memberList = ref([])
 
 const defaultFilters = () => ({
   query: '',
@@ -274,6 +277,12 @@ const typeOptions = [
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const memberOptions = computed(() => {
+  return memberList.value.map((member) => ({
+    userId: member.userId,
+    label: member.email ? `${member.username || `成员 ${member.userId}`} (${member.email})` : (member.username || `成员 ${member.userId}`)
+  }))
+})
 const hasActiveFilters = computed(() => {
   return Boolean(
     filters.query.trim() ||
@@ -356,6 +365,15 @@ const loadCategories = async () => {
   categoryList.value = await fetchLedgerCategories(currentLedgerId.value)
 }
 
+const loadMembers = async () => {
+  if (!currentLedgerId.value) {
+    memberList.value = []
+    return
+  }
+
+  memberList.value = await fetchLedgerMembers(currentLedgerId.value)
+}
+
 const loadSearchResults = async () => {
   if (!currentLedgerId.value) {
     return
@@ -408,17 +426,32 @@ const formatDateTime = (value) => {
   }).format(new Date(value))
 }
 
+const getMemberDisplayName = (userId) => {
+  const matchedMember = memberList.value.find((member) => member.userId === userId)
+
+  if (!matchedMember) {
+    return `成员 ${userId}`
+  }
+
+  if (matchedMember.username && matchedMember.email) {
+    return `${matchedMember.username} (${matchedMember.email})`
+  }
+
+  return matchedMember.username || matchedMember.email || `成员 ${userId}`
+}
+
 watch(
   () => currentLedgerId.value,
   async (ledgerId) => {
     if (!ledgerId) {
       categoryList.value = []
+      memberList.value = []
       results.value = []
       hasLoadedResults.value = false
       return
     }
 
-    await loadCategories()
+    await Promise.all([loadCategories(), loadMembers()])
     await loadSearchResults()
   },
   { immediate: true }
@@ -435,14 +468,6 @@ onMounted(async () => {
 :deep(.el-select__wrapper) {
   border-radius: 18px;
   min-height: 42px;
-}
-
-:deep(.el-input-number) {
-  width: 100%;
-}
-
-:deep(.el-input-number .el-input__wrapper) {
-  width: 100%;
 }
 
 :deep(.el-input__wrapper) {

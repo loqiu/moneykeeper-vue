@@ -2,7 +2,9 @@
   <el-dialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    width="640px"
+    width="min(1080px, calc(100vw - 48px))"
+    top="4vh"
+    destroy-on-close
     class="category-dialog"
   >
     <template #header>
@@ -12,7 +14,7 @@
       </div>
     </template>
 
-    <div class="space-y-5">
+    <div class="category-dialog__content space-y-5">
       <section class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
         <div class="flex items-start justify-between gap-4">
           <div>
@@ -236,6 +238,22 @@ const handleAdd = () => {
 </script>
 
 <style scoped>
+:deep(.category-dialog) {
+  width: min(1080px, calc(100vw - 48px)) !important;
+  max-width: calc(100vw - 48px);
+  border-radius: 32px;
+}
+
+:deep(.category-dialog .el-dialog__header) {
+  padding-bottom: 16px;
+}
+
+:deep(.category-dialog .el-dialog__body) {
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  padding-top: 0;
+}
+
 :deep(.el-input__wrapper) {
   box-shadow: inset 0 0 0 1px #e2e8f0;
   border-radius: 18px;
