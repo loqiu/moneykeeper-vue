@@ -1,23 +1,28 @@
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
 import {
-  createCategory,
-  deleteCategory,
-  fetchUserCategories
+  createLedgerCategory,
+  deleteLedgerCategory,
+  fetchLedgerCategories
 } from '@/api/modules/categories'
 import { splitCategoriesByType } from '@/api/mappers/categoryMapper'
 import { availableCategoryIcons } from '@/constants/categoryIcons'
 import { getApiErrorMessage } from '@/api/response'
 
-const LOGIN_REQUIRED_MESSAGE = '\u8bf7\u5148\u767b\u5f55'
-const FETCH_CATEGORY_ERROR_MESSAGE = '\u83b7\u53d6\u5206\u7c7b\u5217\u8868\u5931\u8d25'
-const ADD_CATEGORY_ERROR_MESSAGE = '\u6dfb\u52a0\u5206\u7c7b\u5931\u8d25'
-const DELETE_CATEGORY_ERROR_MESSAGE = '\u5220\u9664\u5206\u7c7b\u5931\u8d25'
-const INVALID_CATEGORY_MESSAGE = '\u8bf7\u586b\u5199\u5b8c\u6574\u7684\u5206\u7c7b\u4fe1\u606f'
+const LOGIN_REQUIRED_MESSAGE = '请先登录'
+const LEDGER_REQUIRED_MESSAGE = '请先选择账本'
+const FETCH_CATEGORY_ERROR_MESSAGE = '获取分类列表失败'
+const ADD_CATEGORY_ERROR_MESSAGE = '添加分类失败'
+const DELETE_CATEGORY_ERROR_MESSAGE = '删除分类失败'
+const INVALID_CATEGORY_MESSAGE = '请填写完整的分类信息'
+
+const CATEGORY_PERMISSION_MESSAGE = '当前角色只能查看分类，需要 owner 或 admin 才能维护'
 
 export function useCategory() {
   const userStore = useUserStore()
+  const ledgerStore = useLedgerStore()
   const expenseCategories = ref([])
   const incomeCategories = ref([])
   const dialogVisible = ref(false)
@@ -27,15 +32,38 @@ export function useCategory() {
     icon: 'ShoppingCart'
   })
 
-  const fetchCategories = async () => {
+  const canManageCategories = () => {
+    return ['owner', 'admin'].includes(ledgerStore.currentLedgerRole || ledgerStore.currentLedger?.memberRole || '')
+  }
+
+  const ensureLedgerContext = ({ requireManage = false } = {}) => {
     if (!userStore.userId) {
+      ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
+      return false
+    }
+
+    if (!ledgerStore.currentLedgerId) {
+      ElMessage.warning(LEDGER_REQUIRED_MESSAGE)
+      return false
+    }
+
+    if (requireManage && !canManageCategories()) {
+      ElMessage.warning(CATEGORY_PERMISSION_MESSAGE)
+      return false
+    }
+
+    return true
+  }
+
+  const fetchCategories = async () => {
+    if (!userStore.userId || !ledgerStore.currentLedgerId) {
       expenseCategories.value = []
       incomeCategories.value = []
       return
     }
 
     try {
-      const categories = await fetchUserCategories(userStore.userId)
+      const categories = await fetchLedgerCategories(ledgerStore.currentLedgerId)
       const grouped = splitCategoriesByType(categories)
       expenseCategories.value = grouped.expenseCategories
       incomeCategories.value = grouped.incomeCategories
@@ -45,8 +73,7 @@ export function useCategory() {
   }
 
   const showAddCategoryDialog = (type) => {
-    if (!userStore.userId) {
-      ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 
@@ -55,20 +82,19 @@ export function useCategory() {
   }
 
   const deleteCategoryItem = async ({ category, type }) => {
-    if (!userStore.userId) {
-      ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 
-    const categoryLabel = type === 'expense' ? '\u652f\u51fa' : '\u6536\u5165'
+    const categoryLabel = type === 'expense' ? '支出' : '收入'
 
     try {
       await ElMessageBox.confirm(
-        `\u786e\u5b9a\u8981\u5220\u9664${categoryLabel}\u5206\u7c7b\u201c${category.name}\u201d\u5417\uff1f`,
-        '\u5220\u9664\u786e\u8ba4',
+        `确定要删除${categoryLabel}分类“${category.name}”吗？`,
+        '删除确认',
         {
-          confirmButtonText: '\u786e\u5b9a',
-          cancelButtonText: '\u53d6\u6d88',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
           type: 'warning'
         }
       )
@@ -78,9 +104,9 @@ export function useCategory() {
         throw new Error('Invalid category ID')
       }
 
-      await deleteCategory(categoryId)
+      await deleteLedgerCategory(ledgerStore.currentLedgerId, categoryId)
       await fetchCategories()
-      ElMessage.success(`\u5df2\u5220\u9664${categoryLabel}\u5206\u7c7b\uff1a${category.name}`)
+      ElMessage.success(`已删除${categoryLabel}分类：${category.name}`)
     } catch (error) {
       if (error !== 'cancel') {
         ElMessage.error(getApiErrorMessage(error, DELETE_CATEGORY_ERROR_MESSAGE))
@@ -89,8 +115,7 @@ export function useCategory() {
   }
 
   const addCategory = async (category) => {
-    if (!userStore.userId) {
-      ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
+    if (!ensureLedgerContext({ requireManage: true })) {
       return
     }
 
@@ -100,11 +125,11 @@ export function useCategory() {
     }
 
     try {
-      await createCategory(userStore.userId, category, categoryType.value)
+      await createLedgerCategory(ledgerStore.currentLedgerId, category, categoryType.value)
       await fetchCategories()
       dialogVisible.value = false
       newCategory.value = { name: '', icon: 'ShoppingCart' }
-      ElMessage.success('\u6dfb\u52a0\u5206\u7c7b\u6210\u529f')
+      ElMessage.success('添加分类成功')
     } catch (error) {
       ElMessage.error(getApiErrorMessage(error, ADD_CATEGORY_ERROR_MESSAGE))
     }

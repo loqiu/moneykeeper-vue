@@ -1,13 +1,15 @@
-const BACKEND_EXPENSE_TYPE = '支出'
-const BACKEND_INCOME_TYPE = '收入'
+const BACKEND_EXPENSE_TYPE = '\u652f\u51fa'
+const BACKEND_INCOME_TYPE = '\u6536\u5165'
 
 export const toFrontendRecordType = (type) => {
   if (type === BACKEND_EXPENSE_TYPE || type === 'expense') {
     return 'expense'
   }
+
   if (type === BACKEND_INCOME_TYPE || type === 'income') {
     return 'income'
   }
+
   return 'expense'
 }
 

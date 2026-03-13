@@ -1,18 +1,23 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
 import {
-  createRecord,
-  deleteRecord,
-  fetchRecordsSummary,
-  fetchRecordsWithCategoryName,
-  updateRecord
+  createLedgerRecord,
+  deleteLedgerRecord,
+  fetchLedgerRecords,
+  fetchLedgerRecordsSummary,
+  updateLedgerRecord
 } from '@/api/modules/records'
 import { getApiErrorMessage } from '@/api/response'
 
+const LEDGER_REQUIRED_MESSAGE = '请先选择账本'
+
 export function useRecord() {
   const { userId } = storeToRefs(useUserStore())
+  const ledgerStore = useLedgerStore()
+  const { currentLedgerId } = storeToRefs(ledgerStore)
 
   const loading = ref(false)
   const pagination = ref({
@@ -66,16 +71,29 @@ export function useRecord() {
 
   const totalRecords = computed(() => filteredAllRecords.value.length)
 
+  const resetSummary = () => {
+    totalIncome.value = 0
+    totalExpense.value = 0
+    balance.value = 0
+  }
+
+  const ensureLedgerContext = () => {
+    if (!currentLedgerId.value) {
+      ElMessage.warning(LEDGER_REQUIRED_MESSAGE)
+      return false
+    }
+
+    return true
+  }
+
   const loadSummary = async (params = {}) => {
-    if (!userId.value) {
-      totalIncome.value = 0
-      totalExpense.value = 0
-      balance.value = 0
+    if (!userId.value || !currentLedgerId.value) {
+      resetSummary()
       return
     }
 
     try {
-      const summary = await fetchRecordsSummary(userId.value, params)
+      const summary = await fetchLedgerRecordsSummary(currentLedgerId.value, params)
       totalIncome.value = summary.totalIncome
       totalExpense.value = summary.totalExpense
       balance.value = summary.balance
@@ -85,20 +103,22 @@ export function useRecord() {
   }
 
   const fetchRecords = async (params = {}) => {
-    if (!userId.value) {
+    if (!userId.value || !currentLedgerId.value) {
       allRecords.value = []
+      resetSummary()
       return []
     }
 
     loading.value = true
     try {
-      const data = await fetchRecordsWithCategoryName(userId.value, params)
+      const data = await fetchLedgerRecords(currentLedgerId.value, params)
       allRecords.value = data
       await loadSummary(params)
       return data
     } catch (error) {
       ElMessage.error(getApiErrorMessage(error, '获取记录列表失败'))
       allRecords.value = []
+      resetSummary()
       return []
     } finally {
       loading.value = false
@@ -123,13 +143,17 @@ export function useRecord() {
   }
 
   const addRecord = async (record) => {
+    if (!ensureLedgerContext()) {
+      return
+    }
+
     if (!record.amount || !record.categoryId) {
       ElMessage.warning('请填写完整的记账信息')
       return
     }
 
     try {
-      await createRecord(userId.value, record)
+      await createLedgerRecord(currentLedgerId.value, userId.value, record)
       await fetchRecords()
       resetNewRecord()
       ElMessage.success('添加成功')
@@ -139,6 +163,10 @@ export function useRecord() {
   }
 
   const deleteRecordItem = async (id) => {
+    if (!ensureLedgerContext()) {
+      return
+    }
+
     try {
       const recordId = Number(id)
       if (Number.isNaN(recordId)) {
@@ -155,7 +183,7 @@ export function useRecord() {
         }
       )
 
-      await deleteRecord(recordId)
+      await deleteLedgerRecord(currentLedgerId.value, recordId)
       await fetchRecords()
       ElMessage.success('删除成功')
     } catch (error) {
@@ -178,7 +206,7 @@ export function useRecord() {
   }
 
   const saveEdit = async () => {
-    if (!editingRecord.value) {
+    if (!ensureLedgerContext() || !editingRecord.value) {
       return
     }
 
@@ -193,7 +221,7 @@ export function useRecord() {
         throw new Error('Invalid record ID')
       }
 
-      await updateRecord(recordId, editingRecord.value)
+      await updateLedgerRecord(currentLedgerId.value, recordId, editingRecord.value)
       await fetchRecords()
       ElMessage.success('修改成功')
       editingRecord.value = null

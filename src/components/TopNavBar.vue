@@ -1,94 +1,137 @@
 <template>
   <div class="rounded-[32px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_55px_rgba(148,163,184,0.14)] backdrop-blur sm:p-5">
-    <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-      <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
-        <div class="flex items-center gap-4">
-          <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-lg font-semibold text-white shadow-sm">
-            MK
+    <div class="flex flex-col gap-5">
+      <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+          <div class="flex items-center gap-4">
+            <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-lg font-semibold text-white shadow-sm">
+              MK
+            </div>
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">MoneyKeeper</p>
+              <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">平台工作台</h2>
+              <p class="mt-1 text-sm text-slate-500">账本、预算、通知、导出和订阅都会从这里展开。</p>
+            </div>
           </div>
-          <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">MoneyKeeper</p>
-            <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">账户中心</h2>
-            <p class="mt-1 text-sm text-slate-500">升级、支持与账户设置都收在这里。</p>
+
+          <div class="flex flex-wrap items-center gap-2 lg:ml-4">
+            <span class="rounded-full border px-3 py-1 text-xs font-medium" :class="connectionBadgeClass">
+              <span class="mr-1 inline-block h-2 w-2 rounded-full" :class="connectionDotClass"></span>
+              {{ connectionLabel }}
+            </span>
+            <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+              当前用户：{{ displayName }}
+            </span>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2 lg:ml-4">
-          <span class="rounded-full border px-3 py-1 text-xs font-medium" :class="connectionBadgeClass">
-            <span class="mr-1 inline-block h-2 w-2 rounded-full" :class="connectionDotClass"></span>
-            {{ connectionLabel }}
-          </span>
-          <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-            当前用户：{{ displayName }}
-          </span>
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+          <router-link to="/billing" class="no-underline">
+            <button
+              type="button"
+              class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-w-[260px]"
+            >
+              <div>
+                <div class="text-sm font-semibold text-slate-900">升级到专业版</div>
+                <div class="mt-1 text-xs text-slate-500">查看支付状态并解锁导出、通知和后续平台能力。</div>
+              </div>
+              <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400 text-slate-900">
+                <el-icon :size="20"><Star /></el-icon>
+              </div>
+            </button>
+          </router-link>
+
+          <div class="flex items-center justify-between gap-3 rounded-[28px] border border-slate-200 bg-slate-900 px-4 py-3 text-white shadow-sm sm:justify-start">
+            <div class="flex items-center gap-3">
+              <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-white backdrop-blur">
+                {{ userInitial }}
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-white">{{ displayName }}</div>
+                <div class="mt-1 text-xs text-slate-300">{{ connectionDetail }}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <el-dropdown trigger="click" class="user-dropdown" popper-class="topbar-menu">
+                <el-button circle class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15">
+                  <el-icon><MoreFilled /></el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu class="!rounded-2xl !p-2">
+                    <el-dropdown-item @click="handleSupport" class="!rounded-xl">
+                      <el-icon><Message /></el-icon>
+                      联系支持
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showUserAgreement" class="!rounded-xl">
+                      <el-icon><Document /></el-icon>
+                      用户协议
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-xl">
+                      <el-icon><Lock /></el-icon>
+                      隐私政策
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleDeleteAccount" divided class="!rounded-xl !text-rose-300 hover:!text-rose-200">
+                      <el-icon><Delete /></el-icon>
+                      删除账号
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+
+              <el-button
+                circle
+                class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15 hover:!text-rose-200"
+                :loading="loading"
+                title="退出登录"
+                @click="handleLogout"
+              >
+                <el-icon><SwitchButton /></el-icon>
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-        <router-link to="/billing" class="no-underline">
-          <button
-            type="button"
-            class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-w-[260px]"
-          >
+      <div class="grid gap-4 xl:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
+        <section class="rounded-[28px] border border-slate-200 bg-slate-50/85 p-5">
+          <div class="flex items-start justify-between gap-4">
             <div>
-              <div class="text-sm font-semibold text-slate-900">升级到专业版</div>
-              <div class="mt-1 text-xs text-slate-500">查看支付状态并解锁后续能力。</div>
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Ledger Context</p>
+              <h3 class="mt-2 text-xl font-semibold text-slate-900">{{ ledgerTitle }}</h3>
+              <p class="mt-2 text-sm leading-6 text-slate-500">{{ ledgerDescription }}</p>
             </div>
-            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400 text-slate-900">
-              <el-icon :size="20"><Star /></el-icon>
-            </div>
-          </button>
-        </router-link>
 
-        <div class="flex items-center justify-between gap-3 rounded-[28px] border border-slate-200 bg-slate-900 px-4 py-3 text-white shadow-sm sm:justify-start">
-          <div class="flex items-center gap-3">
-            <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-white backdrop-blur">
-              {{ userInitial }}
-            </div>
-            <div>
-              <div class="text-sm font-semibold text-white">{{ displayName }}</div>
-              <div class="mt-1 text-xs text-slate-300">{{ connectionDetail }}</div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <el-dropdown trigger="click" class="user-dropdown" popper-class="topbar-menu">
-              <el-button circle class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15">
-                <el-icon><MoreFilled /></el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu class="!rounded-2xl !p-2">
-                  <el-dropdown-item @click="handleSupport" class="!rounded-xl">
-                    <el-icon><Message /></el-icon>
-                    联系支持
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="showUserAgreement" class="!rounded-xl">
-                    <el-icon><Document /></el-icon>
-                    用户协议
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-xl">
-                    <el-icon><Lock /></el-icon>
-                    隐私政策
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="handleDeleteAccount" divided class="!rounded-xl !text-rose-300 hover:!text-rose-200">
-                    <el-icon><Delete /></el-icon>
-                    删除账号
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-
-            <el-button
-              circle
-              class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15 hover:!text-rose-200"
-              :loading="loading"
-              title="退出登录"
-              @click="handleLogout"
+            <router-link
+              to="/ledgers"
+              class="inline-flex shrink-0 items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
             >
-              <el-icon><SwitchButton /></el-icon>
-            </el-button>
+              账本中心
+            </router-link>
           </div>
-        </div>
+        </section>
+
+        <nav class="rounded-[28px] border border-slate-200 bg-white px-4 py-4">
+          <div class="flex flex-wrap gap-2">
+            <router-link
+              v-for="item in platformNavItems"
+              :key="item.path"
+              :to="item.path"
+              class="group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium no-underline transition"
+              :class="isActive(item) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100'"
+            >
+              <span>{{ item.label }}</span>
+              <span class="text-xs opacity-70">{{ item.description }}</span>
+              <span
+                v-if="item.path === '/notifications' && unreadCount > 0"
+                class="inline-flex min-w-[22px] items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                :class="isActive(item) ? 'bg-white/15 text-white' : 'bg-rose-500 text-white'"
+              >
+                {{ unreadCount }}
+              </span>
+            </router-link>
+          </div>
+        </nav>
       </div>
     </div>
   </div>
@@ -107,7 +150,7 @@
       </div>
     </template>
 
-    <div class="max-h-[60vh] overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700 whitespace-pre-wrap">
+    <div class="max-h-[60vh] overflow-y-auto whitespace-pre-wrap rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700">
       {{ userAgreementText }}
     </div>
 
@@ -132,7 +175,7 @@
       </div>
     </template>
 
-    <div class="max-h-[60vh] overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700 whitespace-pre-wrap">
+    <div class="max-h-[60vh] overflow-y-auto whitespace-pre-wrap rounded-3xl border border-slate-200 bg-slate-50 px-5 py-5 text-sm leading-7 text-slate-700">
       {{ privacyPolicyText }}
     </div>
 
@@ -145,15 +188,25 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { Delete, Document, Lock, Message, MoreFilled, Star, SwitchButton } from '@element-plus/icons-vue'
+import { useRoute } from 'vue-router'
+import { useNotificationStore } from '@/stores/notification'
 import { useUserStore } from '@/stores/user'
 import { useLogin } from '@/composables/useLogin'
 import { topNavBar } from '@/composables/topNavBar'
+import { useLedgerStore } from '@/stores/ledger'
+import { platformNavItems } from '@/constants/platformNav'
 
+const route = useRoute()
 const userStore = useUserStore()
+const ledgerStore = useLedgerStore()
+const notificationStore = useNotificationStore()
 const { handleLogout, loading } = useLogin()
 const { handleDeleteAccount } = topNavBar()
+const { currentLedger, isLoading, errorMessage } = storeToRefs(ledgerStore)
+const { unreadCount } = storeToRefs(notificationStore)
 
 const userAgreementVisible = ref(false)
 const privacyPolicyVisible = ref(false)
@@ -243,6 +296,30 @@ const connectionDotClass = computed(() => {
   }
 })
 
+const ledgerTitle = computed(() => {
+  if (isLoading.value) {
+    return '正在加载账本...'
+  }
+
+  return currentLedger.value?.name || '账本上下文已预留'
+})
+
+const ledgerDescription = computed(() => {
+  if (errorMessage.value) {
+    return errorMessage.value
+  }
+
+  if (currentLedger.value) {
+    return `当前角色：${currentLedger.value.memberRole || 'member'}。预算、通知、导出和搜索页面会默认围绕这个账本扩展。`
+  }
+
+  return '账本中心已经接入，后续平台页面会默认基于这里的账本上下文工作。'
+})
+
+const isActive = (item) => {
+  return route.path === item.path || route.path.startsWith(`${item.matchPrefix}/`)
+}
+
 const loadLegalTexts = async () => {
   if (userAgreementText.value && privacyPolicyText.value) {
     return
@@ -266,6 +343,16 @@ const showPrivacyPolicy = async () => {
 const handleSupport = () => {
   window.location.href = 'mailto:rochelle.wang1116@gmail.com'
 }
+
+onMounted(async () => {
+  if (userStore.isLoggedIn && !ledgerStore.initialized) {
+    await ledgerStore.initializeLedgers()
+  }
+
+  if (userStore.isLoggedIn && !notificationStore.initialized) {
+    await notificationStore.initializeUnreadCount()
+  }
+})
 </script>
 
 <style scoped>
