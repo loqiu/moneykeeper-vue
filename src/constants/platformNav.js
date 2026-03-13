@@ -1,5 +1,11 @@
 export const platformNavItems = [
   {
+    label: '主页',
+    path: '/accounting',
+    matchPrefix: '/accounting',
+    description: '记账与总览'
+  },
+  {
     label: '账本',
     path: '/ledgers',
     matchPrefix: '/ledgers',
