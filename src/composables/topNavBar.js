@@ -1,17 +1,21 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { useLedgerStore } from '@/stores/ledger'
+import { useNotificationStore } from '@/stores/notification'
 import { useUserStore } from '@/stores/user'
 import { deleteUserAccount } from '@/api/modules/users'
 import { getApiErrorMessage } from '@/api/response'
 
 export function topNavBar() {
   const userStore = useUserStore()
+  const ledgerStore = useLedgerStore()
+  const notificationStore = useNotificationStore()
   const router = useRouter()
 
   const handleDeleteAccount = async () => {
     try {
       await ElMessageBox.confirm(
-        '确定要删除您的账号吗？此操作不可撤销，且本地数据也可能无法恢复。',
+        '确定要删除你的账号吗？此操作不可撤销，且本地数据也可能无法恢复。',
         '删除账号',
         {
           confirmButtonText: '确认删除',
@@ -21,6 +25,8 @@ export function topNavBar() {
       )
 
       await deleteUserAccount(userStore.userId)
+      ledgerStore.resetLedgerState()
+      notificationStore.resetNotificationState()
       userStore.clearUserInfo()
       ElMessage.success('账号已成功删除')
       router.push('/login')

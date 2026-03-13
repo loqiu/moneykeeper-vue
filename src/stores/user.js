@@ -7,6 +7,7 @@ import {
   parseStoredUserInfo,
   sanitizeUserInfo
 } from '@/utils/auth'
+import { useNotificationStore } from '@/stores/notification'
 import { getSseSubscribeUrl } from '@/utils/runtimeConfig'
 
 const MAX_RECONNECT_ATTEMPTS = 5
@@ -38,6 +39,9 @@ const showNotification = (payload) => {
   if (payload.type === 'heartbeat' || payload.type === 'connect') {
     return
   }
+
+  const notificationStore = useNotificationStore()
+  notificationStore.handleIncomingNotification(payload)
 
   ElNotification({
     title: payload.title || '新消息',

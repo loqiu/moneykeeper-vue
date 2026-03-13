@@ -7,6 +7,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@/assets/styles/global.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { useLedgerStore } from './stores/ledger'
+import { useNotificationStore } from './stores/notification'
 import { useUserStore } from './stores/user'
 
 const app = createApp(App)
@@ -21,5 +23,12 @@ app.use(ElementPlus, {
 
 const userStore = useUserStore()
 userStore.initializeFromStorage()
+
+if (userStore.isLoggedIn) {
+  const ledgerStore = useLedgerStore()
+  const notificationStore = useNotificationStore()
+  ledgerStore.initializeLedgers()
+  notificationStore.initializeUnreadCount()
+}
 
 app.mount('#app')

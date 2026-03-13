@@ -13,6 +13,54 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/ledgers',
+    name: 'Ledgers',
+    component: () => import('@/views/LedgersPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/ledgers/:ledgerId/members',
+    name: 'LedgerMembers',
+    component: () => import('@/views/LedgerMembersPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/categories',
+    name: 'Categories',
+    component: () => import('@/views/CategoriesPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/budgets',
+    name: 'Budgets',
+    component: () => import('@/views/BudgetsPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/statistics',
+    name: 'Statistics',
+    component: () => import('@/views/StatisticsPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('@/views/SearchPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/exports',
+    name: 'Exports',
+    component: () => import('@/views/ExportJobsPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/notifications',
+    name: 'Notifications',
+    component: () => import('@/views/NotificationsPage.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/LoginPage.vue')
@@ -57,7 +105,7 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!userStore.isLoggedIn) {
       next({
         path: '/login',

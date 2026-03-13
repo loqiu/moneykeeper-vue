@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
+import { useLedgerStore } from '@/stores/ledger'
+import { useNotificationStore } from '@/stores/notification'
 import { useUserStore } from '@/stores/user'
 import { login, logout } from '@/api/modules/auth'
 import { getApiErrorMessage } from '@/api/response'
@@ -9,6 +11,8 @@ export function useLogin() {
   const router = useRouter()
   const route = useRoute()
   const userStore = useUserStore()
+  const ledgerStore = useLedgerStore()
+  const notificationStore = useNotificationStore()
 
   const loginForm = ref({
     username: '',
@@ -41,6 +45,8 @@ export function useLogin() {
     try {
       const loginData = await login(loginForm.value)
       userStore.setUserInfo(loginData)
+      await ledgerStore.initializeLedgers({ force: true })
+      await notificationStore.initializeUnreadCount({ force: true })
       ElMessage.success('登录成功')
       const redirectPath = route.query.redirect || '/accounting'
       router.push(redirectPath)
@@ -53,6 +59,8 @@ export function useLogin() {
 
   const handleLogout = async () => {
     if (!userStore.token) {
+      ledgerStore.resetLedgerState()
+      notificationStore.resetNotificationState()
       userStore.clearUserInfo()
       router.push('/login')
       return
@@ -66,6 +74,8 @@ export function useLogin() {
         return
       }
 
+      ledgerStore.resetLedgerState()
+      notificationStore.resetNotificationState()
       userStore.clearUserInfo()
       router.push('/login')
       ElMessage.success('退出登录成功')

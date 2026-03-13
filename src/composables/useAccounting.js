@@ -1,28 +1,43 @@
 import { computed, watch, ref, nextTick } from 'vue'
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
+import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
 
 export function useAccounting() {
   const category = useCategory()
   const record = useRecord()
   const userStore = useUserStore()
+  const ledgerStore = useLedgerStore()
   const timeUnit = ref('day')
 
-  watch(() => userStore.userId, async (newUserId) => {
-    if (newUserId) {
+  watch(
+    [
+      () => userStore.userId,
+      () => ledgerStore.currentLedgerId
+    ],
+    async ([newUserId, newLedgerId], [, oldLedgerId]) => {
+      if (!newUserId || !newLedgerId) {
+        return
+      }
+
+      if (newLedgerId !== oldLedgerId) {
+        record.setFilter('', '')
+      }
+
       await Promise.all([
         record.fetchRecords(),
         category.fetchCategories()
       ])
     }
-  })
+  )
 
   const selectedCategory = computed({
     get: () => {
       if (record.filterState.value.type !== 'expense') {
         return ''
       }
+
       return record.filterState.value.category
     },
     set: (value) => {
@@ -30,6 +45,7 @@ export function useAccounting() {
         record.setFilter('expense', value)
         return
       }
+
       record.setFilter('', '')
     }
   })

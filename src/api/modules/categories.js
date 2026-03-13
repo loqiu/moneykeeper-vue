@@ -1,16 +1,27 @@
 import request from '@/utils/axios'
 import { mapCategoryDto, mapCategoryPayload } from '@/api/mappers/categoryMapper'
 
-export const fetchUserCategories = async (userId) => {
-  const response = await request.get(`/categories/user/${userId}`)
-  return Array.isArray(response.data) ? response.data.map(mapCategoryDto) : []
+const mapCategoryList = (payload) => {
+  return Array.isArray(payload) ? payload.map(mapCategoryDto) : []
 }
 
-export const createCategory = async (userId, category, type) => {
-  const response = await request.post(`/categories/${userId}`, mapCategoryPayload(category, type))
+export const fetchLedgerCategories = async (ledgerId) => {
+  const [expenseResponse, incomeResponse] = await Promise.all([
+    request.get(`/ledgers/${ledgerId}/categories`, { params: { type: 'expense' } }),
+    request.get(`/ledgers/${ledgerId}/categories`, { params: { type: 'income' } })
+  ])
+
+  return [
+    ...mapCategoryList(expenseResponse.data),
+    ...mapCategoryList(incomeResponse.data)
+  ]
+}
+
+export const createLedgerCategory = async (ledgerId, category, type) => {
+  const response = await request.post(`/ledgers/${ledgerId}/categories`, mapCategoryPayload(category, type))
   return mapCategoryDto(response.data)
 }
 
-export const deleteCategory = async (categoryId) => {
-  await request.delete(`/categories/${categoryId}`)
+export const deleteLedgerCategory = async (ledgerId, categoryId) => {
+  await request.delete(`/ledgers/${ledgerId}/categories/${categoryId}`)
 }
