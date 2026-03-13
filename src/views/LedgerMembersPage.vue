@@ -92,6 +92,15 @@
           <el-button class="!rounded-full !px-4" @click="loadPendingInvites">刷新</el-button>
         </div>
 
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
+            待处理 {{ visiblePendingInvites.length }}
+          </span>
+          <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
+            已处理 {{ resolvedMyInvites.length }}
+          </span>
+        </div>
+
         <div v-if="visiblePendingInvites.length" class="mt-5 space-y-3">
           <div
             v-for="invite in visiblePendingInvites"
@@ -219,6 +228,12 @@
                   <div class="mt-2 text-xs text-slate-500">{{ member.email || '未提供邮箱' }}</div>
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
+                  <span
+                    v-if="member.userId === currentUserId"
+                    class="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
+                  >
+                    当前用户
+                  </span>
                   <span class="rounded-full px-3 py-1 text-xs font-medium" :class="roleBadgeClass(member.role)">
                     {{ roleLabel(member.role) }}
                   </span>
@@ -251,9 +266,24 @@
             当前角色没有邀请查看权限，需 owner / admin。
           </div>
 
-          <div v-else-if="ledgerInvites.length" class="mt-5 space-y-3">
+          <div v-if="canManageInvites && ledgerInvites.length" class="mt-4 flex flex-wrap gap-2">
+            <button
+              v-for="option in inviteFilterOptions"
+              :key="option.value"
+              type="button"
+              class="rounded-full border px-3 py-1 text-xs font-medium transition"
+              :class="inviteStatusFilter === option.value
+                ? 'border-slate-900 bg-slate-900 text-white'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'"
+              @click="inviteStatusFilter = option.value"
+            >
+              {{ option.label }} {{ inviteStatusCounts[option.value] ?? 0 }}
+            </button>
+          </div>
+
+          <div v-else-if="filteredLedgerInvites.length" class="mt-5 space-y-3">
             <div
-              v-for="invite in ledgerInvites"
+              v-for="invite in filteredLedgerInvites"
               :key="invite.id"
               class="rounded-[24px] border border-slate-200 bg-slate-50/80 p-4"
             >
@@ -271,6 +301,10 @@
                 </div>
 
                 <el-button class="!rounded-full !px-4" @click="copyInviteCode(invite.inviteCode)">复制邀请码</el-button>
+              </div>
+
+              <div v-if="invite.status === 'expired'" class="mt-3">
+                <el-button class="!rounded-full !px-4" @click="handleReinvite(invite)">重新邀请</el-button>
               </div>
 
               <div class="mt-3 space-y-1 text-xs text-slate-500">
@@ -307,9 +341,11 @@ import {
 } from '@/api/modules/ledgers'
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const ledgerStore = useLedgerStore()
+const userStore = useUserStore()
 const { currentLedgerId, ledgerList } = storeToRefs(ledgerStore)
 
 const isLoading = ref(false)
@@ -326,6 +362,8 @@ const inviteForm = reactive({
   expiresInDays: 7
 })
 
+const inviteStatusFilter = ref('all')
+
 const targetLedgerId = computed(() => Number(route.params.ledgerId))
 const targetLedger = computed(() => {
   return ledgerList.value.find((item) => Number(item.id) === targetLedgerId.value) || null
@@ -335,6 +373,39 @@ const hasTargetLedger = computed(() => Boolean(targetLedger.value))
 const canManageInvites = computed(() => ['owner', 'admin'].includes(currentRole.value))
 const ledgerTitle = computed(() => targetLedger.value?.name || `账本 #${targetLedgerId.value}`)
 const visiblePendingInvites = computed(() => myPendingInvites.value.filter((item) => item.status === 'pending'))
+const resolvedMyInvites = computed(() => myPendingInvites.value.filter((item) => item.status !== 'pending'))
+const filteredLedgerInvites = computed(() => {
+  if (inviteStatusFilter.value === 'all') {
+    return ledgerInvites.value
+  }
+
+  return ledgerInvites.value.filter((item) => item.status === inviteStatusFilter.value)
+})
+const inviteStatusCounts = computed(() => {
+  return ledgerInvites.value.reduce(
+    (accumulator, item) => {
+      const status = item.status || 'unknown'
+      accumulator[status] = (accumulator[status] || 0) + 1
+      return accumulator
+    },
+    { all: ledgerInvites.value.length, pending: 0, accepted: 0, expired: 0, unknown: 0 }
+  )
+})
+const currentUserId = computed(() => Number(userStore.userId))
+const existingMemberEmails = computed(() => {
+  return new Set(
+    members.value
+      .map((item) => item.email?.trim().toLowerCase())
+      .filter(Boolean)
+  )
+})
+
+const inviteFilterOptions = [
+  { label: '全部', value: 'all' },
+  { label: '待处理', value: 'pending' },
+  { label: '已接受', value: 'accepted' },
+  { label: '已过期', value: 'expired' }
+]
 
 const isValidEmail = (value) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -343,6 +414,12 @@ const isValidEmail = (value) => {
 const resetInviteForm = () => {
   inviteForm.invitedEmail = ''
   inviteForm.role = 'member'
+  inviteForm.expiresInDays = 7
+}
+
+const prefillInviteForm = (invite) => {
+  inviteForm.invitedEmail = invite.invitedEmail || ''
+  inviteForm.role = invite.role || 'member'
   inviteForm.expiresInDays = 7
 }
 
@@ -425,6 +502,7 @@ const loadPageData = async () => {
     members.value = memberList
     ledgerInvites.value = inviteList
     myPendingInvites.value = pendingInviteList
+    inviteStatusFilter.value = 'all'
   } catch (error) {
     errorMessage.value = getApiErrorMessage(error, '获取成员与邀请信息失败')
   } finally {
@@ -433,19 +511,38 @@ const loadPageData = async () => {
 }
 
 const handleCreateInvite = async () => {
-  if (!inviteForm.invitedEmail.trim()) {
+  const normalizedEmail = inviteForm.invitedEmail.trim().toLowerCase()
+
+  if (!normalizedEmail) {
     ElMessage.warning('请输入受邀邮箱')
     return
   }
 
-  if (!isValidEmail(inviteForm.invitedEmail.trim())) {
+  if (!isValidEmail(normalizedEmail)) {
     ElMessage.warning('请输入有效的邮箱地址')
+    return
+  }
+
+  if (existingMemberEmails.value.has(normalizedEmail)) {
+    ElMessage.warning('璇ラ偖绠卞凡缁忔槸褰撳墠璐︽湰鎴愬憳')
+    return
+  }
+
+  const duplicatedPendingInvite = ledgerInvites.value.find((item) => {
+    return item.status === 'pending' && item.invitedEmail?.trim().toLowerCase() === normalizedEmail
+  })
+
+  if (duplicatedPendingInvite) {
+    ElMessage.warning('璇ラ偖绠卞凡鏈夊緟澶勭悊閭€璇凤紝鍙互鐩存帴澶嶅埗閭€璇风爜')
     return
   }
 
   isCreatingInvite.value = true
   try {
-    const createdInvite = await createLedgerInvite(targetLedgerId.value, inviteForm)
+    const createdInvite = await createLedgerInvite(targetLedgerId.value, {
+      ...inviteForm,
+      invitedEmail: normalizedEmail
+    })
     ledgerInvites.value = [createdInvite, ...ledgerInvites.value]
     resetInviteForm()
     ElMessage.success('邀请已创建')
@@ -497,6 +594,16 @@ const copyInviteCode = async (inviteCode) => {
   } catch (error) {
     ElMessage.error('复制邀请码失败')
   }
+}
+
+const handleReinvite = (invite) => {
+  if (!canManageInvites.value) {
+    ElMessage.warning('褰撳墠瑙掕壊鏃犳硶閲嶆柊鍒涘缓閭€璇')
+    return
+  }
+
+  prefillInviteForm(invite)
+  ElMessage.info('宸插皢閭€璇蜂俊鎭洖濉埌琛ㄥ崟锛屽彲鐩存帴閲嶆柊鍒涘缓')
 }
 
 const setAsCurrentContext = () => {
