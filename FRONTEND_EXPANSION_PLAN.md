@@ -11,6 +11,27 @@
 
 目标不是一次性把所有平台功能都塞进现有首页，而是基于当前项目，逐步从“单页记账工具”升级成“以 ledger 为上下文的多页面前端”。
 
+## 1.1 当前进度
+
+截至 2026-03-13，这份计划里的第一阶段主功能面已经基本落地，当前已有真实页面：
+
+- `src/views/LedgersPage.vue`
+- `src/views/CategoriesPage.vue`
+- `src/views/BudgetsPage.vue`
+- `src/views/NotificationsPage.vue`
+- `src/views/ExportJobsPage.vue`
+- `src/views/StatisticsPage.vue`
+- `src/views/SearchPage.vue`
+- `src/views/LedgerMembersPage.vue`
+
+当前剩余工作主要是收尾和平台化细化，而不是继续补主入口：
+
+- 统一 loading / empty / error 状态
+- 细化成员角色权限态与异常态
+- 收口错误码与前端提示文案
+- 推进 i18n 基础设施
+- 继续做包体积与构建层优化
+
 ## 2. 当前前端现状
 
 ### 2.1 已有页面与组件
