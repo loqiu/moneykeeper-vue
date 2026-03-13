@@ -2,24 +2,24 @@
   <PlatformPageShell
     eyebrow="Record Search"
     title="记录搜索"
-    description="搜索页开始承接 ledger 维度的全文检索和高级筛选。后端索引有轻微异步延迟时，这里会明确提示，而不是假设新记录必定立刻可搜到。"
+    description="在当前账本里按关键字、分类、日期和成员快速找记录。刚保存的记录如果暂时没出现，稍后刷新一下即可。"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Results</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Matches</p>
           <p class="mt-2 text-3xl font-semibold">{{ results.length }}</p>
           <p class="mt-2 text-xs text-slate-300">当前命中的记录数</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Top Score</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Best Match</p>
           <p class="mt-2 text-3xl font-semibold">{{ topScore }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前结果里的最高相关度</p>
+          <p class="mt-2 text-xs text-slate-300">最接近本次搜索条件的匹配度</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Window</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Scope</p>
           <p class="mt-2 text-lg font-semibold">{{ currentLedgerName }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前搜索作用的 ledger 上下文</p>
+          <p class="mt-2 text-xs text-slate-300">当前搜索使用的账本范围</p>
         </div>
       </div>
     </template>
@@ -29,7 +29,7 @@
         <div>
           <h2 class="text-xl font-semibold text-slate-900">搜索条件</h2>
           <p class="mt-2 text-sm leading-6 text-slate-500">
-            可以只用全文关键字，也可以直接按成员、分类、日期和类型筛。没有关键字时仍会按筛选条件返回结果。
+            可以直接输入关键字，也可以按成员、分类、日期和类型筛选。没有关键字时，也会按筛选条件返回结果。
           </p>
         </div>
 
@@ -124,7 +124,7 @@
 
     <div class="space-y-6">
       <section class="rounded-[28px] border border-amber-200 bg-amber-50/80 p-5 text-sm leading-6 text-amber-900">
-        索引说明：新创建、更新、删除的记录会自动同步到搜索索引，但如果后端启用了 Kafka 事件链，搜索结果可能有轻微异步延迟。不要把“刚保存却暂时搜不到”误判为数据丢失。
+        如果刚新增、修改或删除记录，搜索结果可能会稍晚一点更新。遇到这种情况先刷新一次，不代表记录丢失。
       </section>
 
       <section class="rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
@@ -132,7 +132,7 @@
           <div>
             <h2 class="text-xl font-semibold text-slate-900">{{ currentLedgerName }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
-              搜索结果基于当前账本过滤，支持 query、categoryId、categoryName、type、日期区间和成员维度。
+              搜索结果只显示当前账本里的记录，可按关键字、分类、日期、类型和成员继续缩小范围。
             </p>
           </div>
 
@@ -202,7 +202,7 @@
                   {{ item.categoryName || '未分类' }}
                 </span>
                 <span class="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs text-sky-700">
-                  score {{ formatScore(item.score) }}
+                  匹配度 {{ formatScore(item.score) }}
                 </span>
               </div>
 
