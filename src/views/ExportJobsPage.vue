@@ -139,23 +139,46 @@
         </p>
       </section>
 
-      <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
-        {{ errorMessage }}
-      </section>
+      <PlatformStateCard
+        v-if="errorMessage"
+        variant="error"
+        compact
+        :centered="false"
+        title="导出任务加载失败"
+        :description="errorMessage"
+        action-label="重试"
+        @action="loadJobs"
+      />
 
-      <section v-if="!hasLedgerContext" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-        <p class="text-base font-medium text-slate-900">请先选择账本</p>
-        <p class="mt-2 text-sm text-slate-500">导出任务是账本维度功能，先到“账本中心”切到目标账本再继续。</p>
-      </section>
+      <PlatformStateCard
+        v-if="!hasLedgerContext"
+        variant="warning"
+        title="请先选择账本"
+        description="导出任务是账本维度功能，先到“账本中心”切到目标账本再继续。"
+      >
+        <template #actions>
+          <router-link
+            to="/ledgers"
+            class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-slate-50"
+          >
+            前往账本中心
+          </router-link>
+        </template>
+      </PlatformStateCard>
 
-      <section v-else-if="isLoading" class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
-        正在加载导出任务...
-      </section>
+      <PlatformStateCard
+        v-else-if="isLoading"
+        variant="loading"
+        title="正在加载导出任务..."
+        description="会按当前账本读取最近的导出任务和状态。"
+      />
 
-      <section v-else-if="!jobs.length" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <p class="text-base font-medium text-slate-900">当前还没有导出任务</p>
-        <p class="mt-2 text-sm text-slate-500">可以先创建一条任务，后端会异步处理并通过通知中心回流结果。</p>
-      </section>
+      <PlatformStateCard
+        v-else-if="!jobs.length"
+        variant="empty"
+        title="当前还没有导出任务"
+        description="可以先创建一条任务，后端会异步处理并通过通知中心回流结果。"
+      />
 
       <section v-else class="space-y-4">
         <article
@@ -228,6 +251,7 @@ import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import {
   createLedgerExportJob,
   downloadLedgerExportJob,

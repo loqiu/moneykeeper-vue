@@ -146,26 +146,56 @@
         </div>
       </section>
 
-      <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
-        {{ errorMessage }}
-      </section>
+      <PlatformStateCard
+        v-if="errorMessage"
+        variant="error"
+        compact
+        :centered="false"
+        title="成员协作数据加载失败"
+        :description="errorMessage"
+        action-label="重试"
+        @action="loadPageData"
+      />
+
+      <PlatformStateCard
+        v-if="!hasTargetLedger"
+        variant="warning"
+        title="当前账本不在你的可访问列表中"
+        description="可以先回到账本中心刷新列表，或者确认你已经接受对应邀请。"
+      >
+        <template #actions>
+          <router-link
+            to="/ledgers"
+            class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+          >
+            返回账本中心
+          </router-link>
+        </template>
+      </PlatformStateCard>
+
+      <PlatformStateCard
+        v-else-if="isLoading"
+        variant="loading"
+        title="正在加载成员与邀请信息..."
+        description="系统正在同步成员列表、账本邀请和当前账号待接受邀请。"
+      />
 
       <section
-        v-if="!hasTargetLedger"
-        class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center"
+        v-if="false && !hasTargetLedger"
+        class="hidden rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center"
       >
         <p class="text-base font-medium text-slate-900">当前账本不在你的可访问列表中</p>
         <p class="mt-2 text-sm text-slate-500">可以先回到账本中心刷新列表，或确认你已经接受对应邀请。</p>
       </section>
 
       <section
-        v-else-if="isLoading"
-        class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500"
+        v-else-if="false && isLoading"
+        class="hidden rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500"
       >
         正在加载成员与邀请信息...
       </section>
 
-      <section v-else class="grid gap-6 xl:grid-cols-2">
+      <section v-else-if="hasTargetLedger && !isLoading" class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
@@ -267,6 +297,7 @@ import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import {
   acceptLedgerInvite,
   createLedgerInvite,

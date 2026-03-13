@@ -68,25 +68,43 @@
         </div>
       </section>
 
-      <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
-        {{ errorMessage }}
-      </section>
+      <PlatformStateCard
+        v-if="errorMessage"
+        variant="error"
+        compact
+        :centered="false"
+        title="通知列表加载失败"
+        :description="errorMessage"
+        action-label="重试"
+        @action="loadNotifications"
+      />
 
-      <section
+      <PlatformStateCard
         v-if="!userStore.isConnected"
-        class="rounded-[24px] border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900"
+        variant="warning"
+        compact
+        :centered="false"
+        title="实时通知当前不可用"
+        :description="connectionHint"
       >
-        {{ connectionHint }}
-      </section>
+        <template #actions>
+          <el-button class="!rounded-full !px-4" @click="loadNotifications">刷新列表</el-button>
+        </template>
+      </PlatformStateCard>
 
-      <section v-if="isLoading" class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
-        正在加载通知列表...
-      </section>
+      <PlatformStateCard
+        v-if="isLoading"
+        variant="loading"
+        title="正在加载通知列表..."
+        description="会同时刷新当前筛选下的通知列表和未读数。"
+      />
 
-      <section v-else-if="!notifications.length" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
-        <p class="text-base font-medium text-slate-900">当前没有匹配的通知</p>
-        <p class="mt-2 text-sm text-slate-500">预算预警、导出完成和系统消息后续都会沉淀到这里。</p>
-      </section>
+      <PlatformStateCard
+        v-else-if="!notifications.length"
+        variant="empty"
+        title="当前没有匹配的通知"
+        description="预算预警、导出完成和系统消息后续都会沉淀到这里。"
+      />
 
       <section v-else class="space-y-4">
         <article
@@ -138,6 +156,7 @@ import { computed, onMounted, reactive, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { getApiErrorMessage } from '@/api/response'
 import { useNotificationStore } from '@/stores/notification'
 import { useUserStore } from '@/stores/user'

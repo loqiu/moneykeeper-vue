@@ -107,25 +107,62 @@
         </div>
       </section>
 
-      <section v-if="errorMessage" class="rounded-[24px] border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700">
-        {{ errorMessage }}
-      </section>
+      <PlatformStateCard
+        v-if="errorMessage"
+        variant="error"
+        compact
+        :centered="false"
+        title="统计数据加载失败"
+        :description="errorMessage"
+        action-label="重试"
+        @action="loadStatistics"
+      />
 
-      <section v-if="!hasLedgerContext" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
+      <PlatformStateCard
+        v-if="!hasLedgerContext"
+        variant="warning"
+        title="请先选择账本"
+        description="统计页现在完全基于当前账本上下文运行，先切换到目标账本再查看趋势和分类结构。"
+      >
+        <template #actions>
+          <router-link
+            to="/ledgers"
+            class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
+          >
+            前往账本中心
+          </router-link>
+        </template>
+      </PlatformStateCard>
+
+      <PlatformStateCard
+        v-else-if="isLoading"
+        variant="loading"
+        title="正在加载统计结果..."
+        description="系统正在按当前账本、周期和筛选条件重新计算统计窗口。"
+      />
+
+      <PlatformStateCard
+        v-else-if="!hasStatisticsData"
+        variant="empty"
+        title="当前窗口还没有统计数据"
+        description="可以切换周期、调整锚点日期，或者先在当前账本补充记录后再回来查看。"
+      />
+
+      <section v-if="false && !hasLedgerContext" class="hidden rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
         <p class="text-base font-medium text-slate-900">请先选择账本</p>
         <p class="mt-2 text-sm text-slate-500">统计页是账本维度功能，先到“账本中心”切到目标账本再继续。</p>
       </section>
 
-      <section v-else-if="isLoading" class="rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
+      <section v-else-if="false && isLoading" class="hidden rounded-[28px] border border-slate-200 bg-white px-6 py-16 text-center text-sm text-slate-500">
         正在加载统计结果...
       </section>
 
-      <section v-else-if="!hasStatisticsData" class="rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+      <section v-else-if="false && !hasStatisticsData" class="hidden rounded-[28px] border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
         <p class="text-base font-medium text-slate-900">当前窗口还没有统计数据</p>
         <p class="mt-2 text-sm text-slate-500">可以切换周期、调整锚点日期，或者先在当前账本补充记录后再回来查看。</p>
       </section>
 
-      <section v-else class="grid gap-6 xl:grid-cols-2">
+      <section v-else-if="hasLedgerContext && !isLoading && hasStatisticsData" class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-start justify-between gap-3">
             <div>
@@ -243,6 +280,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
+import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { fetchLedgerStatistics } from '@/api/modules/statistics'
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
