@@ -1,226 +1,164 @@
-# 猪猪记账本 (MoneyKeeper)
+[中文](./README_zh.md) | **English**
 
-## 项目概览
+# MoneyKeeper Vue
 
-猪猪记账本是一个基于 Vue 3 + Element Plus 开发的个人记账应用。它提供了直观的界面和丰富的功能，帮助用户轻松管理日常收支。
+![Vue](https://img.shields.io/badge/Vue-3.x-42b883?style=flat-square)
+![Element Plus](https://img.shields.io/badge/UI-Element%20Plus-409eff?style=flat-square)
+![Pinia](https://img.shields.io/badge/State-Pinia-f7c948?style=flat-square)
+![Cloudflare Workers](https://img.shields.io/badge/Deploy-Cloudflare%20Workers-f38020?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker-enabled-2496ed?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active%20Development-2ea44f?style=flat-square)
 
-### 主要特性
+MoneyKeeper Vue is the web frontend for the MoneyKeeper platform. It started as a personal bookkeeping app and has now grown into a ledger-based workspace for records, categories, budgets, notifications, exports, search, collaboration, and billing.
 
-- 📝 支持收入和支出记录管理
-- 🏷️ 自定义分类管理（支持添加、删除分类）
-- 📊 数据可视化（饼图、折线图、柱状图）
-- 📱 响应式设计，支持移动端
-- 🔐 用户认证和授权
-- 💾 数据持久化存储
+## What's New
 
-### 项目状态
+- Ledger-based workspace with platform navigation
+- Dedicated pages for budgets, notifications, export jobs, statistics, search, and ledger members
+- Cloudflare Workers deployment support with SPA routing
+- Docker image build and push pipeline on `main`
+- Stripe billing flow updated to backend-driven checkout sessions
 
-- 当前版本：0.1.0
-- 开发状态：积极维护中
-- 稳定性：Beta
+## Features
 
-## 快速上手
+### Core bookkeeping
+- Record income and expense entries
+- Category-based filtering and summaries
+- Monthly accounting dashboard
+- Editable records and categories
 
-### 环境要求
+### Ledger workspace
+- Ledger list and current ledger context
+- Ledger-scoped categories
+- Ledger budgets and budget rules
+- Ledger statistics and search
+- Ledger members and invite flows
 
-- Node.js >= 14.0.0
-- npm >= 6.14.0
-- Vue.js 3.x
-- Element Plus 2.x
+### Platform capabilities
+- Notification center with unread state
+- Export job tracking and downloads
+- Stripe billing pages
+- SSE-powered realtime status updates
 
-### 安装步骤
+## Tech Stack
 
-1. 克隆项目
-bash
-git clone https://github.com/yourusername/moneykeeper-vue.git
-cd moneykeeper-vue
+- Vue 3
+- Vue Router
+- Pinia
+- Element Plus
+- Axios
+- ECharts / Vue-ECharts
+- Tailwind CSS
+- Vue CLI
 
-2. 安装依赖
+## Routes
+
+- `/accounting` — accounting dashboard
+- `/ledgers` — ledger center
+- `/ledgers/:ledgerId/members` — ledger members and invites
+- `/categories` — ledger category management
+- `/budgets` — ledger budgets
+- `/statistics` — ledger statistics
+- `/search` — record search
+- `/exports` — export jobs
+- `/notifications` — notification center
+- `/billing` — billing and checkout
+- `/login` — authentication
+
+## Development
+
+### Requirements
+
+- Node.js 18+
+- npm 9+
+
+### Install
 
 ```bash
 npm install
 ```
 
-3. 开发环境运行
+### Run locally
 
 ```bash
 npm run serve
 ```
 
-4. 生产环境构建
+### Lint
+
+```bash
+npm run lint
+```
+
+### Build
 
 ```bash
 npm run build
 ```
 
-## 项目架构
+## Runtime configuration
 
-### 技术栈
+The frontend uses different base URLs for REST API and SSE in production.
 
-- 前端框架：Vue 3
-- UI 组件库：Element Plus
-- 状态管理：Pinia + 持久化存储
-- 路由管理：Vue Router
-- 图表库：ECharts + Vue-ECharts
-- HTTP 客户端：Axios
-- 构建工具：Vue CLI
-- CSS 预处理器：SCSS
+### Development
 
-### 项目结构
-```
-moneykeeper-vue/
-├── public/                 # 静态资源
-├── src/
-│   ├── assets/            # 资源文件
-│   │   └── styles/        # 样式文件
-│   │       ├── accounting.css  # 记账页面样式
-│   │       └── login.css      # 登录页面样式
-│   ├── composables/       # 组合式函数
-│   │   ├── useLogin.js    # 登录相关逻辑
-│   │   ├── useCategory.js # 分类管理逻辑
-│   │   └── useRecord.js   # 记账记录逻辑
-│   ├── router/            # 路由配置
-│   ├── stores/            # Pinia 状态管理
-│   │   └── user.js        # 用户状态管理
-│   ├── views/             # 页面组件
-│   │   ├── LoginPage.vue  # 登录页面
-│   │   └── AccountingPage.vue # 记账主页面
-│   ├── App.vue            # 根组件
-│   └── main.js            # 入口文件
-├── .env.development       # 开发环境配置
-├── .env.production        # 生产环境配置
-└── vue.config.js          # Vue CLI 配置
-```
+- REST API: `/api`
+- SSE: `/api`
 
-### 核心功能模块
+### Production
 
-#### 用户认证模块
-- 登录功能
-- 状态持久化
-- 路由守卫
+- REST API: configured through runtime/env
+- SSE: configured through runtime/env
+- Cloudflare Workers handles SPA routing
 
-#### 分类管理模块
-- 支出/收入分类管理
-- 自定义图标和颜色
-- 分类的增删改查
+See:
 
-#### 记账记录模块
-- 收支记录的增删改查
-- 分页显示
-- 按类型筛选
+- [`PROJECT_DETAILS.md`](./PROJECT_DETAILS.md)
+- [`wrangler.jsonc`](./wrangler.jsonc)
 
-#### 数据可视化模块
-- 收支统计
-- 分类占比分析
-- 趋势图表展示
+## API contract notes
 
-## 配置说明
+- Frontend state uses `income` / `expense`
+- Records and categories should also send `income` / `expense` to the backend
+- When backend documents change, check `C:\WorkSpace\Java\moneykeeper-back\FRONTEND_API.md` before updating request/response mapping
 
-### 环境变量
+## CI/CD
 
-开发环境 (.env.development):
+GitHub Actions builds and pushes a Docker image on `main`.
 
-```properties
-NODE_ENV=development
-VUE_APP_API_URL=/api
+Workflow:
+
+- install dependencies
+- run lint
+- run production build
+- build and push Docker image
+
+See:
+
+- [`.github/workflows/node.js.yml`](./.github/workflows/node.js.yml)
+- [`Dockerfile`](./Dockerfile)
+- [`nginx.conf`](./nginx.conf)
+
+## Project structure
+
+```text
+src/
+  api/
+    mappers/
+    modules/
+  components/
+  composables/
+  constants/
+  router/
+  stores/
+  utils/
+  views/
 ```
 
-生产环境 (.env.production):
+## Current focus
 
-```properties
-NODE_ENV=production
-VUE_APP_API_URL=/api
-```
+- polish the ledger workspace UX
+- keep frontend mappings aligned with the backend handoff
+- continue cleanup of legacy copy and encoding issues
+- prepare for future i18n adoption
 
-### 代理配置
-
-vue.config.js 中配置了开发环境和生产环境的 API 代理：
-
-```javascript
-devServer: {
-  proxy: {
-    '/api': {
-      target: process.env.NODE_ENV === 'development'
-        ? 'http://localhost:8081'
-        : 'http://<your-server-ip>:8080/moneykeeper-back-0.0.1-SNAPSHOT',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api': '/api'
-      }
-    }
-  }
-}
-```
-
-## 部署说明
-
-1. 构建生产版本
-
-```bash
-npm run build
-```
-
-2. Nginx 配置示例
-
-```nginx
-location /api {
-    proxy_pass http://<your-server-ip>:8080/moneykeeper-back-0.0.1-SNAPSHOT/api;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-}
-
-location / {
-    root /path/to/dist;
-    index index.html;
-    try_files $uri $uri/ /index.html;
-}
-```
-
-## 开发指南
-
-### 代码规范
-- 使用 ESLint 进行代码检查
-- 遵循 Vue 3 组合式 API 风格
-- 使用 Prettier 进行代码格式化
-
-### 组件开发规范
-- 使用 SFC (Single File Component) 格式
-- 组件名使用 PascalCase
-- Props 定义要包含类型和默认值
-- 使用 composition API 组织代码逻辑
-
-### Git 提交规范
-- feat: 新功能
-- fix: 修复 bug
-- docs: 文档更新
-- style: 代码格式修改
-- refactor: 代码重构
-- test: 测试用例
-- chore: 构建过程或辅助工具的变动
-
-## 维护与支持
-
-### 问题反馈
-- GitHub Issues
-- Email: your.email@example.com
-
-### 更新日志
-查看 [CHANGELOG.md](./CHANGELOG.md)
-
-### 常见问题 (FAQ)
-1. Q: 如何修改后端 API 地址？
-   A: 修改对应环境的 .env 文件中的 VUE_APP_API_URL 值
-
-2. Q: 如何添加新的图标？
-   A: 在 useCategory.js 中的 availableIcons 数组添加新的图标配置
-
-## 许可证
-
-本项目采用 MIT 许可证，详见 [LICENSE](./LICENSE) 文件。
-
-## 致谢
-
-- [Vue.js](https://vuejs.org/)
-- [Element Plus](https://element-plus.org/)
-- [ECharts](https://echarts.apache.org/)
-- [Pinia](https://pinia.vuejs.org/)
