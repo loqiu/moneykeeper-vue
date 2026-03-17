@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useLedgerStore } from '@/stores/ledger'
 import { useNotificationStore } from '@/stores/notification'
@@ -8,6 +9,7 @@ import { login, logout } from '@/api/modules/auth'
 import { getApiErrorMessage } from '@/api/response'
 
 export function useLogin() {
+  const { t } = useI18n()
   const router = useRouter()
   const route = useRoute()
   const userStore = useUserStore()
@@ -24,10 +26,10 @@ export function useLogin() {
 
   const loginRules = {
     username: [
-      { required: true, message: '请输入用户名', trigger: 'blur' }
+      { required: true, message: t('auth.validation.usernameRequired'), trigger: 'blur' }
     ],
     password: [
-      { required: true, message: '请输入密码', trigger: 'blur' }
+      { required: true, message: t('auth.validation.passwordRequired'), trigger: 'blur' }
     ]
   }
 
@@ -47,11 +49,11 @@ export function useLogin() {
       userStore.setUserInfo(loginData)
       await ledgerStore.initializeLedgers({ force: true })
       await notificationStore.initializeUnreadCount({ force: true })
-      ElMessage.success('登录成功')
+      ElMessage.success(t('auth.messages.loginSuccess'))
       const redirectPath = route.query.redirect || '/accounting'
       router.push(redirectPath)
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '登录失败，请稍后重试'))
+      ElMessage.error(getApiErrorMessage(error, t('auth.messages.loginFailed')))
     } finally {
       loading.value = false
     }
@@ -70,7 +72,7 @@ export function useLogin() {
     try {
       const result = await logout()
       if (result !== true) {
-        ElMessage.error('退出登录失败，请稍后重试')
+        ElMessage.error(t('auth.messages.logoutFailed'))
         return
       }
 
@@ -78,10 +80,10 @@ export function useLogin() {
       notificationStore.resetNotificationState()
       userStore.clearUserInfo()
       router.push('/login')
-      ElMessage.success('退出登录成功')
+      ElMessage.success(t('auth.messages.logoutSuccess'))
     } catch (error) {
       if (error.response?.status !== 401) {
-        ElMessage.error(getApiErrorMessage(error, '退出登录失败，请稍后重试'))
+        ElMessage.error(getApiErrorMessage(error, t('auth.messages.logoutFailed')))
       }
     } finally {
       loading.value = false

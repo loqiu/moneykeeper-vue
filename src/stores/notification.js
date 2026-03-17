@@ -6,6 +6,7 @@ import {
   markNotificationRead
 } from '@/api/modules/notifications'
 import { getApiErrorMessage } from '@/api/response'
+import { mapRealtimeNotificationPayload } from '@/api/mappers/notificationMapper'
 
 const sortByCreatedAtDesc = (items = []) => {
   return [...items].sort((left, right) => {
@@ -107,9 +108,7 @@ export const useNotificationStore = defineStore('notification', {
       const transientNotification = {
         id: `live-${Date.now()}`,
         userId: null,
-        title: payload.title || '新通知',
-        message: payload.message || '',
-        type: payload.type || 'info',
+        ...mapRealtimeNotificationPayload(payload),
         channel: 'sse',
         status: 'sent',
         read: false,

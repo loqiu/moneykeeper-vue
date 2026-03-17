@@ -8,9 +8,9 @@
               MK
             </div>
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">MoneyKeeper</p>
-              <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">平台工作台</h2>
-              <p class="mt-1 text-sm text-slate-500">账本、预算、通知、导出和订阅入口都在这里。</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">{{ t('common.moneyKeeper') }}</p>
+              <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">{{ t('topbar.workspaceTitle') }}</h2>
+              <p class="mt-1 text-sm text-slate-500">{{ t('topbar.workspaceSubtitle') }}</p>
             </div>
           </div>
 
@@ -20,8 +20,26 @@
               {{ connectionLabel }}
             </span>
             <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
-              当前用户：{{ displayName }}
+              {{ t('topbar.currentUser', { name: displayName }) }}
             </span>
+            <div class="inline-flex items-center overflow-hidden rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-600">
+              <button
+                type="button"
+                class="px-3 py-1.5 transition"
+                :class="locale === 'zh-CN' ? 'bg-slate-900 text-white' : 'hover:bg-slate-50'"
+                @click="setLocale('zh-CN')"
+              >
+                {{ t('common.localeZh') }}
+              </button>
+              <button
+                type="button"
+                class="border-l border-slate-200 px-3 py-1.5 transition"
+                :class="locale === 'en-GB' ? 'bg-slate-900 text-white' : 'hover:bg-slate-50'"
+                @click="setLocale('en-GB')"
+              >
+                {{ t('common.localeEn') }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -32,8 +50,8 @@
               class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-w-[260px]"
             >
               <div>
-                <div class="text-sm font-semibold text-slate-900">升级到专业版</div>
-                <div class="mt-1 text-xs text-slate-500">查看支付状态并解锁导出、通知和后续平台能力。</div>
+                <div class="text-sm font-semibold text-slate-900">{{ t('topbar.upgradeTitle') }}</div>
+                <div class="mt-1 text-xs text-slate-500">{{ t('topbar.upgradeDescription') }}</div>
               </div>
               <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400 text-slate-900">
                 <el-icon :size="20"><Star /></el-icon>
@@ -61,19 +79,19 @@
                   <el-dropdown-menu class="!rounded-2xl !p-2">
                     <el-dropdown-item @click="handleSupport" class="!rounded-xl">
                       <el-icon><Message /></el-icon>
-                      联系支持
+                      {{ t('topbar.support') }}
                     </el-dropdown-item>
                     <el-dropdown-item @click="showUserAgreement" class="!rounded-xl">
                       <el-icon><Document /></el-icon>
-                      用户协议
+                      {{ t('topbar.userAgreement') }}
                     </el-dropdown-item>
                     <el-dropdown-item @click="showPrivacyPolicy" class="!rounded-xl">
                       <el-icon><Lock /></el-icon>
-                      隐私政策
+                      {{ t('topbar.privacyPolicy') }}
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDeleteAccount" divided class="!rounded-xl !text-rose-300 hover:!text-rose-200">
                       <el-icon><Delete /></el-icon>
-                      删除账号
+                      {{ t('topbar.deleteAccount') }}
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -83,7 +101,7 @@
                 circle
                 class="!border-white/10 !bg-white/10 !text-white hover:!bg-white/15 hover:!text-rose-200"
                 :loading="loading"
-                title="退出登录"
+                :title="t('topbar.logout')"
                 @click="handleLogout"
               >
                 <el-icon><SwitchButton /></el-icon>
@@ -97,7 +115,7 @@
         <section class="rounded-[28px] border border-slate-200 bg-slate-50/85 p-5">
           <div class="flex flex-col gap-5">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Ledger Context</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{{ t('topbar.ledgerContextTitle') }}</p>
               <h3 class="mt-2 text-xl font-semibold text-slate-900">{{ ledgerTitle }}</h3>
               <p class="mt-2 text-sm leading-6 text-slate-500">{{ ledgerDescription }}</p>
             </div>
@@ -107,13 +125,13 @@
                 to="/accounting"
                 class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
               >
-                主页面
+                {{ t('common.mainPage') }}
               </router-link>
               <router-link
                 to="/ledgers"
                 class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
               >
-                账本中心
+                {{ t('common.ledgerCenter') }}
               </router-link>
             </div>
           </div>
@@ -128,8 +146,8 @@
               class="group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium no-underline transition"
               :class="isActive(item) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100'"
             >
-              <span>{{ item.label }}</span>
-              <span class="text-xs opacity-70">{{ item.description }}</span>
+              <span>{{ t(item.labelKey) }}</span>
+              <span class="text-xs opacity-70">{{ t(item.descriptionKey) }}</span>
               <span
                 v-if="item.path === '/notifications' && unreadCount > 0"
                 class="inline-flex min-w-[22px] items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
@@ -153,8 +171,8 @@
   >
     <template #header>
       <div class="space-y-2 pr-8">
-        <h2 class="text-xl font-semibold text-slate-900">用户协议</h2>
-        <p class="text-sm text-slate-500">使用前请确认你已阅读并理解以下条款内容。</p>
+        <h2 class="text-xl font-semibold text-slate-900">{{ t('topbar.userAgreement') }}</h2>
+        <p class="text-sm text-slate-500">{{ t('topbar.agreementDescription') }}</p>
       </div>
     </template>
 
@@ -164,7 +182,7 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <el-button class="!rounded-full !px-5" @click="userAgreementVisible = false">关闭</el-button>
+        <el-button class="!rounded-full !px-5" @click="userAgreementVisible = false">{{ t('common.close') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -178,8 +196,8 @@
   >
     <template #header>
       <div class="space-y-2 pr-8">
-        <h2 class="text-xl font-semibold text-slate-900">隐私政策</h2>
-        <p class="text-sm text-slate-500">以下内容说明了应用如何处理和保护你的数据。</p>
+        <h2 class="text-xl font-semibold text-slate-900">{{ t('topbar.privacyPolicy') }}</h2>
+        <p class="text-sm text-slate-500">{{ t('topbar.privacyDescription') }}</p>
       </div>
     </template>
 
@@ -189,7 +207,7 @@
 
     <template #footer>
       <div class="flex justify-end">
-        <el-button class="!rounded-full !px-5" @click="privacyPolicyVisible = false">关闭</el-button>
+        <el-button class="!rounded-full !px-5" @click="privacyPolicyVisible = false">{{ t('common.close') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -199,7 +217,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Delete, Document, Lock, Message, MoreFilled, Star, SwitchButton } from '@element-plus/icons-vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { useLocaleStore } from '@/stores/locale'
 import { useNotificationStore } from '@/stores/notification'
 import { useUserStore } from '@/stores/user'
 import { useLogin } from '@/composables/useLogin'
@@ -208,20 +228,23 @@ import { useLedgerStore } from '@/stores/ledger'
 import { platformNavItems } from '@/constants/platformNav'
 
 const route = useRoute()
+const { t } = useI18n()
 const userStore = useUserStore()
 const ledgerStore = useLedgerStore()
+const localeStore = useLocaleStore()
 const notificationStore = useNotificationStore()
 const { handleLogout, loading } = useLogin()
 const { handleDeleteAccount } = topNavBar()
 const { currentLedger, isLoading, errorMessage } = storeToRefs(ledgerStore)
 const { unreadCount } = storeToRefs(notificationStore)
+const { locale } = storeToRefs(localeStore)
 
 const userAgreementVisible = ref(false)
 const privacyPolicyVisible = ref(false)
 const userAgreementText = ref('')
 const privacyPolicyText = ref('')
 
-const displayName = computed(() => userStore.username || '当前用户')
+const displayName = computed(() => userStore.username || t('common.currentUserFallback'))
 const userInitial = computed(() => displayName.value.trim().slice(0, 1).toUpperCase())
 
 const connectionState = computed(() => {
@@ -247,30 +270,30 @@ const connectionState = computed(() => {
 const connectionLabel = computed(() => {
   switch (connectionState.value) {
     case 'connected':
-      return '实时通知正常'
+      return t('topbar.connection.connected')
     case 'connecting':
-      return '正在连接通知'
+      return t('topbar.connection.connecting')
     case 'reconnecting':
-      return '正在重新连接'
+      return t('topbar.connection.reconnecting')
     case 'error':
-      return '通知连接异常'
+      return t('topbar.connection.error')
     default:
-      return '通知未连接'
+      return t('topbar.connection.idle')
   }
 })
 
 const connectionDetail = computed(() => {
   switch (connectionState.value) {
     case 'connected':
-      return '通知与状态更新已开启'
+      return t('topbar.connection.detailConnected')
     case 'connecting':
-      return '正在建立实时通知连接'
+      return t('topbar.connection.detailConnecting')
     case 'reconnecting':
-      return `正在尝试恢复实时通知（第 ${userStore.reconnectAttempts} 次）`
+      return t('topbar.connection.detailReconnecting', { count: userStore.reconnectAttempts })
     case 'error':
-      return '当前未连上实时通知，可稍后刷新页面重试'
+      return t('topbar.connection.detailError')
     default:
-      return '当前尚未建立实时通知连接'
+      return t('topbar.connection.detailIdle')
   }
 })
 
@@ -306,10 +329,10 @@ const connectionDotClass = computed(() => {
 
 const ledgerTitle = computed(() => {
   if (isLoading.value) {
-    return '正在加载账本...'
+    return t('common.loadingLedger')
   }
 
-  return currentLedger.value?.name || '账本上下文已预留'
+  return currentLedger.value?.name || t('common.ledgerContextReserved')
 })
 
 const ledgerDescription = computed(() => {
@@ -318,10 +341,12 @@ const ledgerDescription = computed(() => {
   }
 
   if (currentLedger.value) {
-    return `当前角色：${currentLedger.value.memberRole || 'member'}。预算、通知、导出和搜索页面会默认围绕这个账本扩展。`
+    return t('topbar.ledgerDescriptionWithRole', {
+      role: currentLedger.value.memberRole || t('common.memberRoleFallback')
+    })
   }
 
-  return '账本中心已经接入，后续平台页面会默认基于这里的账本上下文工作。'
+  return t('topbar.ledgerDescription')
 })
 
 const isActive = (item) => {
@@ -350,6 +375,10 @@ const showPrivacyPolicy = async () => {
 
 const handleSupport = () => {
   window.location.href = 'mailto:rochelle.wang1116@gmail.com'
+}
+
+const setLocale = (value) => {
+  localeStore.setLocale(value)
 }
 
 onMounted(async () => {

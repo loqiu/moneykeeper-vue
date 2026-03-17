@@ -1,25 +1,25 @@
 <template>
   <PlatformPageShell
-    eyebrow="Ledger Members"
-    title="成员与邀请"
-    description="成员页已经从平台骨架切成真实协作页面，当前可查看成员、创建邀请、追踪待处理邀请，并接受发给当前账号邮箱的待加入账本邀请。"
+    :eyebrow="t('platform.members.eyebrow')"
+    :title="t('platform.members.title')"
+    :description="t('platform.members.description')"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Members</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.members.summary.membersLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ members.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前账本成员数量</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.members.summary.membersHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Invites</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.members.summary.invitesLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ ledgerInvites.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前账本邀请数量</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.members.summary.invitesHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Role</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.members.summary.roleLabel') }}</p>
           <p class="mt-2 text-lg font-semibold">{{ roleLabel(currentRole) }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前页面可见权限基于此角色</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.members.summary.roleHint') }}</p>
         </div>
       </div>
     </template>
@@ -27,9 +27,9 @@
     <template #aside>
       <article class="rounded-[32px] border border-white/70 bg-white/92 p-6 shadow-[0_20px_60px_rgba(148,163,184,0.16)] backdrop-blur">
         <div>
-          <h2 class="text-xl font-semibold text-slate-900">创建邀请</h2>
+          <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.members.inviteForm.title') }}</h2>
           <p class="mt-2 text-sm leading-6 text-slate-500">
-            只有 owner / admin 可以创建邀请。邀请会按邮箱匹配当前账号，接受后会自动刷新账本列表。
+            {{ t('platform.members.inviteForm.description') }}
           </p>
         </div>
 
@@ -37,28 +37,28 @@
           v-if="!canManageInvites"
           class="mt-5 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-5 text-sm leading-6 text-slate-600"
         >
-          当前角色只能查看成员，不能创建邀请。需要 owner / admin，或者平台级更高权限。
+          {{ t('platform.members.inviteForm.readOnly') }}
         </div>
 
         <el-form v-else class="mt-5 space-y-4" label-position="top" @submit.prevent>
-          <el-form-item label="受邀邮箱">
+          <el-form-item :label="t('platform.members.inviteForm.emailLabel')">
             <el-input
               v-model="inviteForm.invitedEmail"
               maxlength="100"
               clearable
-              placeholder="teammate@example.com"
+              :placeholder="t('platform.members.inviteForm.emailPlaceholder')"
             />
           </el-form-item>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <el-form-item label="角色">
+            <el-form-item :label="t('platform.members.inviteForm.roleLabel')">
               <el-select v-model="inviteForm.role" class="w-full">
-                <el-option label="管理员" value="admin" />
-                <el-option label="普通成员" value="member" />
+                <el-option :label="t('platform.members.inviteForm.roles.admin')" value="admin" />
+                <el-option :label="t('platform.members.inviteForm.roles.member')" value="member" />
               </el-select>
             </el-form-item>
 
-            <el-form-item label="有效期（天）">
+            <el-form-item :label="t('platform.members.inviteForm.daysLabel')">
               <el-input-number
                 v-model="inviteForm.expiresInDays"
                 :min="1"
@@ -76,7 +76,7 @@
             :loading="isCreatingInvite"
             @click="handleCreateInvite"
           >
-            创建邀请
+            {{ t('platform.members.inviteForm.submit') }}
           </el-button>
         </el-form>
       </article>
@@ -84,20 +84,20 @@
       <article class="rounded-[32px] border border-white/70 bg-white/92 p-6 shadow-[0_20px_60px_rgba(148,163,184,0.16)] backdrop-blur">
         <div class="flex items-center justify-between gap-3">
           <div>
-            <h2 class="text-xl font-semibold text-slate-900">我的待接受邀请</h2>
+            <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.members.myInvites.title') }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
-              这里显示当前账号邮箱匹配到的邀请。接受后会把新账本同步进 ledger 上下文。
+              {{ t('platform.members.myInvites.description') }}
             </p>
           </div>
-          <el-button class="!rounded-full !px-4" @click="loadPendingInvites">刷新</el-button>
+          <el-button class="!rounded-full !px-4" @click="loadPendingInvites">{{ t('platform.members.myInvites.refresh') }}</el-button>
         </div>
 
         <div class="mt-4 flex flex-wrap gap-2">
           <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
-            待处理 {{ visiblePendingInvites.length }}
+            {{ t('platform.members.myInvites.pendingCount', { count: visiblePendingInvites.length }) }}
           </span>
           <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
-            已处理 {{ resolvedMyInvites.length }}
+            {{ t('platform.members.myInvites.resolvedCount', { count: resolvedMyInvites.length }) }}
           </span>
         </div>
 
@@ -109,7 +109,7 @@
           >
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="text-sm font-semibold text-slate-900">{{ invite.ledgerName || `账本 #${invite.ledgerId}` }}</div>
+                <div class="text-sm font-semibold text-slate-900">{{ invite.ledgerName || ledgerFallback(invite.ledgerId) }}</div>
                 <div class="mt-2 text-xs text-slate-500">
                   {{ invite.invitedEmail }} · {{ roleLabel(invite.role) }} · {{ inviteStatusLabel(invite.status) }}
                 </div>
@@ -120,14 +120,14 @@
                 :loading="acceptingInviteCode === invite.inviteCode"
                 @click="handleAcceptInvite(invite)"
               >
-                接受邀请
+                {{ t('platform.members.myInvites.accept') }}
               </el-button>
             </div>
           </div>
         </div>
 
         <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
-          当前没有待接受的邀请。
+          {{ t('platform.members.myInvites.empty') }}
         </div>
 
         <div v-if="resolvedMyInvites.length" class="mt-4 space-y-3">
@@ -138,7 +138,7 @@
           >
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="text-sm font-semibold text-slate-900">{{ invite.ledgerName || `账本 #${invite.ledgerId}` }}</div>
+                <div class="text-sm font-semibold text-slate-900">{{ invite.ledgerName || ledgerFallback(invite.ledgerId) }}</div>
                 <div class="mt-2 text-xs text-slate-500">
                   {{ invite.invitedEmail }} · {{ inviteStatusLabel(invite.status) }}
                 </div>
@@ -158,18 +158,18 @@
           <div>
             <h2 class="text-xl font-semibold text-slate-900">{{ ledgerTitle }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
-              当前页面围绕路由里的 ledgerId 展示成员与邀请。如果这不是当前平台上下文，可以在这里一键切换。
+              {{ t('platform.members.workspace.description') }}
             </p>
           </div>
 
           <div class="flex flex-wrap gap-3">
-            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadPageData">刷新页面</el-button>
+            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadPageData">{{ t('platform.members.workspace.refresh') }}</el-button>
             <el-button
               v-if="hasTargetLedger && Number(route.params.ledgerId) !== currentLedgerId"
               class="!rounded-full !px-4"
               @click="setAsCurrentContext"
             >
-              设为当前账本
+              {{ t('platform.members.workspace.setCurrent') }}
             </el-button>
           </div>
         </div>
@@ -180,24 +180,24 @@
         variant="error"
         compact
         :centered="false"
-        title="成员协作数据加载失败"
+        :title="t('platform.members.states.errorTitle')"
         :description="errorMessage"
-        action-label="重试"
+        :action-label="t('common.refresh')"
         @action="loadPageData"
       />
 
       <PlatformStateCard
         v-else-if="!hasTargetLedger"
         variant="warning"
-        title="当前账本不在你的可访问列表中"
-        description="可以先回到账本中心刷新列表，或者确认你已经接受对应邀请。"
+        :title="t('platform.members.states.ledgerMissingTitle')"
+        :description="t('platform.members.states.ledgerMissingDescription')"
       >
         <template #actions>
           <router-link
             to="/ledgers"
             class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
           >
-            返回账本中心
+            {{ t('platform.members.states.ledgerMissingAction') }}
           </router-link>
         </template>
       </PlatformStateCard>
@@ -205,19 +205,19 @@
       <PlatformStateCard
         v-else-if="isLoading"
         variant="loading"
-        title="正在加载成员与邀请信息..."
-        description="系统正在同步成员列表、账本邀请和当前账号待接受邀请。"
+        :title="t('platform.members.states.loadingTitle')"
+        :description="t('platform.members.states.loadingDescription')"
       />
 
       <section v-else class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-semibold text-slate-900">成员列表</h3>
-              <p class="mt-1 text-sm text-slate-500">展示 owner / admin / member 角色和加入时间。</p>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('platform.members.membersList.title') }}</h3>
+              <p class="mt-1 text-sm text-slate-500">{{ t('platform.members.membersList.description') }}</p>
             </div>
             <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
-              {{ members.length }} 人
+              {{ t('platform.members.membersList.count', { count: members.length }) }}
             </span>
           </div>
 
@@ -229,46 +229,46 @@
             >
               <div class="flex items-start justify-between gap-3">
                 <div>
-                  <div class="text-sm font-semibold text-slate-900">{{ member.username || `用户 ${member.userId}` }}</div>
-                  <div class="mt-2 text-xs text-slate-500">{{ member.email || '未提供邮箱' }}</div>
+                  <div class="text-sm font-semibold text-slate-900">{{ member.username || memberFallback(member.userId) }}</div>
+                  <div class="mt-2 text-xs text-slate-500">{{ member.email || t('platform.members.membersList.emailMissing') }}</div>
                 </div>
                 <div class="flex flex-wrap gap-2 justify-end">
                   <span
                     v-if="member.userId === currentUserId"
                     class="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
                   >
-                    当前用户
+                    {{ t('platform.members.membersList.currentUser') }}
                   </span>
                   <span class="rounded-full px-3 py-1 text-xs font-medium" :class="roleBadgeClass(member.role)">
                     {{ roleLabel(member.role) }}
                   </span>
                   <span class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-500">
-                    {{ member.status || 'active' }}
+                    {{ statusLabel(member.status || 'active') }}
                   </span>
                 </div>
               </div>
-              <div class="mt-3 text-xs text-slate-500">加入时间：{{ formatDateTime(member.joinedAt) }}</div>
+              <div class="mt-3 text-xs text-slate-500">{{ t('platform.members.membersList.joinedAt', { value: formatDateTime(member.joinedAt) }) }}</div>
             </div>
           </div>
 
           <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
-            当前账本还没有成员数据。
+            {{ t('platform.members.membersList.empty') }}
           </div>
         </article>
 
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-semibold text-slate-900">账本邀请</h3>
-              <p class="mt-1 text-sm text-slate-500">追踪待处理、已接受和已过期的邀请状态。</p>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('platform.members.ledgerInvites.title') }}</h3>
+              <p class="mt-1 text-sm text-slate-500">{{ t('platform.members.ledgerInvites.description') }}</p>
             </div>
             <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
-              {{ ledgerInvites.length }} 条
+              {{ t('platform.members.ledgerInvites.count', { count: ledgerInvites.length }) }}
             </span>
           </div>
 
           <div v-if="!canManageInvites" class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
-            当前角色没有邀请查看权限，需 owner / admin。
+            {{ t('platform.members.ledgerInvites.noPermission') }}
           </div>
 
           <div v-if="canManageInvites && ledgerInvites.length" class="mt-4 flex flex-wrap gap-2">
@@ -311,33 +311,29 @@
                     class="!rounded-full !px-4"
                     @click="copyInviteCode(invite.inviteCode)"
                   >
-                    复制邀请码
+                    {{ t('platform.members.ledgerInvites.copyCode') }}
                   </el-button>
                   <el-button
                     v-if="invite.status === 'expired'"
                     class="!rounded-full !px-4"
                     @click="handleReinvite(invite)"
                   >
-                    重新邀请
+                    {{ t('platform.members.ledgerInvites.reinvite') }}
                   </el-button>
                 </div>
               </div>
 
-              <div v-if="invite.status === 'expired'" class="mt-3">
-                <el-button class="!rounded-full !px-4" @click="handleReinvite(invite)">重新邀请</el-button>
-              </div>
-
               <div class="mt-3 space-y-1 text-xs text-slate-500">
-                <div>邀请码：{{ invite.inviteCode }}</div>
-                <div>过期时间：{{ formatDateTime(invite.expiresAt) }}</div>
-                <div>创建时间：{{ formatDateTime(invite.createdAt) }}</div>
-                <div v-if="invite.acceptedAt">接受时间：{{ formatDateTime(invite.acceptedAt) }}</div>
+                <div>{{ t('platform.members.ledgerInvites.inviteCode', { code: invite.inviteCode }) }}</div>
+                <div>{{ t('platform.members.ledgerInvites.expiresAt', { value: formatDateTime(invite.expiresAt) }) }}</div>
+                <div>{{ t('platform.members.ledgerInvites.createdAt', { value: formatDateTime(invite.createdAt) }) }}</div>
+                <div v-if="invite.acceptedAt">{{ t('platform.members.ledgerInvites.acceptedAt', { value: formatDateTime(invite.acceptedAt) }) }}</div>
               </div>
             </div>
           </div>
 
           <div v-else-if="canManageInvites" class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm text-slate-500">
-            {{ ledgerInvites.length ? '当前筛选下没有匹配的邀请' : '当前账本还没有邀请记录。' }}
+            {{ ledgerInvites.length ? t('platform.members.ledgerInvites.filteredEmpty') : t('platform.members.ledgerInvites.empty') }}
           </div>
         </article>
       </section>
@@ -350,6 +346,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import {
@@ -362,6 +359,8 @@ import {
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
+
+const { t, locale } = useI18n()
 
 const route = useRoute()
 const ledgerStore = useLedgerStore()
@@ -385,51 +384,39 @@ const inviteForm = reactive({
 const inviteStatusFilter = ref('all')
 
 const targetLedgerId = computed(() => Number(route.params.ledgerId))
-const targetLedger = computed(() => {
-  return ledgerList.value.find((item) => Number(item.id) === targetLedgerId.value) || null
-})
-const currentRole = computed(() => targetLedger.value?.memberRole || '')
+const targetLedger = computed(() => ledgerList.value.find((item) => Number(item.id) === targetLedgerId.value) || null)
+const currentRole = computed(() => targetLedger.value?.memberRole || 'member')
 const hasTargetLedger = computed(() => Boolean(targetLedger.value))
 const canManageInvites = computed(() => ['owner', 'admin'].includes(currentRole.value))
-const ledgerTitle = computed(() => targetLedger.value?.name || `账本 #${targetLedgerId.value}`)
+const ledgerTitle = computed(() => targetLedger.value?.name || ledgerFallback(targetLedgerId.value))
 const visiblePendingInvites = computed(() => myPendingInvites.value.filter((item) => item.status === 'pending'))
 const resolvedMyInvites = computed(() => myPendingInvites.value.filter((item) => item.status !== 'pending'))
-const filteredLedgerInvites = computed(() => {
-  if (inviteStatusFilter.value === 'all') {
-    return ledgerInvites.value
-  }
-
-  return ledgerInvites.value.filter((item) => item.status === inviteStatusFilter.value)
-})
-const inviteStatusCounts = computed(() => {
-  return ledgerInvites.value.reduce(
-    (accumulator, item) => {
-      const status = item.status || 'unknown'
-      accumulator[status] = (accumulator[status] || 0) + 1
-      return accumulator
-    },
-    { all: ledgerInvites.value.length, pending: 0, accepted: 0, expired: 0, unknown: 0 }
-  )
-})
+const filteredLedgerInvites = computed(() => inviteStatusFilter.value === 'all'
+  ? ledgerInvites.value
+  : ledgerInvites.value.filter((item) => item.status === inviteStatusFilter.value))
+const inviteStatusCounts = computed(() => ledgerInvites.value.reduce(
+  (accumulator, item) => {
+    const status = item.status || 'unknown'
+    accumulator[status] = (accumulator[status] || 0) + 1
+    return accumulator
+  },
+  { all: ledgerInvites.value.length, pending: 0, accepted: 0, expired: 0, unknown: 0 }
+))
 const currentUserId = computed(() => Number(userStore.userId))
-const existingMemberEmails = computed(() => {
-  return new Set(
-    members.value
-      .map((item) => item.email?.trim().toLowerCase())
-      .filter(Boolean)
-  )
-})
+const existingMemberEmails = computed(() => new Set(
+  members.value
+    .map((item) => item.email?.trim().toLowerCase())
+    .filter(Boolean)
+))
 
-const inviteFilterOptions = [
-  { label: '全部', value: 'all' },
-  { label: '待处理', value: 'pending' },
-  { label: '已接受', value: 'accepted' },
-  { label: '已过期', value: 'expired' }
-]
+const inviteFilterOptions = computed(() => [
+  { label: t('platform.members.ledgerInvites.filters.all'), value: 'all' },
+  { label: t('platform.members.ledgerInvites.filters.pending'), value: 'pending' },
+  { label: t('platform.members.ledgerInvites.filters.accepted'), value: 'accepted' },
+  { label: t('platform.members.ledgerInvites.filters.expired'), value: 'expired' }
+])
 
-const isValidEmail = (value) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-}
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 
 const resetInviteForm = () => {
   inviteForm.invitedEmail = ''
@@ -443,16 +430,11 @@ const prefillInviteForm = (invite) => {
   inviteForm.expiresInDays = 7
 }
 
-const roleLabel = (role) => {
-  switch (role) {
-    case 'owner':
-      return '所有者'
-    case 'admin':
-      return '管理员'
-    default:
-      return '普通成员'
-  }
-}
+const roleLabel = (role) => t(`common.roles.${role || 'member'}`)
+const statusLabel = (status) => t(`common.status.${status || 'unknown'}`)
+const inviteStatusLabel = (status) => statusLabel(status || 'unknown')
+const memberFallback = (userId) => t('platform.search.filters.memberFallback', { id: userId })
+const ledgerFallback = (ledgerId) => `${t('nav.ledgers.label')} #${ledgerId}`
 
 const roleBadgeClass = (role) => {
   switch (role) {
@@ -465,25 +447,12 @@ const roleBadgeClass = (role) => {
   }
 }
 
-const inviteStatusLabel = (status) => {
-  switch (status) {
-    case 'pending':
-      return '待处理'
-    case 'accepted':
-      return '已接受'
-    case 'expired':
-      return '已过期'
-    default:
-      return status || '未知状态'
-  }
-}
-
 const formatDateTime = (value) => {
   if (!value) {
-    return '未记录'
+    return t('common.status.notRecorded')
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(locale.value, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -496,7 +465,7 @@ const loadPendingInvites = async () => {
   try {
     myPendingInvites.value = await fetchMyLedgerInvites()
   } catch (error) {
-    errorMessage.value = getApiErrorMessage(error, '获取待接受邀请失败')
+    errorMessage.value = getApiErrorMessage(error, t('platform.members.errors.pendingFetchFailed'))
   }
 }
 
@@ -524,7 +493,7 @@ const loadPageData = async () => {
     myPendingInvites.value = pendingInviteList
     inviteStatusFilter.value = 'all'
   } catch (error) {
-    errorMessage.value = getApiErrorMessage(error, '获取成员与邀请信息失败')
+    errorMessage.value = getApiErrorMessage(error, t('platform.members.errors.fetchFailed'))
   } finally {
     isLoading.value = false
   }
@@ -534,26 +503,23 @@ const handleCreateInvite = async () => {
   const normalizedEmail = inviteForm.invitedEmail.trim().toLowerCase()
 
   if (!normalizedEmail) {
-    ElMessage.warning('请输入受邀邮箱')
+    ElMessage.warning(t('platform.members.messages.emailRequired'))
     return
   }
 
   if (!isValidEmail(normalizedEmail)) {
-    ElMessage.warning('请输入有效的邮箱地址')
+    ElMessage.warning(t('platform.members.messages.emailInvalid'))
     return
   }
 
   if (existingMemberEmails.value.has(normalizedEmail)) {
-    ElMessage.warning('璇ラ偖绠卞凡缁忔槸褰撳墠璐︽湰鎴愬憳')
+    ElMessage.warning(t('platform.members.messages.alreadyMember'))
     return
   }
 
-  const duplicatedPendingInvite = ledgerInvites.value.find((item) => {
-    return item.status === 'pending' && item.invitedEmail?.trim().toLowerCase() === normalizedEmail
-  })
-
+  const duplicatedPendingInvite = ledgerInvites.value.find((item) => item.status === 'pending' && item.invitedEmail?.trim().toLowerCase() === normalizedEmail)
   if (duplicatedPendingInvite) {
-    ElMessage.warning('璇ラ偖绠卞凡鏈夊緟澶勭悊閭€璇凤紝鍙互鐩存帴澶嶅埗閭€璇风爜')
+    ElMessage.warning(t('platform.members.messages.duplicatePendingInvite'))
     return
   }
 
@@ -565,9 +531,9 @@ const handleCreateInvite = async () => {
     })
     ledgerInvites.value = [createdInvite, ...ledgerInvites.value]
     resetInviteForm()
-    ElMessage.success('邀请已创建')
+    ElMessage.success(t('platform.members.messages.inviteCreated'))
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '创建邀请失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.members.errors.createInviteFailed')))
   } finally {
     isCreatingInvite.value = false
   }
@@ -575,7 +541,7 @@ const handleCreateInvite = async () => {
 
 const handleAcceptInvite = async (invite) => {
   if (invite.status !== 'pending') {
-    ElMessage.warning('当前邀请已经不可接受')
+    ElMessage.warning(t('platform.members.messages.inviteUnavailable'))
     return
   }
 
@@ -594,9 +560,9 @@ const handleAcceptInvite = async (invite) => {
       await loadPageData()
     }
 
-    ElMessage.success('邀请已接受')
+    ElMessage.success(t('platform.members.messages.inviteAccepted'))
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '接受邀请失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.members.errors.acceptInviteFailed')))
   } finally {
     acceptingInviteCode.value = ''
   }
@@ -604,36 +570,36 @@ const handleAcceptInvite = async (invite) => {
 
 const copyInviteCode = async (inviteCode) => {
   if (!inviteCode) {
-    ElMessage.warning('当前邀请没有可复制的邀请码')
+    ElMessage.warning(t('platform.members.messages.inviteCodeMissing'))
     return
   }
 
   try {
     await navigator.clipboard.writeText(inviteCode)
-    ElMessage.success('邀请码已复制')
+    ElMessage.success(t('platform.members.messages.inviteCodeCopied'))
   } catch (error) {
-    ElMessage.error('复制邀请码失败')
+    ElMessage.error(t('platform.members.errors.copyInviteCodeFailed'))
   }
 }
 
 const handleReinvite = (invite) => {
   if (!canManageInvites.value) {
-    ElMessage.warning('褰撳墠瑙掕壊鏃犳硶閲嶆柊鍒涘缓閭€璇')
+    ElMessage.warning(t('platform.members.messages.reinviteForbidden'))
     return
   }
 
   prefillInviteForm(invite)
-  ElMessage.info('宸插皢閭€璇蜂俊鎭洖濉埌琛ㄥ崟锛屽彲鐩存帴閲嶆柊鍒涘缓')
+  ElMessage.info(t('platform.members.messages.reinviteFilled'))
 }
 
 const setAsCurrentContext = () => {
   if (!hasTargetLedger.value) {
-    ElMessage.warning('当前账本不在你的可访问列表中')
+    ElMessage.warning(t('platform.members.states.ledgerMissingTitle'))
     return
   }
 
   ledgerStore.selectLedger(targetLedgerId.value)
-  ElMessage.success('已切换当前账本上下文')
+  ElMessage.success(t('platform.members.messages.contextSwitched'))
 }
 
 watch(

@@ -1,20 +1,20 @@
 <template>
   <PlatformPageShell
-    eyebrow="Ledger Categories"
-    title="分类管理"
-    description="这里集中管理当前账本下的收入和支出分类。现有新增分类弹窗已经迁到独立页面里，后续会继续补编辑能力和权限态。"
+    :eyebrow="t('platform.categories.eyebrow')"
+    :title="t('platform.categories.title')"
+    :description="t('platform.categories.description')"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-2">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Expense</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.categories.summary.expenseLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ expenseCategories.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前支出分类数量</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.categories.summary.expenseHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Income</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.categories.summary.incomeLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ incomeCategories.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前收入分类数量</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.categories.summary.incomeHint') }}</p>
         </div>
       </div>
     </template>
@@ -24,19 +24,27 @@
         <div>
           <h2 class="text-xl font-semibold text-slate-900">{{ currentLedgerTitle }}</h2>
           <p class="mt-2 text-sm leading-6 text-slate-500">
-            分类现在已经切到当前账本维度。后续 owner/admin 和 member 的差异化权限会继续补齐。
+            {{ t('platform.categories.workspaceDescription') }}
           </p>
         </div>
 
         <div class="flex flex-wrap gap-3">
-          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext || !canManageCategories" @click="showAddCategoryDialog('expense')">
-            新增支出分类
+          <el-button
+            class="!rounded-full !px-4"
+            :disabled="!hasLedgerContext || !canManageCategories"
+            @click="showAddCategoryDialog('expense')"
+          >
+            {{ t('platform.categories.actions.addExpense') }}
           </el-button>
-          <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext || !canManageCategories" @click="showAddCategoryDialog('income')">
-            新增收入分类
+          <el-button
+            class="!rounded-full !px-4"
+            :disabled="!hasLedgerContext || !canManageCategories"
+            @click="showAddCategoryDialog('income')"
+          >
+            {{ t('platform.categories.actions.addIncome') }}
           </el-button>
           <el-button class="!rounded-full !px-4" :disabled="!hasLedgerContext" @click="fetchCategories">
-            刷新列表
+            {{ t('common.refresh') }}
           </el-button>
         </div>
       </section>
@@ -46,15 +54,15 @@
         variant="warning"
         compact
         :centered="false"
-        title="请先选择账本"
-        description="分类管理已经切到账本维度，先选择目标账本再维护收入和支出分类。"
+        :title="t('platform.categories.states.ledgerRequiredTitle')"
+        :description="t('platform.categories.states.ledgerRequiredDescription')"
       >
         <template #actions>
           <router-link
             to="/ledgers"
             class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:text-slate-900"
           >
-            前往账本中心
+            {{ t('platform.categories.states.ledgerRequiredAction') }}
           </router-link>
         </template>
       </PlatformStateCard>
@@ -64,19 +72,19 @@
         variant="info"
         compact
         :centered="false"
-        title="当前角色为只读"
-        description="你仍然可以查看当前账本的分类结构，但新增和删除分类需要 owner 或 admin 权限。"
+        :title="t('platform.categories.states.readOnlyTitle')"
+        :description="t('platform.categories.states.readOnlyDescription')"
       />
 
       <section class="grid gap-6 xl:grid-cols-2">
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-semibold text-slate-900">支出分类</h3>
-              <p class="mt-1 text-sm text-slate-500">用于账本记录、筛选和图表归类。</p>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('platform.categories.expense.title') }}</h3>
+              <p class="mt-1 text-sm text-slate-500">{{ t('platform.categories.expense.description') }}</p>
             </div>
             <span class="rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-medium text-rose-700">
-              {{ expenseCategories.length }} 项
+              {{ t('platform.categories.countBadge', { count: expenseCategories.length }) }}
             </span>
           </div>
 
@@ -96,7 +104,9 @@
                 >
                   <el-icon :size="20" :class="resolveCategoryIconClass(item.icon)"><component :is="resolveCategoryIcon(item.icon)" /></el-icon>
                 </div>
-                <span class="text-xs text-slate-400 opacity-0 transition group-hover:opacity-100">删除</span>
+                <span class="text-xs text-slate-400 opacity-0 transition group-hover:opacity-100">
+                  {{ t('common.delete') }}
+                </span>
               </div>
               <div class="mt-4 text-sm font-semibold text-slate-900">{{ item.name }}</div>
               <div class="mt-1 text-xs text-slate-500">{{ item.icon }}</div>
@@ -104,19 +114,19 @@
           </div>
 
           <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center">
-            <p class="text-sm font-medium text-slate-900">还没有支出分类</p>
-            <p class="mt-2 text-sm text-slate-500">先创建几个高频分类，首页录入会更顺手。</p>
+            <p class="text-sm font-medium text-slate-900">{{ t('platform.categories.expense.emptyTitle') }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ t('platform.categories.expense.emptyDescription') }}</p>
           </div>
         </article>
 
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div class="flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-semibold text-slate-900">收入分类</h3>
-              <p class="mt-1 text-sm text-slate-500">统一管理工资、奖金、报销等收入来源。</p>
+              <h3 class="text-lg font-semibold text-slate-900">{{ t('platform.categories.income.title') }}</h3>
+              <p class="mt-1 text-sm text-slate-500">{{ t('platform.categories.income.description') }}</p>
             </div>
             <span class="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-              {{ incomeCategories.length }} 项
+              {{ t('platform.categories.countBadge', { count: incomeCategories.length }) }}
             </span>
           </div>
 
@@ -136,7 +146,9 @@
                 >
                   <el-icon :size="20" :class="resolveCategoryIconClass(item.icon)"><component :is="resolveCategoryIcon(item.icon)" /></el-icon>
                 </div>
-                <span class="text-xs text-slate-400 opacity-0 transition group-hover:opacity-100">删除</span>
+                <span class="text-xs text-slate-400 opacity-0 transition group-hover:opacity-100">
+                  {{ t('common.delete') }}
+                </span>
               </div>
               <div class="mt-4 text-sm font-semibold text-slate-900">{{ item.name }}</div>
               <div class="mt-1 text-xs text-slate-500">{{ item.icon }}</div>
@@ -144,8 +156,8 @@
           </div>
 
           <div v-else class="mt-5 rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center">
-            <p class="text-sm font-medium text-slate-900">还没有收入分类</p>
-            <p class="mt-2 text-sm text-slate-500">补几个收入类型后，统计页的收入结构会更清晰。</p>
+            <p class="text-sm font-medium text-slate-900">{{ t('platform.categories.income.emptyTitle') }}</p>
+            <p class="mt-2 text-sm text-slate-500">{{ t('platform.categories.income.emptyDescription') }}</p>
           </div>
         </article>
       </section>
@@ -163,6 +175,7 @@
 <script setup>
 import { computed, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import AddCategoryDialog from '@/components/AddCategoryDialog.vue'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
@@ -170,6 +183,7 @@ import { resolveCategoryIcon, resolveCategoryIconClass } from '@/constants/categ
 import { useCategory } from '@/composables/useCategory'
 import { useLedgerStore } from '@/stores/ledger'
 
+const { t } = useI18n()
 const ledgerStore = useLedgerStore()
 const { currentLedger, currentLedgerId } = storeToRefs(ledgerStore)
 
@@ -187,7 +201,7 @@ const {
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
 const canManageCategories = computed(() => ['owner', 'admin'].includes(currentLedger.value?.memberRole || ''))
-const currentLedgerTitle = computed(() => currentLedger.value?.name || '请先选择账本')
+const currentLedgerTitle = computed(() => currentLedger.value?.name || t('platform.categories.states.ledgerFallback'))
 
 watch(
   () => currentLedgerId.value,

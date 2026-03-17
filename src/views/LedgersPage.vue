@@ -1,20 +1,20 @@
 <template>
   <PlatformPageShell
-    eyebrow="Ledger Workspace"
-    title="账本中心"
-    description="这里承接平台化后的账本上下文。先把账本列表、创建和当前上下文切起来，后续预算、通知、导出和搜索页面都会围绕这里的选择工作。"
+    :eyebrow="t('platform.ledgers.eyebrow')"
+    :title="t('platform.ledgers.title')"
+    :description="t('platform.ledgers.description')"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-2">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Ledgers</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.ledgers.summary.ledgersLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ ledgerList.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前可访问账本数量</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.ledgers.summary.ledgersHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Context</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.ledgers.summary.contextLabel') }}</p>
           <p class="mt-2 text-2xl font-semibold">{{ currentLedgerName }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前平台上下文</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.ledgers.summary.contextHint') }}</p>
         </div>
       </div>
     </template>
@@ -24,11 +24,11 @@
         <article class="rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
           <div class="flex items-center justify-between gap-3">
             <div>
-              <h2 class="text-xl font-semibold text-slate-900">我的账本</h2>
-              <p class="mt-1 text-sm text-slate-500">默认账本、共享账本和后续平台能力都会从这里进入。</p>
+              <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.ledgers.list.title') }}</h2>
+              <p class="mt-1 text-sm text-slate-500">{{ t('platform.ledgers.list.description') }}</p>
             </div>
             <el-button class="!rounded-full !px-4" :loading="isLoading" @click="refreshLedgers">
-              刷新列表
+              {{ t('platform.ledgers.list.refresh') }}
             </el-button>
           </div>
 
@@ -37,9 +37,9 @@
             variant="error"
             compact
             :centered="false"
-            title="账本列表加载失败"
+            :title="t('platform.ledgers.list.loadErrorTitle')"
             :description="errorMessage"
-            action-label="重试"
+            :action-label="t('common.refresh')"
             @action="refreshLedgers"
           />
 
@@ -47,16 +47,16 @@
             v-else-if="isLoading"
             variant="loading"
             compact
-            title="正在加载账本列表..."
-            description="系统正在同步你当前可访问的账本和默认上下文。"
+            :title="t('platform.ledgers.list.loadingTitle')"
+            :description="t('platform.ledgers.list.loadingDescription')"
           />
 
           <PlatformStateCard
             v-else-if="!ledgerList.length"
             variant="empty"
             compact
-            title="还没有可用账本"
-            description="可以先创建一个 shared、family 或 project 类型的账本。"
+            :title="t('platform.ledgers.list.emptyTitle')"
+            :description="t('platform.ledgers.list.emptyDescription')"
           />
 
           <div v-else class="mt-5 grid gap-4 md:grid-cols-2">
@@ -73,7 +73,7 @@
                     class="mt-2 text-xs uppercase tracking-[0.22em]"
                     :class="ledger.id === currentLedgerId ? 'text-slate-300' : 'text-slate-400'"
                   >
-                    {{ ledger.type }}
+                    {{ ledgerTypeLabel(ledger.type) }}
                   </p>
                 </div>
 
@@ -83,13 +83,13 @@
                     class="rounded-full px-3 py-1 text-xs font-medium"
                     :class="ledger.id === currentLedgerId ? 'bg-white/10 text-white' : 'bg-amber-100 text-amber-700'"
                   >
-                    默认
+                    {{ t('platform.ledgers.list.defaultBadge') }}
                   </span>
                   <span
                     class="rounded-full px-3 py-1 text-xs font-medium"
                     :class="ledger.id === currentLedgerId ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-700'"
                   >
-                    {{ ledger.memberRole || 'member' }}
+                    {{ roleLabel(ledger.memberRole || 'member') }}
                   </span>
                 </div>
               </div>
@@ -98,7 +98,7 @@
                 class="mt-4 text-sm leading-6"
                 :class="ledger.id === currentLedgerId ? 'text-slate-300' : 'text-slate-500'"
               >
-                当前阶段先把账本上下文接起来，后续预算、通知、导出和搜索页面都会默认基于这里的选择工作。
+                {{ t('platform.ledgers.list.contextDescription') }}
               </p>
 
               <div class="mt-5 flex flex-wrap gap-3">
@@ -107,7 +107,7 @@
                   :type="ledger.id === currentLedgerId ? 'primary' : 'default'"
                   @click="selectLedgerContext(ledger.id)"
                 >
-                  {{ ledger.id === currentLedgerId ? '当前上下文' : '设为当前上下文' }}
+                  {{ ledger.id === currentLedgerId ? t('platform.ledgers.list.currentContext') : t('platform.ledgers.list.setCurrentContext') }}
                 </el-button>
 
                 <router-link
@@ -115,7 +115,7 @@
                   :class="ledger.id === currentLedgerId ? 'border-white/20 text-white' : 'text-slate-700'"
                   :to="`/ledgers/${ledger.id}/members`"
                 >
-                  成员与邀请
+                  {{ t('platform.ledgers.list.membersAction') }}
                 </router-link>
               </div>
             </article>
@@ -124,16 +124,16 @@
 
         <article class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
           <div>
-            <h2 class="text-xl font-semibold text-slate-900">创建账本</h2>
-            <p class="mt-1 text-sm text-slate-500">当前后端支持 shared / family / project 三种类型。</p>
+            <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.ledgers.create.title') }}</h2>
+            <p class="mt-1 text-sm text-slate-500">{{ t('platform.ledgers.create.description') }}</p>
           </div>
 
           <el-form class="mt-5 space-y-4" label-position="top" @submit.prevent>
-            <el-form-item label="账本名称">
-              <el-input v-model="form.name" maxlength="50" placeholder="例如：Family Budget" />
+            <el-form-item :label="t('platform.ledgers.create.nameLabel')">
+              <el-input v-model="form.name" maxlength="50" :placeholder="t('platform.ledgers.create.namePlaceholder')" />
             </el-form-item>
 
-            <el-form-item label="账本类型">
+            <el-form-item :label="t('platform.ledgers.create.typeLabel')">
               <el-select v-model="form.type" class="w-full">
                 <el-option
                   v-for="option in typeOptions"
@@ -145,16 +145,14 @@
             </el-form-item>
 
             <el-button class="!w-full !rounded-full" type="primary" :loading="isCreating" @click="handleCreateLedger">
-              创建并加入账本上下文
+              {{ t('platform.ledgers.create.submit') }}
             </el-button>
           </el-form>
 
           <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
-            <p class="font-medium text-slate-900">下一步接入</p>
-            <ul class="mt-3 space-y-2">
-              <li>1. 把当前 ledger 挂到预算、通知、导出和搜索页面。</li>
-              <li>2. 再把记录与分类接口迁到 `/api/ledgers/{ledgerId}/...`。</li>
-              <li>3. 最后把成员和邀请页接成真实管理页。</li>
+            <p class="font-medium text-slate-900">{{ t('platform.ledgers.create.nextTitle') }}</p>
+            <ul class="mt-3 space-y-2 list-decimal pl-5">
+              <li v-for="(step, index) in nextSteps" :key="index">{{ step }}</li>
             </ul>
           </div>
         </article>
@@ -164,13 +162,16 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { useLedgerStore } from '@/stores/ledger'
 import { getApiErrorMessage } from '@/api/response'
+
+const { t } = useI18n()
 
 const ledgerStore = useLedgerStore()
 const { ledgerList, currentLedgerId, currentLedger, isLoading, errorMessage } = storeToRefs(ledgerStore)
@@ -181,13 +182,17 @@ const form = reactive({
   type: 'shared'
 })
 
-const typeOptions = [
-  { label: 'Shared', value: 'shared' },
-  { label: 'Family', value: 'family' },
-  { label: 'Project', value: 'project' }
-]
+const typeOptions = computed(() => [
+  { label: t('platform.ledgers.types.shared'), value: 'shared' },
+  { label: t('platform.ledgers.types.family'), value: 'family' },
+  { label: t('platform.ledgers.types.project'), value: 'project' }
+])
 
-const currentLedgerName = computed(() => currentLedger.value?.name || '未选择账本')
+const nextSteps = computed(() => t('platform.ledgers.create.steps'))
+const currentLedgerName = computed(() => currentLedger.value?.name || t('platform.ledgers.messages.currentLedgerFallback'))
+
+const roleLabel = (role) => t(`common.roles.${role || 'member'}`)
+const ledgerTypeLabel = (type) => t(`platform.ledgers.types.${type}`, type)
 
 const refreshLedgers = async () => {
   await ledgerStore.refreshLedgers()
@@ -195,12 +200,12 @@ const refreshLedgers = async () => {
 
 const selectLedgerContext = (ledgerId) => {
   ledgerStore.selectLedger(ledgerId)
-  ElMessage.success('已切换当前平台上下文')
+  ElMessage.success(t('platform.ledgers.messages.contextSwitched'))
 }
 
 const handleCreateLedger = async () => {
   if (!form.name.trim()) {
-    ElMessage.warning('请输入账本名称')
+    ElMessage.warning(t('platform.ledgers.messages.nameRequired'))
     return
   }
 
@@ -214,13 +219,17 @@ const handleCreateLedger = async () => {
     ledgerStore.selectLedger(created.id)
     form.name = ''
     form.type = 'shared'
-    ElMessage.success('账本创建成功')
+    ElMessage.success(t('platform.ledgers.messages.created'))
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '创建账本失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.ledgers.errors.createFailed')))
   } finally {
     isCreating.value = false
   }
 }
 
-ledgerStore.initializeLedgers()
+onMounted(async () => {
+  if (!ledgerStore.initialized) {
+    await ledgerStore.initializeLedgers()
+  }
+})
 </script>

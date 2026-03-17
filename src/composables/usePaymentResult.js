@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import i18n from '@/i18n'
 import {
   fetchCurrentSubscription as fetchCurrentSubscriptionApi,
   fetchPaymentOrders as fetchPaymentOrdersApi
@@ -21,26 +22,13 @@ const DEFAULT_SUBSCRIPTION = {
   canceledAt: '',
   stripeSubscriptionId: ''
 }
-const SUBSCRIPTION_STATUS_LABELS = {
-  none: '未开通',
-  active: '订阅有效',
-  trialing: '试用中',
-  past_due: '待补款',
-  canceled: '已取消',
-  unpaid: '未支付'
-}
-const ORDER_STATUS_LABELS = {
-  pending: '待支付',
-  checkout_created: '已创建会话',
-  paid: '已支付',
-  payment_failed: '支付失败',
-  canceled: '已取消',
-  refunded: '已退款'
-}
+
+const translate = (key, params = {}) => i18n.global.t(key, params)
+const getLocale = () => i18n.global.locale.value || 'en-GB'
 
 const formatDate = (value) => {
   if (!value) {
-    return '后端暂未返回'
+    return translate('billing.result.messages.periodUnknown')
   }
 
   const date = new Date(value)
@@ -48,7 +36,7 @@ const formatDate = (value) => {
     return value
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(getLocale(), {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -65,18 +53,38 @@ const getOrderTimestamp = (order = {}) => {
 
 const mapSubscriptionStatus = (subscription) => {
   if (!subscription.active && subscription.status === 'none') {
-    return SUBSCRIPTION_STATUS_LABELS.none
+    return translate('billing.result.messages.subscriptionNone')
   }
 
   if (subscription.cancelAtPeriodEnd) {
-    return '当前有效，到期后取消'
+    return translate('billing.result.messages.subscriptionCancelAtPeriodEnd')
   }
 
   if (subscription.active || subscription.status === 'active') {
-    return SUBSCRIPTION_STATUS_LABELS.active
+    return translate('billing.result.messages.subscriptionActive')
   }
 
-  return SUBSCRIPTION_STATUS_LABELS[subscription.status] || subscription.status || '待确认'
+  const statusMap = {
+    trialing: 'billing.result.messages.subscriptionTrialing',
+    past_due: 'billing.result.messages.subscriptionPastDue',
+    canceled: 'billing.result.messages.subscriptionCanceled',
+    unpaid: 'billing.result.messages.subscriptionUnpaid'
+  }
+
+  return translate(statusMap[subscription.status], { status: subscription.status }) || subscription.status
+}
+
+const mapOrderStatus = (status) => {
+  const statusMap = {
+    pending: 'billing.result.messages.orderPending',
+    checkout_created: 'billing.result.messages.orderCheckoutCreated',
+    paid: 'billing.result.messages.orderPaid',
+    payment_failed: 'billing.result.messages.orderFailed',
+    canceled: 'billing.result.messages.orderCanceled',
+    refunded: 'billing.result.messages.orderRefunded'
+  }
+
+  return translate(statusMap[status], { status }) || status || translate('common.status.unknown')
 }
 
 export function usePaymentResult(mode = 'success') {
@@ -110,94 +118,100 @@ export function usePaymentResult(mode = 'success') {
 
   const confirmedByText = computed(() => {
     if (hasActiveSubscription.value) {
-      return '已通过订阅状态确认生效'
+      return translate('billing.result.messages.confirmedBySubscription')
     }
 
     if (isLatestOrderPaid.value) {
-      return '已通过最新订单确认支付完成'
+      return translate('billing.result.messages.confirmedByOrder')
     }
 
     if (verificationState.value === 'timeout') {
-      return '轮询结束，仍在等待后端确认'
+      return translate('billing.result.messages.confirmedWaiting')
     }
 
     if (verificationState.value === 'checking') {
-      return '正在等待后端同步订单与订阅状态'
+      return translate('billing.result.messages.confirmedChecking')
     }
 
-    return '尚未确认'
+    return translate('billing.result.messages.confirmedUnknown')
   })
 
   const subscriptionStatusText = computed(() => mapSubscriptionStatus(currentSubscription.value))
 
   const latestOrderStatusText = computed(() => {
     if (!latestOrder.value) {
-      return '暂无订单记录'
+      return translate('billing.result.messages.noOrder')
     }
 
-    return ORDER_STATUS_LABELS[latestOrder.value.status] || latestOrder.value.status || '待确认'
+    return mapOrderStatus(latestOrder.value.status)
   })
 
   const currentPeriodText = computed(() => {
     if (!hasActiveSubscription.value) {
-      return '当前没有有效订阅周期'
+      return translate('billing.result.messages.noPeriod')
     }
 
     if (currentSubscription.value.currentPeriodStart && currentSubscription.value.currentPeriodEnd) {
-      return `${formatDate(currentSubscription.value.currentPeriodStart)} - ${formatDate(currentSubscription.value.currentPeriodEnd)}`
+      return translate('billing.result.messages.periodRange', {
+        start: formatDate(currentSubscription.value.currentPeriodStart),
+        end: formatDate(currentSubscription.value.currentPeriodEnd)
+      })
     }
 
     if (currentSubscription.value.currentPeriodEnd) {
-      return `当前周期到 ${formatDate(currentSubscription.value.currentPeriodEnd)} 结束`
+      return translate('billing.result.messages.periodUntil', {
+        date: formatDate(currentSubscription.value.currentPeriodEnd)
+      })
     }
 
-    return '后端暂未返回订阅周期时间'
+    return translate('billing.result.messages.periodUnknown')
   })
 
   const pollingProgressText = computed(() => {
     if (verificationState.value === 'confirmed') {
-      return `已在第 ${pollCount.value} 次轮询确认`
+      return translate('billing.result.messages.pollingConfirmed', { count: pollCount.value })
     }
 
     if (verificationState.value === 'timeout') {
-      return `已轮询 ${MAX_POLL_ATTEMPTS} 次，仍未拿到确认结果`
+      return translate('billing.result.messages.pollingTimeout', { count: MAX_POLL_ATTEMPTS })
     }
 
     if (!pollCount.value) {
-      return `准备开始轮询，最多 ${MAX_POLL_ATTEMPTS} 次`
+      return translate('billing.result.messages.pollingReady', { count: MAX_POLL_ATTEMPTS })
     }
 
-    return `第 ${pollCount.value} / ${MAX_POLL_ATTEMPTS} 次轮询`
+    return translate('billing.result.messages.pollingProgress', {
+      current: pollCount.value,
+      total: MAX_POLL_ATTEMPTS
+    })
   })
 
   const successTitle = computed(() => {
     if (verificationState.value === 'confirmed') {
-      return '订阅状态已确认'
+      return translate('billing.result.successTitleConfirmed')
     }
 
     if (verificationState.value === 'timeout') {
-      return '支付已返回，等待后端确认'
+      return translate('billing.result.successTitleTimeout')
     }
 
-    return '正在确认支付结果'
+    return translate('billing.result.successTitleChecking')
   })
 
   const successDescription = computed(() => {
     if (verificationState.value === 'confirmed') {
-      return '前端已经从后端订阅或订单接口里拿到了有效结果。你现在看到的是已确认状态，而不是本地臆测。'
+      return translate('billing.result.successDescriptionConfirmed')
     }
 
     if (verificationState.value === 'timeout') {
-      return 'Stripe 已经跳回前端，但在限定轮询次数内还没有拿到订阅生效或订单 paid 的结果。请稍后重试，或回到账单页继续查看。'
+      return translate('billing.result.successDescriptionTimeout')
     }
 
-    return 'Stripe 已经跳回前端。页面正在按约定轮询订阅与订单接口，只有拿到后端确认结果后，才会把状态展示为已生效。'
+    return translate('billing.result.successDescriptionChecking')
   })
 
-  const cancelTitle = computed(() => '你已离开支付流程')
-  const cancelDescription = computed(() => {
-    return '这只表示你离开了 Stripe Checkout。当前订阅状态以后端为准，前端不会把这次返回解释为购买成功或失败。'
-  })
+  const cancelTitle = computed(() => translate('billing.result.cancelTitle'))
+  const cancelDescription = computed(() => translate('billing.result.cancelDescription'))
 
   const verificationAlertType = computed(() => {
     if (verificationState.value === 'confirmed') {
@@ -212,15 +226,19 @@ export function usePaymentResult(mode = 'success') {
   })
 
   const verificationAlertTitle = computed(() => {
+    if (mode === 'cancel') {
+      return translate('billing.result.alert.cancel')
+    }
+
     if (verificationState.value === 'confirmed') {
-      return '后端已经确认支付结果，当前页面展示的是已确认状态。'
+      return translate('billing.result.alert.confirmed')
     }
 
     if (verificationState.value === 'timeout') {
-      return '轮询次数已经用完，但还没有拿到有效订阅或 paid 订单。你可以稍后继续重试。'
+      return translate('billing.result.alert.timeout')
     }
 
-    return '页面正在每 2 秒轮询一次订阅与订单接口，最多 10 次。'
+    return translate('billing.result.alert.checking')
   })
 
   const stopPolling = () => {

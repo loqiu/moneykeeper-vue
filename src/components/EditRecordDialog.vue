@@ -8,8 +8,8 @@
   >
     <template #header>
       <div class="space-y-2 pr-8">
-        <h2 class="text-xl font-semibold text-slate-900">编辑记录</h2>
-        <p class="text-sm text-slate-500">调整金额、分类或日期后保存，明细列表会立即同步。</p>
+        <h2 class="text-xl font-semibold text-slate-900">{{ t('accounting.edit.dialogTitle') }}</h2>
+        <p class="text-sm text-slate-500">{{ t('accounting.edit.dialogDescription') }}</p>
       </div>
     </template>
 
@@ -17,8 +17,8 @@
       <section class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h3 class="text-base font-semibold text-slate-900">记录类型</h3>
-            <p class="mt-1 text-sm text-slate-500">切换类型时会清空当前分类，请重新选择。</p>
+            <h3 class="text-base font-semibold text-slate-900">{{ t('accounting.form.recordTypeTitle') }}</h3>
+            <p class="mt-1 text-sm text-slate-500">{{ t('accounting.edit.recordTypeDescription') }}</p>
           </div>
           <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="typeBadgeClass">
             {{ typeLabel }}
@@ -32,7 +32,7 @@
             :class="localRecord.type === 'expense' ? 'border-rose-200 bg-rose-100 text-rose-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'"
             @click="updateRecord('type', 'expense')"
           >
-            支出
+            {{ t('common.expense') }}
           </button>
           <button
             type="button"
@@ -40,14 +40,14 @@
             :class="localRecord.type === 'income' ? 'border-emerald-200 bg-emerald-100 text-emerald-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'"
             @click="updateRecord('type', 'income')"
           >
-            收入
+            {{ t('common.income') }}
           </button>
         </div>
       </section>
 
       <section class="grid gap-4 sm:grid-cols-2">
         <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-          <label class="text-sm font-medium text-slate-700">金额</label>
+          <label class="text-sm font-medium text-slate-700">{{ t('common.amount') }}</label>
           <el-input-number
             :model-value="localRecord.amount"
             @update:model-value="updateRecord('amount', $event)"
@@ -57,35 +57,35 @@
             class="!mt-3 !w-full"
             :controls="false"
           />
-          <p class="mt-2 text-xs text-slate-500">保存前请确认金额和类型是否匹配。</p>
+          <p class="mt-2 text-xs text-slate-500">{{ t('accounting.edit.amountHint') }}</p>
         </div>
 
         <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
           <div class="flex items-center justify-between gap-3">
-            <label class="text-sm font-medium text-slate-700">日期</label>
+            <label class="text-sm font-medium text-slate-700">{{ t('common.date') }}</label>
             <button type="button" class="text-xs font-medium text-indigo-600" @click="setToday">
-              设为今天
+              {{ t('common.setToday') }}
             </button>
           </div>
           <el-date-picker
             :model-value="localRecord.date"
             @update:model-value="updateRecord('date', $event)"
             type="date"
-            placeholder="选择日期"
+            :placeholder="t('accounting.form.datePlaceholder')"
             format="YYYY-MM-DD"
             value-format="YYYY-MM-DD"
             class="!mt-3 !w-full"
           />
-          <p class="mt-2 text-xs text-slate-500">用于图表统计和明细排序。</p>
+          <p class="mt-2 text-xs text-slate-500">{{ t('accounting.edit.dateHint') }}</p>
         </div>
       </section>
 
       <section class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h3 class="text-base font-semibold text-slate-900">分类</h3>
+            <h3 class="text-base font-semibold text-slate-900">{{ t('common.category') }}</h3>
             <p class="mt-1 text-sm text-slate-500">
-              {{ currentCategories.length ? '从当前类型的分类中重新选择一项。' : '当前类型没有可用分类，请先关闭弹窗后新增分类。' }}
+              {{ currentCategories.length ? t('accounting.edit.categoryDescription') : t('accounting.edit.categoryEmpty') }}
             </p>
           </div>
           <span v-if="selectedCategoryName" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
@@ -115,19 +115,19 @@
         </div>
 
         <div v-else class="mt-4 rounded-3xl border border-dashed border-amber-200 bg-amber-50 px-4 py-6 text-sm text-amber-800">
-          当前没有可选分类，建议先关闭弹窗并新增对应分类后再编辑这条记录。
+          {{ t('accounting.edit.categoryUnavailable') }}
         </div>
       </section>
 
       <section class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div class="flex items-center justify-between gap-3">
-          <label class="text-sm font-medium text-slate-700">备注</label>
-          <span class="text-xs text-slate-400">可选</span>
+          <label class="text-sm font-medium text-slate-700">{{ t('common.note') }}</label>
+          <span class="text-xs text-slate-400">{{ t('common.optional') }}</span>
         </div>
         <el-input
           :model-value="localRecord.note"
           @update:model-value="updateRecord('note', $event)"
-          placeholder="补充这笔记录的背景，例如消费场景或支付对象。"
+          :placeholder="t('accounting.edit.notePlaceholder')"
           maxlength="255"
           show-word-limit
           type="textarea"
@@ -141,17 +141,17 @@
     <template #footer>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="text-left text-sm text-slate-500">
-          {{ localRecord.date || todayString }} · {{ localRecord.amount ? formatCurrency(localRecord.amount) : '等待填写金额' }}
+          {{ localRecord.date || todayString }} · {{ localRecord.amount ? formatCurrency(localRecord.amount) : t('accounting.edit.summaryPendingAmount') }}
         </div>
         <div class="flex items-center justify-end gap-3">
-          <el-button @click="$emit('cancel')" class="!rounded-full !px-5">取消</el-button>
+          <el-button @click="$emit('cancel')" class="!rounded-full !px-5">{{ t('common.cancel') }}</el-button>
           <el-button
             type="primary"
             @click="$emit('save', localRecord)"
             :disabled="submitDisabled"
             class="!rounded-full !border-0 !bg-slate-900 !px-6 hover:!bg-slate-800 disabled:!bg-slate-300"
           >
-            保存修改
+            {{ t('accounting.edit.saveChanges') }}
           </el-button>
         </div>
       </div>
@@ -161,6 +161,7 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { resolveCategoryIcon, resolveCategoryIconClass } from '@/constants/categoryIcons'
 
 const emit = defineEmits(['update:modelValue', 'cancel', 'save', 'update:record'])
@@ -190,6 +191,7 @@ const props = defineProps({
 
 const todayString = new Date().toISOString().split('T')[0]
 const localRecord = ref({ ...props.record })
+const { t, locale } = useI18n()
 
 watch(() => props.record, (newVal) => {
   if (newVal && Object.keys(newVal).length > 0) {
@@ -210,7 +212,7 @@ const selectedCategoryName = computed(() => {
 })
 
 const typeLabel = computed(() => {
-  return localRecord.value.type === 'income' ? '收入' : '支出'
+  return localRecord.value.type === 'income' ? t('common.income') : t('common.expense')
 })
 
 const typeBadgeClass = computed(() => {
@@ -224,7 +226,10 @@ const submitDisabled = computed(() => {
 })
 
 const formatCurrency = (value) => {
-  return `£${Number(value || 0).toFixed(2)}`
+  return new Intl.NumberFormat(locale.value, {
+    style: 'currency',
+    currency: 'GBP'
+  }).format(Number(value || 0))
 }
 
 const syncRecord = (nextRecord) => {

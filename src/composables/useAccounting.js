@@ -1,4 +1,5 @@
 import { computed, watch, ref, nextTick } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useCategory } from './useCategory'
 import { useRecord } from './useRecord'
 import { useLedgerStore } from '@/stores/ledger'
@@ -10,6 +11,7 @@ export function useAccounting() {
   const userStore = useUserStore()
   const ledgerStore = useLedgerStore()
   const timeUnit = ref('day')
+  const { t, locale } = useI18n()
 
   watch(
     [
@@ -56,7 +58,7 @@ export function useAccounting() {
     const categoryData = record.allRecords.value
       .filter((item) => item.type === 'expense')
       .reduce((acc, item) => {
-        const categoryName = item.categoryName || '未分类'
+        const categoryName = item.categoryName || t('accounting.charts.uncategorized')
         acc[categoryName] = (acc[categoryName] || 0) + item.amount
         return acc
       }, {})
@@ -65,8 +67,11 @@ export function useAccounting() {
       tooltip: {
         trigger: 'item',
         formatter: (params) => {
-          const amount = Number(params.value).toFixed(2)
-          return `${params.name}: £${amount} (${params.percent}%)`
+          const amount = new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(Number(params.value || 0))
+          return `${params.name}: ${amount} (${params.percent}%)`
         }
       },
       legend: {
@@ -86,8 +91,11 @@ export function useAccounting() {
         label: {
           show: true,
           formatter: (params) => {
-            const amount = Number(params.value).toFixed(2)
-            return `${params.name}: £${amount}`
+            const amount = new Intl.NumberFormat(locale.value, {
+              style: 'currency',
+              currency: 'GBP'
+            }).format(Number(params.value || 0))
+            return `${params.name}: ${amount}`
           }
         },
         data: Object.entries(categoryData).map(([name, value]) => ({
@@ -118,7 +126,14 @@ export function useAccounting() {
     return {
       tooltip: {
         trigger: 'axis',
-        formatter: '{b}<br />支出: £{c}'
+        formatter: (params) => {
+          const firstPoint = Array.isArray(params) ? params[0] : params
+          const amount = new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(Number(firstPoint?.value || 0))
+          return `${firstPoint?.axisValueLabel || firstPoint?.name}<br />${t('accounting.charts.expenseTooltip')}: ${amount}`
+        }
       },
       xAxis: {
         type: 'category',
@@ -130,7 +145,11 @@ export function useAccounting() {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: '£{value}'
+          formatter: (value) => new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP',
+            maximumFractionDigits: 0
+          }).format(Number(value || 0))
         }
       },
       series: [{
@@ -183,11 +202,19 @@ export function useAccounting() {
       tooltip: {
         trigger: 'axis',
         formatter: (params) => {
-          return `${params[0].name}<br/>收入: £${params[0].value}<br/>支出: £${params[1].value}`
+          const incomeAmount = new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(Number(params?.[0]?.value || 0))
+          const expenseAmount = new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP'
+          }).format(Number(params?.[1]?.value || 0))
+          return `${params[0].name}<br/>${t('accounting.charts.incomeLegend')}: ${incomeAmount}<br/>${t('accounting.charts.expenseLegend')}: ${expenseAmount}`
         }
       },
       legend: {
-        data: ['收入', '支出']
+        data: [t('accounting.charts.incomeLegend'), t('accounting.charts.expenseLegend')]
       },
       xAxis: {
         type: 'category',
@@ -199,12 +226,16 @@ export function useAccounting() {
       yAxis: {
         type: 'value',
         axisLabel: {
-          formatter: '£{value}'
+          formatter: (value) => new Intl.NumberFormat(locale.value, {
+            style: 'currency',
+            currency: 'GBP',
+            maximumFractionDigits: 0
+          }).format(Number(value || 0))
         }
       },
       series: [
         {
-          name: '收入',
+          name: t('accounting.charts.incomeLegend'),
           type: 'bar',
           data: incomeData,
           itemStyle: {
@@ -212,7 +243,7 @@ export function useAccounting() {
           }
         },
         {
-          name: '支出',
+          name: t('accounting.charts.expenseLegend'),
           type: 'bar',
           data: expenseData,
           itemStyle: {

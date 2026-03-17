@@ -5,6 +5,8 @@ import router from '@/router'
 import { useUserStore } from '@/stores/user'
 import { normalizeAuthToken, stripBearerPrefix } from '@/utils/auth'
 import { getApiBaseUrl } from '@/utils/runtimeConfig'
+import { getApiErrorMessage } from '@/api/response'
+import { resolveCommonMessage } from '@/i18n/messageResolver'
 
 const LOGIN_ROUTE = '/login'
 
@@ -76,24 +78,35 @@ instance.interceptors.response.use(
 
       switch (error.response.status) {
         case 401:
-          handleUnauthorized(userStore, backendMessage || '登录已过期，请重新登录')
+          handleUnauthorized(
+            userStore,
+            getApiErrorMessage(error, backendMessage || resolveCommonMessage('errors.common.unauthorized', {}, '登录已过期，请重新登录'), {
+              fallbackKey: 'errors.common.unauthorized'
+            })
+          )
           break
         case 403:
-          ElMessage.error(backendMessage || '没有权限执行此操作')
+          ElMessage.error(getApiErrorMessage(error, backendMessage || resolveCommonMessage('errors.common.forbidden', {}, '没有权限进行此操作'), {
+            fallbackKey: 'errors.common.forbidden'
+          }))
           break
         case 404:
-          ElMessage.error(backendMessage || '请求的资源不存在')
+          ElMessage.error(getApiErrorMessage(error, backendMessage || resolveCommonMessage('errors.common.not_found', {}, '请求的资源不存在'), {
+            fallbackKey: 'errors.common.not_found'
+          }))
           break
         case 500:
-          ElMessage.error(backendMessage || '服务器内部错误')
+          ElMessage.error(getApiErrorMessage(error, backendMessage || resolveCommonMessage('errors.common.server_error', {}, '服务器内部错误'), {
+            fallbackKey: 'errors.common.server_error'
+          }))
           break
         default:
-          ElMessage.error(backendMessage || '请求失败')
+          ElMessage.error(getApiErrorMessage(error, backendMessage || resolveCommonMessage('errors.common.request_failed', {}, '请求失败')))
       }
     } else if (error.request) {
-      ElMessage.error('网络请求失败，请检查网络连接')
+      ElMessage.error(resolveCommonMessage('errors.common.network_error', {}, '网络请求失败，请检查网络连接'))
     } else if (error.message !== 'Token expired') {
-      ElMessage.error(error.message || '请求配置错误')
+      ElMessage.error(error.message || resolveCommonMessage('errors.common.config_error', {}, '请求配置错误'))
     }
 
     return Promise.reject(error)

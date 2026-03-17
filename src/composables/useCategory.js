@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useLedgerStore } from '@/stores/ledger'
 import { useUserStore } from '@/stores/user'
@@ -11,16 +12,8 @@ import { splitCategoriesByType } from '@/api/mappers/categoryMapper'
 import { availableCategoryIcons } from '@/constants/categoryIcons'
 import { getApiErrorMessage } from '@/api/response'
 
-const LOGIN_REQUIRED_MESSAGE = '请先登录'
-const LEDGER_REQUIRED_MESSAGE = '请先选择账本'
-const FETCH_CATEGORY_ERROR_MESSAGE = '获取分类列表失败'
-const ADD_CATEGORY_ERROR_MESSAGE = '添加分类失败'
-const DELETE_CATEGORY_ERROR_MESSAGE = '删除分类失败'
-const INVALID_CATEGORY_MESSAGE = '请填写完整的分类信息'
-
-const CATEGORY_PERMISSION_MESSAGE = '当前角色只能查看分类，需要 owner 或 admin 才能维护'
-
 export function useCategory() {
+  const { t } = useI18n()
   const userStore = useUserStore()
   const ledgerStore = useLedgerStore()
   const expenseCategories = ref([])
@@ -51,17 +44,17 @@ export function useCategory() {
 
   const ensureLedgerContext = ({ requireManage = false } = {}) => {
     if (!userStore.userId) {
-      ElMessage.warning(LOGIN_REQUIRED_MESSAGE)
+      ElMessage.warning(t('accounting.messages.loginRequired'))
       return false
     }
 
     if (!ledgerStore.currentLedgerId) {
-      ElMessage.warning(LEDGER_REQUIRED_MESSAGE)
+      ElMessage.warning(t('accounting.messages.ledgerRequired'))
       return false
     }
 
     if (requireManage && !canManageCategories()) {
-      ElMessage.warning(CATEGORY_PERMISSION_MESSAGE)
+      ElMessage.warning(t('accounting.messages.categoryPermission'))
       return false
     }
 
@@ -83,7 +76,7 @@ export function useCategory() {
       return categories
     } catch (error) {
       if (notifyError) {
-        ElMessage.error(getApiErrorMessage(error, FETCH_CATEGORY_ERROR_MESSAGE))
+        ElMessage.error(getApiErrorMessage(error, t('accounting.messages.categoriesFetchFailed')))
       }
       return null
     }
@@ -103,15 +96,15 @@ export function useCategory() {
       return
     }
 
-    const categoryLabel = type === 'expense' ? '支出' : '收入'
+    const categoryLabel = type === 'expense' ? t('common.expense') : t('common.income')
 
     try {
       await ElMessageBox.confirm(
-        `确定要删除${categoryLabel}分类“${category.name}”吗？`,
-        '删除确认',
+        t('accounting.messages.deleteCategoryDescription', { type: categoryLabel, name: category.name }),
+        t('accounting.messages.deleteCategoryTitle'),
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: t('common.confirm'),
+          cancelButtonText: t('common.cancel'),
           type: 'warning'
         }
       )
@@ -123,10 +116,10 @@ export function useCategory() {
 
       await deleteLedgerCategory(ledgerStore.currentLedgerId, categoryId)
       await fetchCategories()
-      ElMessage.success(`已删除${categoryLabel}分类：${category.name}`)
+      ElMessage.success(t('accounting.messages.categoryDeleted', { type: categoryLabel, name: category.name }))
     } catch (error) {
       if (error !== 'cancel') {
-        ElMessage.error(getApiErrorMessage(error, DELETE_CATEGORY_ERROR_MESSAGE))
+        ElMessage.error(getApiErrorMessage(error, t('accounting.messages.categoryDeleteFailed')))
       }
     }
   }
@@ -137,7 +130,7 @@ export function useCategory() {
     }
 
     if (!category.name || !category.icon || !category.color) {
-      ElMessage.warning(INVALID_CATEGORY_MESSAGE)
+      ElMessage.warning(t('accounting.categoryDialog.incompleteWarning'))
       return
     }
 
@@ -147,16 +140,16 @@ export function useCategory() {
 
       if (!refreshedCategories) {
         appendCategoryIfMissing(createdCategory)
-        ElMessage.warning('分类已创建，但列表刷新失败，请手动刷新')
+        ElMessage.warning(t('accounting.messages.categoryRefreshWarning'))
       } else {
         appendCategoryIfMissing(createdCategory)
-        ElMessage.success('添加分类成功')
+        ElMessage.success(t('accounting.messages.categoryAdded'))
       }
 
       dialogVisible.value = false
       newCategory.value = { name: '', icon: 'ShoppingCart' }
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, ADD_CATEGORY_ERROR_MESSAGE))
+      ElMessage.error(getApiErrorMessage(error, t('accounting.messages.categoryAddFailed')))
     }
   }
 

@@ -6,8 +6,9 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import '@/assets/styles/global.css'
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import i18n from '@/i18n'
 import { useLedgerStore } from './stores/ledger'
+import { useLocaleStore } from './stores/locale'
 import { useNotificationStore } from './stores/notification'
 import { useUserStore } from './stores/user'
 
@@ -16,10 +17,12 @@ const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
 app.use(pinia)
+app.use(i18n)
 app.use(router)
-app.use(ElementPlus, {
-  locale: zhCn,
-})
+app.use(ElementPlus)
+
+const localeStore = useLocaleStore()
+localeStore.initializeLocale()
 
 const userStore = useUserStore()
 userStore.initializeFromStorage()

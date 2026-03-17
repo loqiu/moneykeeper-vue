@@ -1,0 +1,1253 @@
+{
+  "common": {
+    "moneyKeeper": "MoneyKeeper",
+    "currentUserFallback": "Current user",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "refresh": "Refresh",
+    "reset": "Reset",
+    "login": "Sign in",
+    "register": "Create account",
+    "mainPage": "Main page",
+    "ledgerCenter": "Ledger centre",
+    "loadingLedger": "Loading ledger...",
+    "ledgerContextReserved": "Ledger context reserved",
+    "userRole": "Current role: {role}.",
+    "memberRoleFallback": "member",
+    "localeLabel": "Language",
+    "localeZh": "中文",
+    "localeEn": "English",
+    "all": "All",
+    "optional": "Optional",
+    "setToday": "Set today",
+    "date": "Date",
+    "amount": "Amount",
+    "type": "Type",
+    "category": "Category",
+    "note": "Note",
+    "unclassified": "Unclassified",
+    "income": "Income",
+    "expense": "Expense",
+    "notAvailable": "No records yet",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "unknown": "Unknown",
+      "notRecorded": "Not recorded"
+    }
+  },
+  "nav": {
+    "home": {
+      "label": "Home",
+      "description": "Accounting overview"
+    },
+    "ledgers": {
+      "label": "Ledgers",
+      "description": "List and context"
+    },
+    "categories": {
+      "label": "Categories",
+      "description": "Ledger categories"
+    },
+    "budgets": {
+      "label": "Budgets",
+      "description": "Rules and thresholds"
+    },
+    "statistics": {
+      "label": "Statistics",
+      "description": "Periods and mix"
+    },
+    "search": {
+      "label": "Search",
+      "description": "Records and filters"
+    },
+    "exports": {
+      "label": "Exports",
+      "description": "Export jobs"
+    },
+    "notifications": {
+      "label": "Notifications",
+      "description": "Notification centre"
+    }
+  },
+  "topbar": {
+    "workspaceTitle": "Platform Workspace",
+    "workspaceSubtitle": "Ledgers, budgets, notifications, exports, and billing all start here.",
+    "currentUser": "Current user: {name}",
+    "upgradeTitle": "Upgrade to Pro",
+    "upgradeDescription": "Check billing status and unlock exports, notifications, and later platform features.",
+    "support": "Contact support",
+    "userAgreement": "User agreement",
+    "privacyPolicy": "Privacy policy",
+    "deleteAccount": "Delete account",
+    "logout": "Sign out",
+    "ledgerContextTitle": "Ledger Context",
+    "ledgerDescription": "Ledger centre is now connected, and later platform pages will default to this ledger context.",
+    "ledgerDescriptionWithRole": "Current role: {role}. Budgets, notifications, exports, and search will default to this ledger.",
+    "agreementDescription": "Please confirm you have read and understood the terms below before using the app.",
+    "privacyDescription": "The following content explains how the app handles and protects your data.",
+    "connection": {
+      "connected": "Realtime notifications active",
+      "connecting": "Connecting notifications",
+      "reconnecting": "Reconnecting",
+      "error": "Notification connection issue",
+      "idle": "Notifications offline",
+      "detailConnected": "Notifications and state updates are active",
+      "detailConnecting": "Establishing realtime notification connection",
+      "detailReconnecting": "Trying to restore realtime notifications (attempt {count})",
+      "detailError": "Realtime notifications are currently unavailable. Refresh again shortly to retry.",
+      "detailIdle": "Realtime notification connection has not been established yet"
+    }
+  },
+  "auth": {
+    "loginPage": {
+      "tag": "Account Access",
+      "heroTitle": "Keep your finances in motion after sign-in",
+      "heroDescription": "Capture records, apply filters, analyse charts, and export data in one place. The sign-in view now follows the same visual language as the main product.",
+      "stats": {
+        "workspace": {
+          "label": "Single entry",
+          "value": "1 place",
+          "description": "Sign in and continue inside one accounting, filtering, and analysis workspace."
+        },
+        "capability": {
+          "label": "Core tools",
+          "value": "4 areas",
+          "description": "Records, filters, charts, and exports now form one connected workflow."
+        },
+        "access": {
+          "label": "Access modes",
+          "value": "2 ways",
+          "description": "Username/password and Google sign-in are both supported."
+        }
+      },
+      "highlights": {
+        "flowTitle": "A clearer accounting flow",
+        "flowDescription": "Create, filter, inspect, and review details without jumping between mismatched screens.",
+        "categoryTitle": "A steadier category model",
+        "categoryDescription": "Category id and category name are now separated, making later linking and editing more stable."
+      },
+      "welcomeTitle": "Welcome back",
+      "welcomeDescription": "Sign in to continue using your accounting workspace, charts, and export tools.",
+      "redirectHint": "After sign-in you will continue to: {path}",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "usernameRangePlaceholder": "3-50 characters",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "passwordMinPlaceholder": "At least 6 characters",
+      "ctaTitle": "Ready to continue",
+      "ctaDescription": "Signing in restores your records, filters, and notification state.",
+      "noAccount": "No account yet?",
+      "registerNow": "Create one now",
+      "orGoogle": "or continue with Google",
+      "thirdParty": "Third-party sign-in",
+      "createAccount": "Create a new account",
+      "createAccountDescription": "Fill in the basics to enter the accounting app, then refine your setup over time.",
+      "registerHighlights": [
+        "Enter the accounting workspace right away",
+        "Track categories and time periods later",
+        "Keep using exports and billing entry points"
+      ],
+      "email": "Email",
+      "emailPlaceholder": "example@email.com",
+      "firstName": "First name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Enter your last name",
+      "phone": "Phone number",
+      "phonePlaceholder": "Enter your phone number",
+      "submitDescription": "After submitting, return to sign-in and use the new account to enter the workspace."
+    },
+    "messages": {
+      "loginSuccess": "Signed in successfully",
+      "loginFailed": "Sign-in failed. Please try again later.",
+      "logoutSuccess": "Signed out successfully",
+      "logoutFailed": "Sign-out failed. Please try again later.",
+      "googleLoginSuccess": "Google sign-in succeeded",
+      "googleLoginFailed": "Google sign-in failed",
+      "registerSuccess": "Account created. Please sign in.",
+      "registerFailed": "Registration failed. Please try again later."
+    },
+    "validation": {
+      "usernameRequired": "Please enter your username",
+      "passwordRequired": "Please enter your password",
+      "usernameRange": "Username must be between 3 and 50 characters",
+      "passwordRange": "Password must be between 6 and 255 characters",
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Please enter a valid email address",
+      "emailRange": "Email must not exceed 255 characters",
+      "firstNameRequired": "Please enter your first name",
+      "firstNameRange": "First name must not exceed 50 characters",
+      "lastNameRequired": "Please enter your last name",
+      "lastNameRange": "Last name must not exceed 50 characters",
+      "phoneRequired": "Please enter your phone number",
+      "phoneInvalid": "Please enter a valid phone number"
+    }
+  },
+  "accounting": {
+    "heroTag": "{monthLabel}",
+    "heroTitle": "My accounting workspace",
+    "heroDescription": "Keep quick entry, filtering, and trend analysis on one screen. The top summary shows the full dataset while filters focus the detail list.",
+    "recentUpdate": "Latest update",
+    "recentUpdateHint": "Date of the most recent record",
+    "filterStatus": "Filter state",
+    "filterEnabled": "Active",
+    "filterIdle": "No filters",
+    "filterIdleHint": "Viewing all records",
+    "categoryCount": "Category count",
+    "categoryCountHint": "Combined income and expense categories",
+    "filtersActiveTitle": "Detail list filters are active",
+    "filtersActiveSummary": "{count} records matched. Income {income}, expense {expense}, balance {balance}.",
+    "filtersActiveHint": "Charts and top summaries still show the full dataset while the detail area focuses on the filtered result.",
+    "clearFilters": "Clear filters",
+    "quickEntryTitle": "Add a record",
+    "quickEntryDescription": "Capture today's income or expense quickly.",
+    "filterTitle": "Filter records",
+    "filterDescription": "Use category and type to locate the records you need.",
+    "summary": {
+      "incomeTitle": "Total income",
+      "incomeHint": "Accumulated value of all income records",
+      "expenseTitle": "Total expense",
+      "expenseHint": "Accumulated value of all expense records",
+      "balanceTitle": "Current balance",
+      "balanceHint": "Income minus expense",
+      "countTitle": "Record count",
+      "countHintActive": "Records matched by the current filters",
+      "countHintIdle": "Records currently loaded"
+    },
+    "form": {
+      "recordTypeTitle": "Record type",
+      "recordTypeDescription": "Switching between income and expense also refreshes the available categories.",
+      "amountHint": "Supports two decimals and will be normalised before submission.",
+      "dateHint": "Defaults to today, but you can also backfill older records.",
+      "datePlaceholder": "Choose a date",
+      "categoryDescription": "Choose the category that best matches this record.",
+      "categoryEmpty": "No categories exist for this type yet. Add one first.",
+      "categoryPrompt": "There are no selectable categories yet. Add a {type} category to continue.",
+      "addCategory": "Add category",
+      "notePlaceholder": "Add context for this record, such as the scenario, merchant, or payment method.",
+      "summaryEmptyCategory": "No category selected yet",
+      "summaryPendingAmount": "Waiting for amount",
+      "saveRecord": "Save record",
+      "incompleteWarning": "Please complete the record before saving"
+    },
+    "filter": {
+      "title": "Quick filters",
+      "description": "Pick a type first, then narrow the result with categories.",
+      "recordTypeTitle": "Record type",
+      "allTypes": "All types",
+      "categoryHint": "{count} categories are available right now",
+      "categoryPending": "Choose a type to enable category filters",
+      "pickTypeFirst": "Choose expense or income first, then narrow down to a specific category.",
+      "noCategories": "There are no categories for this type yet. Add one from the left panel first.",
+      "allCategories": "All categories",
+      "chartHint": "Tip: click a slice in the chart on the right to filter the detail list to that expense category."
+    },
+    "list": {
+      "title": "Record details",
+      "description": "Review, edit, and export the current filtered result.",
+      "totalRecords": "{count} records",
+      "exportExcel": "Export Excel",
+      "exportFilenamePrefix": "moneykeeper-records",
+      "noNote": "No note",
+      "pageStatus": "Page {page}, {pageSize} rows per page.",
+      "emptyTitle": "No matching records yet",
+      "emptyDescription": "Add a record first, or adjust the filters on the left and try again.",
+      "noExportData": "There is no data to export",
+      "exportFailed": "Export failed. Please try again later."
+    },
+    "charts": {
+      "loading": "Preparing chart data...",
+      "insightBoard": "Insight Board",
+      "title": "Insights",
+      "description": "This area shows expense mix, time trends, and income-versus-expense summaries so unusual movement is easier to spot.",
+      "lockedCategory": "Locked category: {category}",
+      "clearCategory": "Clear category",
+      "expenseBreakdownTitle": "Expense category mix",
+      "expenseBreakdownDescription": "Click a slice to link the detail list below.",
+      "expenseBreakdownEmptyTitle": "No expense category data yet",
+      "expenseBreakdownEmptyDescription": "Add a few expense records first and the category mix will start to show changes in structure.",
+      "trendTitle": "Expense trend",
+      "trendDescription": "Track changes in spending over time and spot unusual spending days quickly.",
+      "trendEmptyTitle": "No trend data yet",
+      "trendEmptyDescription": "There is not enough expense data to draw a trend yet. Add some records and it will appear automatically.",
+      "summaryTitle": "Income and expense summary",
+      "summaryDescription": "Switch between yearly, monthly, and daily views to compare how income and expense move over time.",
+      "byYear": "By year",
+      "byMonth": "By month",
+      "byDay": "By day",
+      "timeSummaryEmptyTitle": "No summary data yet",
+      "timeSummaryEmptyDescription": "There is not enough data to draw the time summary. Add a few income or expense records first.",
+      "incomeLegend": "Income",
+      "expenseLegend": "Expense",
+      "expenseTooltip": "Expense",
+      "uncategorized": "Unclassified"
+    },
+    "edit": {
+      "dialogTitle": "Edit record",
+      "dialogDescription": "Adjust the amount, category, or date, then save and the detail list will update right away.",
+      "recordTypeDescription": "Changing the type clears the current category so you can choose again.",
+      "amountHint": "Make sure the amount matches the selected type before saving.",
+      "dateHint": "Used for chart summaries and sorting in the detail list.",
+      "categoryDescription": "Pick a new category from the categories available for this type.",
+      "categoryEmpty": "There are no categories for this type yet. Close the dialog and add one first.",
+      "categoryUnavailable": "There are no selectable categories right now. Close the dialog, add the matching category, then edit this record again.",
+      "notePlaceholder": "Add more background for this record, such as the spending context or payee.",
+      "summaryPendingAmount": "Waiting for amount",
+      "saveChanges": "Save changes"
+    },
+    "categoryDialog": {
+      "description": "Start with a name, then choose an icon and colour so the category is easier to recognise in lists and charts.",
+      "previewTitle": "Live preview",
+      "previewDescription": "This will create an {type} category.",
+      "unnamed": "Untitled category",
+      "nameTitle": "Category name",
+      "namePlaceholder": "For example: Meals, commute, salary, bonus",
+      "nameHint": "The name appears directly in detail lists and chart legends.",
+      "iconTitle": "Icon",
+      "iconDescription": "Choose an icon that matches the scenario so it stays easier to scan later.",
+      "iconUnselected": "No icon selected",
+      "colorTitle": "Colour",
+      "colorDescription": "Colour is used in category buttons and visual accents only. It does not affect the data model.",
+      "summaryPendingName": "Waiting for a name",
+      "createCategory": "Create category",
+      "incompleteWarning": "Please complete the category before saving",
+      "expenseDialogTitle": "Add expense category",
+      "incomeDialogTitle": "Add income category",
+      "expenseType": "expense",
+      "incomeType": "income"
+    },
+    "messages": {
+      "ledgerRequired": "Please choose a ledger first",
+      "loginRequired": "Please sign in first",
+      "recordsSummaryFailed": "Failed to load the summary",
+      "recordsFetchFailed": "Failed to load records",
+      "recordAdded": "Record added",
+      "recordAddFailed": "Failed to add the record",
+      "recordDeleted": "Record deleted",
+      "recordDeleteFailed": "Failed to delete the record",
+      "recordUpdated": "Record updated",
+      "recordUpdateFailed": "Failed to update the record",
+      "deleteRecordTitle": "Delete record",
+      "deleteRecordDescription": "Are you sure you want to delete this record?",
+      "categoriesFetchFailed": "Failed to load categories",
+      "categoryAddFailed": "Failed to add the category",
+      "categoryDeleteFailed": "Failed to delete the category",
+      "categoryPermission": "Your current role can view categories only. Owner or admin access is required to manage them.",
+      "deleteCategoryTitle": "Delete category",
+      "deleteCategoryDescription": "Delete the {type} category “{name}”?",
+      "categoryDeleted": "{type} category deleted: {name}",
+      "categoryAdded": "Category added",
+      "categoryRefreshWarning": "The category was created, but the list could not be refreshed. Please refresh manually."
+    }
+  },
+  "platform": {
+    "search": {
+      "eyebrow": "Record Search",
+      "title": "Record search",
+      "description": "Search records inside the current ledger by keyword, category, date, and member. If a new record does not appear immediately, refresh again in a moment.",
+      "notice": "If you have just created, updated, or deleted a record, search results may update slightly later. Refresh once first; it does not mean the record is lost.",
+      "resultDescription": "Results only show records from the current ledger. Keep narrowing the result with keywords, categories, dates, types, and members.",
+      "refreshAction": "Refresh results",
+      "summary": {
+        "matchesLabel": "Matches",
+        "matchesHint": "Records matched right now",
+        "bestMatchLabel": "Best match",
+        "bestMatchHint": "Closest match score for the current search",
+        "scopeLabel": "Scope",
+        "scopeHint": "Ledger used by this search"
+      },
+      "filters": {
+        "title": "Search filters",
+        "description": "Enter a keyword directly or combine member, category, date, and type filters. Without a keyword, filters alone still return results.",
+        "queryLabel": "Keyword",
+        "queryPlaceholder": "For example: lunch, coffee, salary",
+        "memberLabel": "Member",
+        "allMembers": "All members",
+        "memberFallback": "Member #{id}",
+        "allTypes": "All types",
+        "allCategories": "All categories",
+        "categoryNameLabel": "Category name",
+        "categoryNamePlaceholder": "Type a category name directly",
+        "startDateLabel": "Start date",
+        "endDateLabel": "End date",
+        "dateOptional": "Optional",
+        "limitLabel": "Result size",
+        "limitOption": "{count} rows",
+        "searchAction": "Search now",
+        "resetAction": "Reset and refresh"
+      },
+      "states": {
+        "errorTitle": "Search failed",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Search works in ledger context. Switch to the target ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "loadingTitle": "Searching records...",
+        "loadingDescription": "Keyword and filter conditions are being queried together."
+      },
+      "empty": {
+        "idleTitle": "Start with a search condition",
+        "idleDescription": "Enter a keyword or combine member, category, date, and type filters directly.",
+        "filteredTitle": "No matching results",
+        "filteredDescription": "Try widening the date range, clearing category filters, or trying again shortly.",
+        "ledgerTitle": "No searchable records in this ledger yet",
+        "ledgerDescription": "Create a record first, or add a keyword to narrow the scope and try again."
+      },
+      "results": {
+        "scoreLabel": "Match {score}",
+        "recordId": "Record ID: {id}",
+        "member": "Member: {name}",
+        "memberFallback": "Member #{id}",
+        "date": "Date: {value}",
+        "updated": "Updated: {value}",
+        "noNote": "This record has no note.",
+        "amountLabel": "Amount",
+        "noTimestamp": "Not recorded"
+      },
+      "errors": {
+        "invalidDateRange": "End date cannot be earlier than the start date",
+        "fetchFailed": "Failed to search records"
+      }
+    },
+    "categories": {
+      "eyebrow": "Ledger Categories",
+      "title": "Category management",
+      "description": "Manage income and expense categories for the current ledger in one place. Editing and finer permission states will be added next.",
+      "workspaceDescription": "Categories now run in the current ledger context. Role differences between owner/admin and member will continue to be refined.",
+      "countBadge": "{count} items",
+      "summary": {
+        "expenseLabel": "Expense",
+        "expenseHint": "Current expense category count",
+        "incomeLabel": "Income",
+        "incomeHint": "Current income category count"
+      },
+      "actions": {
+        "addExpense": "Add expense category",
+        "addIncome": "Add income category"
+      },
+      "states": {
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Category management is ledger-based now. Choose the target ledger before managing income and expense categories.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "readOnlyTitle": "Read-only role",
+        "readOnlyDescription": "You can still review the category structure for this ledger, but only owners or admins can add or delete categories."
+      },
+      "expense": {
+        "title": "Expense categories",
+        "description": "Used for records, filters, and chart grouping in this ledger.",
+        "emptyTitle": "No expense categories yet",
+        "emptyDescription": "Create a few high-frequency categories first to make quick entry smoother."
+      },
+      "income": {
+        "title": "Income categories",
+        "description": "Manage salary, bonus, reimbursement, and other income sources in one place.",
+        "emptyTitle": "No income categories yet",
+        "emptyDescription": "Add a few income types to make the statistics view clearer."
+      }
+    },
+    "budgets": {
+      "eyebrow": "Budget Workspace",
+      "title": "Budget centre",
+      "description": "Budgets have been split out from the accounting homepage and now track monthly plans, usage progress, and alert thresholds for the current ledger.",
+      "workspaceDescription": "This budget list now runs in ledger context, and notifications plus statistics will reuse the rule state shown here.",
+      "summary": {
+        "budgetsLabel": "Budgets",
+        "budgetsHint": "Budgets in the current month",
+        "plannedLabel": "Planned",
+        "plannedHint": "Total planned amount",
+        "alertsLabel": "Alerts",
+        "alertsHint": "Budgets with overruns or triggered thresholds"
+      },
+      "actions": {
+        "refresh": "Refresh budgets",
+        "applyFilters": "Apply filters"
+      },
+      "filters": {
+        "yearLabel": "Year",
+        "yearOption": "{year}",
+        "monthLabel": "Month",
+        "monthOption": "{month}",
+        "allTypes": "All types",
+        "allCategories": "All categories"
+      },
+      "form": {
+        "title": "Create budget",
+        "description": "A budget is bound to the current ledger and month. Leave category empty for a ledger-wide total budget.",
+        "readOnlyHint": "Your current role can view budgets but cannot create, delete, or update threshold rules. Owner or admin access is required.",
+        "nameLabel": "Budget name",
+        "namePlaceholder": "For example: Monthly dining budget",
+        "categoryPlaceholder": "Leave empty for a ledger-wide budget",
+        "amountLabel": "Amount",
+        "notesPlaceholder": "Use notes to explain the budget purpose, scope, or spending to watch closely this month.",
+        "submitAction": "Create and refresh"
+      },
+      "states": {
+        "errorTitle": "Budget workspace failed to load",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Budgets now run in ledger context. Choose the current ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "loadingTitle": "Loading budgets and categories...",
+        "loadingDescription": "The budget list and category options are being refreshed together.",
+        "emptyTitle": "No budgets for this month yet",
+        "emptyDescription": "Use the form on the right to create the first budget. Rules and notifications will build on it from here."
+      },
+      "cards": {
+        "expenseBudget": "Expense budget",
+        "incomeBudget": "Income budget",
+        "exceededBadge": "Exceeded",
+        "ledgerTotal": "Ledger-wide budget",
+        "meta": "{category} · {year}-{month}",
+        "budgetLabel": "Budget",
+        "spentLabel": "Spent",
+        "remainingLabel": "Remaining",
+        "usageLabel": "Usage",
+        "thresholdHit": "{threshold}% triggered"
+      },
+      "rules": {
+        "title": "Alert rules",
+        "description": "Backend notifications and budget hit state are driven by these thresholds.",
+        "addAction": "Add rule",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "empty": "No alert rules yet. Start with an 80% or 100% threshold."
+      },
+      "ruleDialog": {
+        "title": "Add budget alert rule",
+        "description": "When budget usage reaches the selected threshold, the backend sends the hit state back into notifications and budget progress.",
+        "currentBudgetLabel": "Current budget",
+        "thresholdBadge": "Threshold",
+        "thresholdLabel": "Threshold percentage",
+        "statusLabel": "Rule status",
+        "disabledTemporarily": "Disabled for now",
+        "notificationTitleLabel": "Notification title",
+        "notificationTitlePlaceholder": "For example: Dining budget is almost used up",
+        "notificationMessageLabel": "Notification message",
+        "notificationMessagePlaceholder": "For example: This month's dining budget has reached 80%. Keep a close eye on spending over the next few days.",
+        "submitAction": "Save rule",
+        "incompleteWarning": "Please complete the budget rule first"
+      },
+      "dialogs": {
+        "deleteBudgetTitle": "Delete budget",
+        "deleteBudgetDescription": "Delete budget “{name}”?",
+        "deleteRuleTitle": "Delete rule",
+        "deleteRuleDescription": "Delete the {threshold}% threshold rule?"
+      },
+      "messages": {
+        "created": "Budget created",
+        "deleted": "Budget deleted",
+        "ruleCreated": "Budget rule created",
+        "ruleDeleted": "Budget rule deleted"
+      },
+      "errors": {
+        "workspaceFetchFailed": "Failed to load budget data",
+        "ledgerRequired": "Choose a ledger first",
+        "formIncomplete": "Please complete the budget name and amount",
+        "createFailed": "Failed to create the budget",
+        "deletePermission": "Your current role cannot delete budgets",
+        "deleteFailed": "Failed to delete the budget",
+        "ruleCreatePermission": "Your current role cannot add budget rules",
+        "ruleCreateFailed": "Failed to create the budget rule",
+        "ruleDeletePermission": "Your current role cannot delete budget rules",
+        "ruleDeleteFailed": "Failed to delete the budget rule"
+      }
+    },
+    "notifications": {
+      "eyebrow": "Notification Center",
+      "title": "Notification centre",
+      "description": "Notifications now move beyond top-bar toasts into a searchable, traceable history centre for budget alerts, export updates, and system events.",
+      "summary": {
+        "unreadLabel": "Unread",
+        "unreadHint": "Unread notifications right now",
+        "loadedLabel": "Loaded",
+        "loadedHint": "Rows loaded this time",
+        "streamLabel": "Stream",
+        "streamHint": "Top bar state stays in sync with this page"
+      },
+      "list": {
+        "title": "My notifications",
+        "description": "SSE handles realtime updates while notification logs handle history and read state. Filters also affect the scope of “mark all as read”."
+      },
+      "actions": {
+        "markFilteredRead": "Mark current filter as read",
+        "markRead": "Mark as read"
+      },
+      "filters": {
+        "allTypes": "All types",
+        "unreadOnly": "Unread only",
+        "limitLabel": "Load count",
+        "limitOption": "{count} rows"
+      },
+      "states": {
+        "errorTitle": "Failed to load notifications",
+        "streamUnavailableTitle": "Realtime notifications are unavailable right now",
+        "loadingTitle": "Loading notifications...",
+        "loadingDescription": "Refreshing both the filtered list and unread counts.",
+        "emptyTitle": "No matching notifications",
+        "emptyDescription": "Budget alerts, completed exports, and system messages will all settle here."
+      },
+      "types": {
+        "success": "Success",
+        "warning": "Warning",
+        "info": "Info",
+        "error": "Error"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "Unread"
+      },
+      "connection": {
+        "reconnecting": "The notification stream is reconnecting. History is still available, but new realtime messages may be slightly delayed.",
+        "connecting": "The notification stream is connecting. If the list loads, wait a few seconds for realtime updates to recover.",
+        "error": "The notification stream is currently offline. Refresh again shortly or check your network. Historical notifications are safe.",
+        "idle": "The notification stream has not connected yet. Historical notifications are still available here."
+      },
+      "messages": {
+        "markedRead": "Notification marked as read",
+        "noUnread": "There are no unread notifications in the current filter",
+        "markedFilteredRead": "Updated notification state for the current filter",
+        "justNow": "Just now"
+      },
+      "errors": {
+        "fetchFailed": "Failed to load notifications",
+        "markReadFailed": "Failed to mark the notification as read",
+        "markAllReadFailed": "Failed to mark filtered notifications as read"
+      }
+    },
+    "statistics": {
+      "eyebrow": "Ledger Analytics",
+      "title": "Statistics",
+      "description": "Review period summaries, trend changes, and category mix for the current ledger to spot unusual movement in income, expense, and balance.",
+      "summary": {
+        "incomeLabel": "Income",
+        "incomeHint": "Change versus the previous period",
+        "expenseLabel": "Expense",
+        "expenseHint": "Change versus the previous period",
+        "balanceLabel": "Balance",
+        "balanceHint": "Change versus the previous period"
+      },
+      "window": {
+        "title": "Current analysis window",
+        "description": "See the current statistics window together with its previous-period baseline to judge whether the movement is unusual.",
+        "rangeLabel": "Range",
+        "previousLabel": "Previous period",
+        "previousHint": "Used to calculate every delta on this page",
+        "recordsLabel": "Records",
+        "recordsHint": "Income {income} · Expense {expense}",
+        "anchorLabel": "Anchor",
+        "anchorHint": "Reference date used by the current filter"
+      },
+      "ledgerDescription": "This page reads the ledger statistics endpoint directly. Switch between week, month, and year, and optionally filter by member.",
+      "actions": {
+        "refresh": "Refresh statistics",
+        "applyFilters": "Apply filters"
+      },
+      "filters": {
+        "anchorPlaceholder": "Choose an anchor date",
+        "memberPlaceholder": "All members",
+        "allMembers": "All members",
+        "memberFallback": "Member #{id}",
+        "period": {
+          "week": "By week",
+          "month": "By month",
+          "year": "By year"
+        },
+        "granularity": {
+          "day": "day",
+          "month": "month"
+        }
+      },
+      "states": {
+        "errorTitle": "Failed to load statistics",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Statistics run entirely in ledger context. Switch to the target ledger before reviewing trends and category structure.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "loadingTitle": "Loading statistics...",
+        "loadingDescription": "The system is recalculating the statistics window using the current ledger, period, and filters.",
+        "emptyTitle": "No statistics for this window yet",
+        "emptyDescription": "Change the period, adjust the anchor date, or add more records to this ledger and come back."
+      },
+      "trend": {
+        "title": "Trend buckets",
+        "description": "Aggregated by {granularity} for income, expense, and record count.",
+        "bucketCount": "{count} buckets",
+        "records": "{count} records",
+        "income": "Income",
+        "expense": "Expense",
+        "empty": "There is no trend data to show in this window yet."
+      },
+      "categories": {
+        "title": "Category mix",
+        "description": "Income and expense structure for the current analysis window.",
+        "expenseTitle": "Expense categories",
+        "incomeTitle": "Income categories",
+        "count": "{count} categories",
+        "expenseEmpty": "There is no expense category data in this window.",
+        "incomeEmpty": "There is no income category data in this window."
+      },
+      "messages": {
+        "noBaseline": "No comparable baseline from the previous period",
+        "vsPrevious": "{value}% vs previous"
+      },
+      "errors": {
+        "fetchFailed": "Failed to load statistics"
+      }
+    },
+    "ledgers": {
+      "eyebrow": "Ledger Workspace",
+      "title": "Ledger centre",
+      "description": "This is the platform entry point for ledger context. Ledger list, creation, and current context all start here, and budgets, notifications, exports, and search follow the same selection.",
+      "summary": {
+        "ledgersLabel": "Ledgers",
+        "ledgersHint": "Accessible ledgers right now",
+        "contextLabel": "Context",
+        "contextHint": "Current platform context"
+      },
+      "list": {
+        "title": "My ledgers",
+        "description": "Default ledgers, shared ledgers, and later platform features all start here.",
+        "refresh": "Refresh list",
+        "loadErrorTitle": "Failed to load ledgers",
+        "loadingTitle": "Loading ledgers...",
+        "loadingDescription": "The app is synchronising the ledgers you can access together with the default context.",
+        "emptyTitle": "No ledger available yet",
+        "emptyDescription": "Start by creating a shared, family, or project ledger.",
+        "defaultBadge": "Default",
+        "contextDescription": "This phase focuses on wiring ledger context first. Budgets, notifications, exports, and search will all follow this selection.",
+        "currentContext": "Current context",
+        "setCurrentContext": "Set as current context",
+        "membersAction": "Members and invites"
+      },
+      "create": {
+        "title": "Create a ledger",
+        "description": "The backend currently supports shared, family, and project ledgers.",
+        "nameLabel": "Ledger name",
+        "namePlaceholder": "For example: Family Budget",
+        "typeLabel": "Ledger type",
+        "submit": "Create and join the ledger context",
+        "nextTitle": "Next steps",
+        "steps": [
+          "Attach the current ledger to budgets, notifications, exports, and search.",
+          "Move records and category APIs under /api/ledgers/{ledgerId}/....",
+          "Turn the members and invites page into a full management view."
+        ]
+      },
+      "types": {
+        "shared": "Shared",
+        "family": "Family",
+        "project": "Project"
+      },
+      "messages": {
+        "contextSwitched": "Platform context updated",
+        "nameRequired": "Please enter a ledger name",
+        "created": "Ledger created",
+        "currentLedgerFallback": "No ledger selected"
+      },
+      "errors": {
+        "createFailed": "Failed to create the ledger"
+      }
+    },
+    "members": {
+      "eyebrow": "Ledger Members",
+      "title": "Members and invites",
+      "description": "Review members, create invites, track invite state, and accept pending invites sent to the current account email.",
+      "summary": {
+        "membersLabel": "Members",
+        "membersHint": "Current ledger member count",
+        "invitesLabel": "Invites",
+        "invitesHint": "Current ledger invite count",
+        "roleLabel": "Role",
+        "roleHint": "Page visibility is based on this role"
+      },
+      "inviteForm": {
+        "title": "Create invite",
+        "description": "Only owners and admins can create invites. Invites are matched by email and accepted ledgers refresh the ledger list automatically.",
+        "readOnly": "Your current role can review members but cannot create invites. Owner or admin access is required.",
+        "emailLabel": "Invited email",
+        "emailPlaceholder": "teammate@example.com",
+        "roleLabel": "Role",
+        "daysLabel": "Valid for (days)",
+        "submit": "Create invite",
+        "roles": {
+          "admin": "Admin",
+          "member": "Member"
+        }
+      },
+      "myInvites": {
+        "title": "My pending invites",
+        "description": "These invites match the current account email. Accepting one syncs the new ledger back into ledger context.",
+        "refresh": "Refresh",
+        "pendingCount": "Pending {count}",
+        "resolvedCount": "Resolved {count}",
+        "accept": "Accept invite",
+        "empty": "There are no pending invites right now."
+      },
+      "workspace": {
+        "description": "This page is scoped to the ledgerId in the route. If this is not the active platform context, switch it here in one click.",
+        "refresh": "Refresh page",
+        "setCurrent": "Set as current ledger"
+      },
+      "states": {
+        "errorTitle": "Failed to load member collaboration data",
+        "ledgerMissingTitle": "This ledger is not in your accessible list",
+        "ledgerMissingDescription": "Go back to Ledger Centre to refresh the list, or confirm that the corresponding invite has been accepted.",
+        "ledgerMissingAction": "Back to Ledger Centre",
+        "loadingTitle": "Loading members and invites...",
+        "loadingDescription": "The app is synchronising the member list, ledger invites, and the pending invites for the current account."
+      },
+      "membersList": {
+        "title": "Member list",
+        "description": "Shows owner, admin, and member roles together with joined time.",
+        "count": "{count} members",
+        "currentUser": "Current user",
+        "emailMissing": "No email available",
+        "joinedAt": "Joined: {value}",
+        "empty": "This ledger does not have member data yet."
+      },
+      "ledgerInvites": {
+        "title": "Ledger invites",
+        "description": "Track pending, accepted, and expired invite states.",
+        "count": "{count} invites",
+        "noPermission": "Your current role cannot review invites. Owner or admin access is required.",
+        "copyCode": "Copy invite code",
+        "reinvite": "Reinvite",
+        "inviteCode": "Invite code: {code}",
+        "expiresAt": "Expires: {value}",
+        "createdAt": "Created: {value}",
+        "acceptedAt": "Accepted: {value}",
+        "filteredEmpty": "No invites match the current filter",
+        "empty": "There are no invite records for this ledger yet.",
+        "filters": {
+          "all": "All",
+          "pending": "Pending",
+          "accepted": "Accepted",
+          "expired": "Expired"
+        }
+      },
+      "messages": {
+        "emailRequired": "Please enter an invited email",
+        "emailInvalid": "Please enter a valid email address",
+        "alreadyMember": "This email already belongs to a member of the current ledger",
+        "duplicatePendingInvite": "There is already a pending invite for this email. You can copy the invite code instead.",
+        "inviteCreated": "Invite created",
+        "inviteAccepted": "Invite accepted",
+        "inviteCodeCopied": "Invite code copied",
+        "reinviteFilled": "The invite details have been copied back into the form. You can create it again directly.",
+        "inviteUnavailable": "This invite can no longer be accepted",
+        "inviteCodeMissing": "This invite does not have a code to copy",
+        "contextSwitched": "Current ledger context updated",
+        "reinviteForbidden": "Your current role cannot create a replacement invite"
+      },
+      "errors": {
+        "pendingFetchFailed": "Failed to load pending invites",
+        "fetchFailed": "Failed to load members and invites",
+        "createInviteFailed": "Failed to create the invite",
+        "acceptInviteFailed": "Failed to accept the invite",
+        "copyInviteCodeFailed": "Failed to copy the invite code"
+      }
+    },
+    "exports": {
+      "eyebrow": "Export Jobs",
+      "title": "Export jobs",
+      "description": "Exports now run as trackable async jobs with history, status, and downloadable results.",
+      "summary": {
+        "jobsLabel": "Jobs",
+        "jobsHint": "Export jobs currently loaded",
+        "activeLabel": "Active",
+        "activeHint": "Queued or running right now",
+        "completedLabel": "Completed",
+        "completedHint": "Ready to download"
+      },
+      "create": {
+        "title": "Create export job",
+        "description": "After creation, the backend writes a queued notification first. Completion or failure also flows back into Notification Centre.",
+        "permissionHint": "Your current role can create your own export jobs, but exporting on behalf of another member requires owner or admin access.",
+        "typeLabel": "Record type",
+        "allTypes": "All types",
+        "targetMemberLabel": "Target member",
+        "targetMemberPlaceholder": "Leave empty for your own records",
+        "startDateLabel": "Start date",
+        "endDateLabel": "End date",
+        "dateOptional": "Optional",
+        "submit": "Create export job"
+      },
+      "workspace": {
+        "description": "Export jobs are listed in the current ledger. Members see jobs they created; owners and admins can review every job in this ledger.",
+        "refresh": "Refresh jobs",
+        "openNotifications": "Open Notification Centre",
+        "limitPlaceholder": "Load count",
+        "limitOption": "{count} rows",
+        "pollingLabel": "Auto-refresh active jobs",
+        "pollingStatus": "Status: {status}"
+      },
+      "states": {
+        "errorTitle": "Failed to load export jobs",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Export jobs work in ledger context. Switch to the target ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "loadingTitle": "Loading export jobs...",
+        "loadingDescription": "Recent export jobs and their status are being read for the current ledger.",
+        "emptyTitle": "There are no export jobs yet",
+        "emptyDescription": "Create the first job and the backend will process it asynchronously before notifying you."
+      },
+      "jobs": {
+        "createdAt": "Created {value}",
+        "fallbackName": "Export job #{id}",
+        "jobId": "Job ID: {id}",
+        "requestedBy": "Requested by: {value}",
+        "targetMember": "Target member: {value}",
+        "currentUser": "Current user",
+        "recordCount": "Records: {count}",
+        "downloadCount": "Downloads: {count}",
+        "startDate": "Start date: {value}",
+        "endDate": "End date: {value}",
+        "unlimited": "No limit",
+        "startedAt": "Started: {value}",
+        "completedAt": "Completed: {value}",
+        "notStarted": "Not started",
+        "notCompleted": "Not completed",
+        "download": "Download result",
+        "refreshStatus": "Refresh status",
+        "status": {
+          "pending": "Queued",
+          "running": "Running",
+          "completed": "Completed",
+          "failed": "Failed"
+        }
+      },
+      "messages": {
+        "ledgerRequired": "Choose a ledger first",
+        "invalidDateRange": "End date cannot be earlier than the start date",
+        "crossMemberForbidden": "Your current role can only create export jobs for your own records",
+        "created": "Export job created. The backend has started queueing it.",
+        "downloadStarted": "The export download has started",
+        "pollingOff": "Auto-refresh is off",
+        "noActiveJobs": "There are no active jobs right now",
+        "pollingActive": "Refreshing active jobs",
+        "pollingReady": "Auto-refresh is enabled",
+        "ledgerFallback": "Choose a ledger first"
+      },
+      "errors": {
+        "fetchFailed": "Failed to load export jobs",
+        "createFailed": "Failed to create the export job",
+        "refreshFailed": "Failed to refresh the export job",
+        "downloadFailed": "Failed to download the export file"
+      }
+    }
+  },
+  "billing": {
+    "checkout": {
+      "eyebrow": "Billing & subscriptions",
+      "stripeHosted": "Stripe hosted checkout",
+      "priceLabel": "Price",
+      "defaultPlanName": "Pro Monthly",
+      "defaultPlanDescription": "Monthly subscription managed through Stripe billing and payment methods.",
+      "serviceSyncingLabel": "Syncing status",
+      "intervalMonth": "/month",
+      "intervalYear": "/year",
+      "heroDescription": "You will be redirected to Stripe to complete payment. The final subscription state still comes from the backend after you return.",
+      "section": {
+        "activeTitle": "Current subscription",
+        "availableTitle": "Before you buy",
+        "errorTitle": "Status unavailable",
+        "loadingTitle": "Syncing status",
+        "blockedTitle": "Current status",
+        "activeDescription": "This section shows the active subscription together with the actions you can take next.",
+        "availableDescription": "The current environment is ready for purchase and you can continue now.",
+        "errorDescription": "This does not mean ready=false. It means the frontend could not fetch the payment status.",
+        "loadingDescription": "The page is synchronising payment status, plan data, and the current subscription from the backend.",
+        "blockedDescription": "Purchasing is not available in the current environment yet."
+      },
+      "cards": {
+        "plan": "Plan",
+        "subscriptionStatus": "Subscription status",
+        "paymentStatus": "Payment status",
+        "subscriptionEmpty": "There is no active subscription yet.",
+        "statusUnavailable": "The backend payment status is not available.",
+        "paymentAvailable": "You can continue and purchase the current plan now.",
+        "paymentBlocked": "The current plan cannot be purchased yet."
+      },
+      "states": {
+        "subscribedTitle": "Your plan is already active",
+        "subscribedCancelHint": "The current subscription is already scheduled to cancel at the end of the billing period.",
+        "subscribedManageHint": "Open Stripe to manage billing details or the payment method.",
+        "availableTitle": "Purchase is available",
+        "availableDescription": "Use the main button above to continue to Stripe. The success page will keep polling the backend until the subscription is actually confirmed.",
+        "errorTitle": "Payment status could not be loaded",
+        "errorDescription": "The frontend will not misread this as ready=false. Refresh first. If it still fails, check the current login state and whether the environment is hitting the expected backend.",
+        "blockedTitle": "Purchasing is temporarily unavailable",
+        "blockedDescription": "The backend currently reports that payment is not ready. Refresh later or continue using the accounting features first."
+      },
+      "actions": {
+        "refreshStatus": "Refresh status",
+        "retryStatus": "Retry status check",
+        "manageSubscription": "Manage subscription",
+        "buyNow": "Buy now",
+        "blocked": "Unavailable right now",
+        "checking": "Checking...",
+        "cancelSubscription": "Cancel subscription",
+        "cancelScheduled": "Cancellation scheduled"
+      },
+      "hints": {
+        "checking": "Checking the payment status. Please wait a moment.",
+        "statusError": "{message}. Refresh first. If it still fails, confirm the current login state and /api routing in this environment.",
+        "blocked": "The payment service is not open right now, so purchasing is temporarily unavailable.",
+        "activeCancel": "Your subscription is still active and already scheduled to cancel at the end of the current billing period.",
+        "activeManage": "You already have the current plan and can jump straight to Stripe to manage it.",
+        "buy": "Clicking buy will redirect you to Stripe's secure checkout page.",
+        "retry": "Refresh the payment status first, then decide whether to continue.",
+        "loading": "The page is still loading the backend payment state.",
+        "manage": "Review billing details, payment methods, and the current subscription in Stripe.",
+        "preparing": "The payment service is still preparing. Please try again later.",
+        "checkout": "Continue to Stripe to pay for the current plan."
+      },
+      "messages": {
+        "statusUnavailable": "Failed to load payment status",
+        "paymentAvailable": "Payment available",
+        "paymentBlocked": "Payment unavailable",
+        "subscriptionNone": "Not subscribed",
+        "subscriptionActive": "Active subscription",
+        "subscriptionTrialing": "Trialing",
+        "subscriptionPastDue": "Past due",
+        "subscriptionCanceled": "Cancelled",
+        "subscriptionUnpaid": "Unpaid",
+        "subscriptionCancelAtPeriodEnd": "Active now, cancelling at period end",
+        "periodMissing": "There is no active subscription period right now",
+        "periodCancelRange": "{start} - {end} (cancels at period end)",
+        "periodRange": "{start} - {end}",
+        "periodCancelUntil": "Current period ends on {end}, then the subscription will cancel",
+        "periodUntil": "Current period ends on {end}",
+        "periodUnknown": "The backend has not returned the subscription period yet"
+      },
+      "confirm": {
+        "cancelTitle": "Cancel subscription",
+        "cancelDescription": "Cancelling the subscription takes effect at the end of the current billing period. Continue?",
+        "confirm": "Confirm cancellation",
+        "cancel": "Keep subscription"
+      },
+      "errors": {
+        "statusFetchFailed": "Failed to fetch the payment status",
+        "plansFetchFailed": "Failed to load plan details, so the default plan is shown for now.",
+        "subscriptionFetchFailed": "Failed to load the current subscription, so the page is showing the unsubscribed state for now.",
+        "portalUrlMissing": "The backend did not return a usable billing portal URL",
+        "portalOpenFailed": "Failed to open subscription management. Please try again later.",
+        "paymentBlocked": "Payment is not available right now",
+        "serviceNotReady": "The payment service is not ready yet",
+        "checkoutUrlMissing": "The backend did not return a usable checkout URL",
+        "checkoutFailed": "Failed to start checkout. Please try again later.",
+        "cancelFailed": "Failed to cancel the subscription. Please try again later."
+      }
+    },
+    "result": {
+      "eyebrow": "Billing return",
+      "successTitleChecking": "Checking your payment result",
+      "successTitleConfirmed": "Subscription confirmed",
+      "successTitleTimeout": "Returned from payment, still waiting for backend confirmation",
+      "successDescriptionChecking": "Stripe has already returned to the frontend. The page is polling the subscription and order endpoints, and only confirmed backend results will be shown as effective.",
+      "successDescriptionConfirmed": "The frontend has received a confirmed result from the backend subscription or order APIs. This page now shows a confirmed state rather than a local guess.",
+      "successDescriptionTimeout": "Stripe returned to the frontend, but no active subscription or paid order was confirmed within the polling window. Please try again later or revisit billing to check again.",
+      "cancelTitle": "You left the payment flow",
+      "cancelDescription": "This only shows that you left Stripe Checkout. The actual subscription state still comes from the backend, and the frontend will not interpret this return as success or failure by itself.",
+      "alert": {
+        "confirmed": "The backend has confirmed the result, so this page is showing a confirmed state.",
+        "timeout": "Polling attempts are exhausted and there is still no active subscription or paid order. You can try again later.",
+        "checking": "The page polls the subscription and order endpoints every 2 seconds, up to 10 attempts.",
+        "cancel": "This page only shows that you have left the payment page. It does not mean the system has already recorded a new subscription state."
+      },
+      "session": {
+        "title": "Session identifier",
+        "description": "Shown only for troubleshooting and reconciliation. It does not directly represent business success.",
+        "present": "Returned with session_id",
+        "missing": "No session_id returned",
+        "missingValue": "The current URL does not contain a session_id that can be displayed"
+      },
+      "backendSummary": {
+        "title": "Backend result summary",
+        "confirmedBy": "Confirmed by: {value}",
+        "period": "Subscription period: {value}",
+        "latestOrder": "Latest order: {value}",
+        "orderTime": "Order time: {value}",
+        "missingOrderNo": "The backend did not return an order number"
+      },
+      "summaryCards": {
+        "polling": "Polling progress",
+        "pollingHint": "The page polls every 2 seconds, up to 10 attempts.",
+        "subscription": "Subscription status",
+        "order": "Latest order",
+        "missingOrderNo": "No order number from backend",
+        "flow": "Flow state",
+        "flowValue": "Left the payment page",
+        "flowHint": "This only reflects the user flow, not a new subscription state.",
+        "verification": "Subscription check",
+        "verificationValue": "No new change",
+        "verificationHint": "The current page has not received a new confirmed subscription result from the backend.",
+        "next": "Next action",
+        "nextValue": "Can try again",
+        "nextHint": "You can go back to billing to review status, or start the purchase flow again."
+      },
+      "side": {
+        "title": "Recommended next step",
+        "confirmed": "The backend has confirmed the payment result. You can go back to billing to keep managing the subscription, or return to accounting now.",
+        "timeout": "If the backend settles slightly later, reopen this page to verify again, or return to billing and refresh there.",
+        "checking": "The page is waiting for backend subscription and order state. As soon as it sees an active subscription or a paid order, polling stops automatically.",
+        "cancelTitle": "Keep the current judgement",
+        "cancelDescription": "If you only left in the middle of the flow, this does not stop you from returning to billing and starting the flow again, or just going back to accounting."
+      },
+      "actions": {
+        "retry": "Retry verification",
+        "polling": "Polling...",
+        "backToBilling": "Back to billing",
+        "backToAccounting": "Back to accounting"
+      },
+      "cancelPage": {
+        "whatNextTitle": "What you can do next",
+        "notesTitle": "Page note",
+        "notesDescription": "To avoid misleading users, this page does not directly say “payment cancelled successfully” or “upgrade failed”. It only shows that the user flow has returned, while the business state still depends on the backend.",
+        "steps": {
+          "review": {
+            "title": "Go back to billing and review the status",
+            "description": "The billing page reloads backend payment status, plan data, and the current subscription."
+          },
+          "retry": {
+            "title": "If you only stepped away, try again later",
+            "description": "The frontend now requests a new checkout session instead of relying on a hard-coded payment link."
+          },
+          "continue": {
+            "title": "Keep using the current accounting features",
+            "description": "Leaving the payment flow does not block you from recording, filtering, or reviewing charts."
+          }
+        }
+      },
+      "messages": {
+        "subscriptionNone": "Not subscribed",
+        "subscriptionActive": "Active subscription",
+        "subscriptionTrialing": "Trialing",
+        "subscriptionPastDue": "Past due",
+        "subscriptionCanceled": "Cancelled",
+        "subscriptionUnpaid": "Unpaid",
+        "subscriptionCancelAtPeriodEnd": "Active now, cancelling at period end",
+        "orderPending": "Awaiting payment",
+        "orderCheckoutCreated": "Checkout created",
+        "orderPaid": "Paid",
+        "orderFailed": "Payment failed",
+        "orderCanceled": "Cancelled",
+        "orderRefunded": "Refunded",
+        "notReady": "The backend has not returned a value yet",
+        "confirmedBySubscription": "Confirmed through subscription status",
+        "confirmedByOrder": "Confirmed through the latest order",
+        "confirmedWaiting": "Polling ended and is still waiting for backend confirmation",
+        "confirmedChecking": "Waiting for backend subscription and order synchronisation",
+        "confirmedUnknown": "Not confirmed yet",
+        "noOrder": "No order record yet",
+        "noPeriod": "There is no active subscription period right now",
+        "periodUntil": "The current period ends on {date}",
+        "periodRange": "{start} - {end}",
+        "periodUnknown": "The backend has not returned the subscription period yet",
+        "pollingConfirmed": "Confirmed on poll attempt {count}",
+        "pollingTimeout": "Finished {count} polling attempts without a confirmed result",
+        "pollingReady": "Ready to start polling, up to {count} attempts",
+        "pollingProgress": "Polling {current} / {total}"
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "request_failed": "Request failed",
+      "bad_request": "The request parameters are invalid",
+      "unauthorized": "Your session has expired. Please sign in again.",
+      "forbidden": "You do not have permission to perform this action",
+      "not_found": "The requested resource was not found",
+      "conflict": "The request conflicts with the current state",
+      "server_error": "An internal server error occurred",
+      "network_error": "Network request failed. Please check your connection.",
+      "config_error": "The request could not be sent"
+    },
+    "auth": {
+      "invalid_credentials": "The username or password is incorrect"
+    },
+    "category": {
+      "invalid_type": "The category type is invalid"
+    },
+    "record": {
+      "invalid_type": "The record type is invalid",
+      "type_mismatch": "The record type must match the selected category type"
+    },
+    "ledger": {
+      "invite": {
+        "already_member": "The invited email already belongs to a member of this ledger",
+        "email_mismatch": "The signed-in email does not match the invited email"
+      }
+    },
+    "budget": {
+      "duplicate_budget": "A budget already exists for the same month, type, and category scope",
+      "invalid_period": "The budget period is invalid"
+    },
+    "export": {
+      "job_not_ready": "The export job is not ready yet"
+    }
+  },
+  "notifications": {
+    "defaults": {
+      "title": "New notification",
+      "message": "You have a new platform update.",
+      "toastTitle": "New message"
+    },
+    "events": {
+      "budget": {
+        "threshold_reached": {
+          "title": "Budget alert",
+          "message": "Budget “{budgetName}” has reached {threshold}% usage."
+        },
+        "threshold_cleared": {
+          "title": "Budget back in range",
+          "message": "Budget “{budgetName}” is now back below the alert threshold."
+        }
+      },
+      "export": {
+        "job_queued": {
+          "title": "Export queued",
+          "message": "Your export job has been queued. You will be notified when it is ready."
+        },
+        "job_ready": {
+          "title": "Export ready",
+          "message": "The export file “{fileName}” is ready to download."
+        },
+        "job_failed": {
+          "title": "Export failed",
+          "message": "The export job could not be completed. Please try again later."
+        }
+      },
+      "ledger": {
+        "invite_received": {
+          "title": "New invite",
+          "message": "You have been invited to join ledger “{ledgerName}”."
+        },
+        "invite_accepted": {
+          "title": "Invite accepted",
+          "message": "A member accepted the invite for ledger “{ledgerName}”."
+        }
+      },
+      "record": {
+        "balance_warning": {
+          "title": "Balance alert",
+          "message": "The current ledger balance has moved sharply. Review the latest records."
+        }
+      }
+    }
+  }
+}

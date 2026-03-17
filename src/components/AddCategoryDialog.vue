@@ -10,7 +10,7 @@
     <template #header>
       <div class="space-y-2 pr-8">
         <h2 class="text-xl font-semibold text-slate-900">{{ dialogTitle }}</h2>
-        <p class="text-sm text-slate-500">先定义名称，再选择一个图标和颜色，让分类在列表和图表里更容易识别。</p>
+        <p class="text-sm text-slate-500">{{ t('accounting.categoryDialog.description') }}</p>
       </div>
     </template>
 
@@ -18,8 +18,8 @@
       <section class="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <p class="text-sm font-medium text-slate-700">实时预览</p>
-            <p class="mt-1 text-sm text-slate-500">当前会创建一个 {{ categoryTypeLabel }} 分类。</p>
+            <p class="text-sm font-medium text-slate-700">{{ t('accounting.categoryDialog.previewTitle') }}</p>
+            <p class="mt-1 text-sm text-slate-500">{{ t('accounting.categoryDialog.previewDescription', { type: categoryTypeLabel }) }}</p>
           </div>
           <div class="rounded-3xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
             <div class="flex items-center gap-3">
@@ -27,7 +27,7 @@
                 <el-icon :size="20" :class="resolveCategoryIconClass(category.icon)"><component :is="resolveCategoryIcon(category.icon)" /></el-icon>
               </div>
               <div>
-                <div class="text-sm font-semibold text-slate-900">{{ category.name || '未命名分类' }}</div>
+                <div class="text-sm font-semibold text-slate-900">{{ category.name || t('accounting.categoryDialog.unnamed') }}</div>
                 <div class="mt-1 text-xs text-slate-500">{{ selectedIconLabel }}</div>
               </div>
             </div>
@@ -36,22 +36,22 @@
       </section>
 
       <section class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
-        <label class="text-sm font-medium text-slate-700">分类名称</label>
+        <label class="text-sm font-medium text-slate-700">{{ t('accounting.categoryDialog.nameTitle') }}</label>
         <el-input
           v-model="category.name"
           maxlength="20"
           show-word-limit
-          placeholder="例如：餐饮、通勤、工资、奖金"
+          :placeholder="t('accounting.categoryDialog.namePlaceholder')"
           class="!mt-3 !w-full"
         />
-        <p class="mt-2 text-xs text-slate-500">名称会直接展示在明细列表和图表图例中。</p>
+        <p class="mt-2 text-xs text-slate-500">{{ t('accounting.categoryDialog.nameHint') }}</p>
       </section>
 
       <section class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h3 class="text-base font-semibold text-slate-900">图标</h3>
-            <p class="mt-1 text-sm text-slate-500">尽量选择和场景含义一致的图标，后续辨识度会更高。</p>
+            <h3 class="text-base font-semibold text-slate-900">{{ t('accounting.categoryDialog.iconTitle') }}</h3>
+            <p class="mt-1 text-sm text-slate-500">{{ t('accounting.categoryDialog.iconDescription') }}</p>
           </div>
           <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">
             {{ selectedIconLabel }}
@@ -79,8 +79,8 @@
 
       <section class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
         <div>
-          <h3 class="text-base font-semibold text-slate-900">颜色</h3>
-          <p class="mt-1 text-sm text-slate-500">颜色会用于分类按钮和部分视觉提示，不影响数据逻辑。</p>
+          <h3 class="text-base font-semibold text-slate-900">{{ t('accounting.categoryDialog.colorTitle') }}</h3>
+          <p class="mt-1 text-sm text-slate-500">{{ t('accounting.categoryDialog.colorDescription') }}</p>
         </div>
 
         <div class="mt-4 grid grid-cols-6 gap-3">
@@ -103,17 +103,17 @@
     <template #footer>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="text-left text-sm text-slate-500">
-          {{ categoryTypeLabel }} · {{ category.name || '等待填写名称' }}
+          {{ categoryTypeLabel }} · {{ category.name || t('accounting.categoryDialog.summaryPendingName') }}
         </div>
         <div class="flex items-center justify-end gap-3">
-          <el-button class="!rounded-full !px-5" @click="$emit('update:modelValue', false)">取消</el-button>
+          <el-button class="!rounded-full !px-5" @click="$emit('update:modelValue', false)">{{ t('common.cancel') }}</el-button>
           <el-button
             type="primary"
             class="!rounded-full !border-0 !bg-slate-900 !px-6 hover:!bg-slate-800 disabled:!bg-slate-300"
             :disabled="submitDisabled"
             @click="handleAdd"
           >
-            创建分类
+            {{ t('accounting.categoryDialog.createCategory') }}
           </el-button>
         </div>
       </div>
@@ -123,6 +123,7 @@
 
 <script setup>
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import { availableCategoryIcons, resolveCategoryIcon, resolveCategoryIconClass } from '@/constants/categoryIcons'
 
@@ -175,15 +176,20 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue', 'add'])
+const { t } = useI18n()
 
 const category = ref(createDefaultCategory())
 
 const categoryTypeLabel = computed(() => {
-  return props.categoryType === 'expense' ? '支出' : '收入'
+  return props.categoryType === 'expense'
+    ? t('accounting.categoryDialog.expenseType')
+    : t('accounting.categoryDialog.incomeType')
 })
 
 const dialogTitle = computed(() => {
-  return `新增${categoryTypeLabel.value}分类`
+  return props.categoryType === 'expense'
+    ? t('accounting.categoryDialog.expenseDialogTitle')
+    : t('accounting.categoryDialog.incomeDialogTitle')
 })
 
 const normalizedIcons = computed(() => {
@@ -203,7 +209,7 @@ const normalizedIcons = computed(() => {
 })
 
 const selectedIconLabel = computed(() => {
-  return normalizedIcons.value.find((item) => item.value === category.value.icon)?.label || '未选择图标'
+  return normalizedIcons.value.find((item) => item.value === category.value.icon)?.label || t('accounting.categoryDialog.iconUnselected')
 })
 
 const submitDisabled = computed(() => {
@@ -222,7 +228,7 @@ watch(() => props.modelValue, (visible) => {
 
 const handleAdd = () => {
   if (submitDisabled.value) {
-    ElMessage.warning('请填写完整的分类信息')
+    ElMessage.warning(t('accounting.categoryDialog.incompleteWarning'))
     return
   }
 

@@ -1,5 +1,6 @@
 import request from '@/utils/axios'
 import { unwrapMkApiResponse } from '@/api/response'
+import { resolveCommonMessage } from '@/i18n/messageResolver'
 
 const DEFAULT_STATUS = {
   enabled: false,
@@ -54,7 +55,10 @@ const normalizeOrder = (order = {}) => ({
 
 export const fetchPaymentStatus = async () => {
   const response = await request.get('/payments/status')
-  const data = unwrapMkApiResponse(response, '获取支付状态失败') || {}
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.statusFetchFailed', {}, 'Failed to fetch the payment status')
+  ) || {}
 
   return {
     ...DEFAULT_STATUS,
@@ -71,14 +75,22 @@ export const fetchPaymentStatus = async () => {
 
 export const fetchPaymentPlans = async () => {
   const response = await request.get('/payments/plans')
-  const data = unwrapMkApiResponse(response, '获取支付套餐失败', { allowUndefinedData: true })
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.plansFetchFailed', {}, 'Failed to load payment plans'),
+    { allowUndefinedData: true }
+  )
 
   return Array.isArray(data) ? data.map(normalizePlan) : []
 }
 
 export const fetchCurrentSubscription = async () => {
   const response = await request.get('/payments/subscriptions/current')
-  const data = unwrapMkApiResponse(response, '获取当前订阅失败', { allowUndefinedData: true }) || {}
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.subscriptionFetchFailed', {}, 'Failed to load the current subscription'),
+    { allowUndefinedData: true }
+  ) || {}
 
   return {
     ...DEFAULT_SUBSCRIPTION,
@@ -99,14 +111,21 @@ export const fetchCurrentSubscription = async () => {
 
 export const fetchPaymentOrders = async () => {
   const response = await request.get('/payments/orders')
-  const data = unwrapMkApiResponse(response, '获取支付订单失败', { allowUndefinedData: true })
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('errors.common.request_failed', {}, 'Failed to load payment orders'),
+    { allowUndefinedData: true }
+  )
 
   return Array.isArray(data) ? data.map(normalizeOrder) : []
 }
 
 export const createCheckoutSession = async (payload) => {
   const response = await request.post('/payments/checkout-sessions', payload)
-  const data = unwrapMkApiResponse(response, '创建支付会话失败') || {}
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.checkoutFailed', {}, 'Failed to start checkout')
+  ) || {}
 
   return {
     orderNo: data.orderNo || '',
@@ -119,7 +138,11 @@ export const createCheckoutSession = async (payload) => {
 
 export const createBillingPortalSession = async (payload = {}) => {
   const response = await request.post('/payments/billing-portal-sessions', payload)
-  const data = unwrapMkApiResponse(response, '创建订阅管理会话失败', { allowUndefinedData: true }) || {}
+  const data = unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.portalOpenFailed', {}, 'Failed to open the billing portal'),
+    { allowUndefinedData: true }
+  ) || {}
 
   return {
     url: data.url || ''
@@ -128,5 +151,9 @@ export const createBillingPortalSession = async (payload = {}) => {
 
 export const cancelCurrentSubscription = async () => {
   const response = await request.post('/payments/subscriptions/current/cancel')
-  return unwrapMkApiResponse(response, '取消订阅失败', { allowUndefinedData: true })
+  return unwrapMkApiResponse(
+    response,
+    resolveCommonMessage('billing.checkout.errors.cancelFailed', {}, 'Failed to cancel the subscription'),
+    { allowUndefinedData: true }
+  )
 }

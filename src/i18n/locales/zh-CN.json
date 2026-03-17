@@ -1,0 +1,1252 @@
+{
+  "common": {
+    "moneyKeeper": "MoneyKeeper",
+    "currentUserFallback": "当前用户",
+    "close": "关闭",
+    "cancel": "取消",
+    "save": "保存",
+    "confirm": "确定",
+    "edit": "编辑",
+    "delete": "删除",
+    "actions": "操作",
+    "refresh": "刷新",
+    "reset": "重置",
+    "login": "登录",
+    "register": "创建账户",
+    "mainPage": "主页面",
+    "ledgerCenter": "账本中心",
+    "loadingLedger": "正在加载账本...",
+    "ledgerContextReserved": "账本上下文已预留",
+    "userRole": "当前角色：{role}。",
+    "memberRoleFallback": "member",
+    "localeLabel": "语言",
+    "localeZh": "中文",
+    "localeEn": "English",
+    "all": "全部",
+    "optional": "可选",
+    "setToday": "设为今天",
+    "date": "日期",
+    "amount": "金额",
+    "type": "类型",
+    "category": "分类",
+    "note": "备注",
+    "unclassified": "未分类",
+    "income": "收入",
+    "expense": "支出",
+    "notAvailable": "暂无记录",
+    "roles": {
+      "owner": "所有者",
+      "admin": "管理员",
+      "member": "普通成员"
+    },
+    "status": {
+      "active": "活跃",
+      "pending": "待处理",
+      "accepted": "已接受",
+      "expired": "已过期",
+      "unknown": "未知状态",
+      "notRecorded": "未记录"
+    }
+  },
+  "nav": {
+    "home": {
+      "label": "主页",
+      "description": "记账与总览"
+    },
+    "ledgers": {
+      "label": "账本",
+      "description": "账本列表与上下文"
+    },
+    "categories": {
+      "label": "分类",
+      "description": "账本分类管理"
+    },
+    "budgets": {
+      "label": "预算",
+      "description": "预算与阈值规则"
+    },
+    "statistics": {
+      "label": "统计",
+      "description": "周期分析与占比"
+    },
+    "search": {
+      "label": "搜索",
+      "description": "记录检索与筛选"
+    },
+    "exports": {
+      "label": "导出",
+      "description": "导出任务中心"
+    },
+    "notifications": {
+      "label": "通知",
+      "description": "通知中心"
+    }
+  },
+  "topbar": {
+    "workspaceTitle": "平台工作台",
+    "workspaceSubtitle": "账本、预算、通知、导出和订阅入口都在这里。",
+    "currentUser": "当前用户：{name}",
+    "upgradeTitle": "升级到专业版",
+    "upgradeDescription": "查看支付状态并解锁导出、通知和后续平台能力。",
+    "support": "联系支持",
+    "userAgreement": "用户协议",
+    "privacyPolicy": "隐私政策",
+    "deleteAccount": "删除账号",
+    "logout": "退出登录",
+    "ledgerContextTitle": "Ledger Context",
+    "ledgerDescription": "账本中心已经接入，后续平台页面会默认基于这里的账本上下文工作。",
+    "ledgerDescriptionWithRole": "当前角色：{role}。预算、通知、导出和搜索页面会默认围绕这个账本扩展。",
+    "agreementDescription": "使用前请确认你已阅读并理解以下条款内容。",
+    "privacyDescription": "以下内容说明了应用如何处理和保护你的数据。",
+    "connection": {
+      "connected": "实时通知正常",
+      "connecting": "正在连接通知",
+      "reconnecting": "正在重新连接",
+      "error": "通知连接异常",
+      "idle": "通知未连接",
+      "detailConnected": "通知与状态更新已开启",
+      "detailConnecting": "正在建立实时通知连接",
+      "detailReconnecting": "正在尝试恢复实时通知（第 {count} 次）",
+      "detailError": "当前未连上实时通知，可稍后刷新页面重试",
+      "detailIdle": "当前尚未建立实时通知连接"
+    }
+  },
+  "auth": {
+    "loginPage": {
+      "tag": "Account Access",
+      "heroTitle": "登录后继续整理你的财务节奏",
+      "heroDescription": "在同一处完成记账、筛选、图表分析和导出。登录页现在和主应用使用同一套视觉语言，避免体验断层。",
+      "stats": {
+        "workspace": {
+          "label": "统一入口",
+          "value": "1 处",
+          "description": "登录后进入同一套记账、筛选和分析工作台。"
+        },
+        "capability": {
+          "label": "核心能力",
+          "value": "4 项",
+          "description": "记录、筛选、图表和导出已串成完整主流程。"
+        },
+        "access": {
+          "label": "访问方式",
+          "value": "2 种",
+          "description": "支持用户名密码和 Google 登录。"
+        }
+      },
+      "highlights": {
+        "flowTitle": "更清晰的记账主线",
+        "flowDescription": "新增、筛选、洞察和明细不再分散在不同风格的页面里。",
+        "categoryTitle": "更稳定的分类模型",
+        "categoryDescription": "分类 ID 和分类名已经拆开，后续联动和编辑更稳定。"
+      },
+      "welcomeTitle": "欢迎回来",
+      "welcomeDescription": "登录后即可继续使用记账台、图表和导出能力。",
+      "redirectHint": "登录后将继续前往：{path}",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入用户名",
+      "usernameRangePlaceholder": "3-50 个字符",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "passwordMinPlaceholder": "至少 6 位",
+      "ctaTitle": "准备开始",
+      "ctaDescription": "登录后会恢复你的记录、筛选和通知状态。",
+      "noAccount": "还没有账户？",
+      "registerNow": "立即注册",
+      "orGoogle": "或使用 Google 登录",
+      "thirdParty": "第三方登录",
+      "createAccount": "创建新账户",
+      "createAccountDescription": "填写基础信息后即可进入记账页，后续再逐步完善你的数据习惯。",
+      "registerHighlights": [
+        "完成后即可进入记账页",
+        "支持后续按分类与时间追踪",
+        "可继续使用导出与支付入口"
+      ],
+      "email": "邮箱",
+      "emailPlaceholder": "example@email.com",
+      "firstName": "名字",
+      "firstNamePlaceholder": "请输入名字",
+      "lastName": "姓氏",
+      "lastNamePlaceholder": "请输入姓氏",
+      "phone": "手机号",
+      "phonePlaceholder": "请输入手机号",
+      "submitDescription": "提交后即可返回登录并使用新账户进入记账页。"
+    },
+    "messages": {
+      "loginSuccess": "登录成功",
+      "loginFailed": "登录失败，请稍后重试",
+      "logoutSuccess": "退出登录成功",
+      "logoutFailed": "退出登录失败，请稍后重试",
+      "googleLoginSuccess": "Google 登录成功",
+      "googleLoginFailed": "Google 登录失败",
+      "registerSuccess": "注册成功，请登录",
+      "registerFailed": "注册失败，请稍后重试"
+    },
+    "validation": {
+      "usernameRequired": "请输入用户名",
+      "passwordRequired": "请输入密码",
+      "usernameRange": "用户名长度应在 3 到 50 个字符之间",
+      "passwordRange": "密码长度应在 6 到 255 个字符之间",
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "请输入正确的邮箱格式",
+      "emailRange": "邮箱长度不能超过 255 个字符",
+      "firstNameRequired": "请输入名字",
+      "firstNameRange": "名字长度不能超过 50 个字符",
+      "lastNameRequired": "请输入姓氏",
+      "lastNameRange": "姓氏长度不能超过 50 个字符",
+      "phoneRequired": "请输入手机号",
+      "phoneInvalid": "请输入正确的手机号格式"
+    }
+  },
+  "accounting": {
+    "heroTag": "{monthLabel}",
+    "heroTitle": "我的记账台",
+    "heroDescription": "把记一笔、筛选和趋势分析放在同一屏里。顶部总览展示全量数据，筛选用于快速聚焦明细记录。",
+    "recentUpdate": "最近更新",
+    "recentUpdateHint": "最近一笔记录的日期",
+    "filterStatus": "筛选状态",
+    "filterEnabled": "已启用",
+    "filterIdle": "未筛选",
+    "filterIdleHint": "查看全部记录",
+    "categoryCount": "分类总数",
+    "categoryCountHint": "支出和收入分类总和",
+    "filtersActiveTitle": "明细列表已启用筛选",
+    "filtersActiveSummary": "当前命中 {count} 条记录，收入 {income}，支出 {expense}，结余 {balance}。",
+    "filtersActiveHint": "图表和顶部总览保持展示全部数据，明细区按当前筛选结果聚焦。",
+    "clearFilters": "清除筛选",
+    "quickEntryTitle": "记一笔",
+    "quickEntryDescription": "快速录入今天的收支。",
+    "filterTitle": "筛选记录",
+    "filterDescription": "用分类和类型快速定位目标记录。",
+    "summary": {
+      "incomeTitle": "总收入",
+      "incomeHint": "所有收入记录的累计金额",
+      "expenseTitle": "总支出",
+      "expenseHint": "所有支出记录的累计金额",
+      "balanceTitle": "当前结余",
+      "balanceHint": "收入减去支出的净值",
+      "countTitle": "明细条数",
+      "countHintActive": "当前筛选命中的记录条数",
+      "countHintIdle": "当前已载入的记录条数"
+    },
+    "form": {
+      "recordTypeTitle": "记录类型",
+      "recordTypeDescription": "切换收入或支出，会自动切换可选分类。",
+      "amountHint": "支持两位小数，提交前会自动按数字格式处理。",
+      "dateHint": "默认使用今天，你也可以补录历史记录。",
+      "datePlaceholder": "选择日期",
+      "categoryDescription": "选择一个最贴近本笔记录的分类。",
+      "categoryEmpty": "当前类型还没有分类，先新增一个分类。",
+      "categoryPrompt": "当前还没有可选分类，先新增一个 {type} 分类再继续。",
+      "addCategory": "新增分类",
+      "notePlaceholder": "写下这笔记录的背景，例如场景、对象或支付方式。",
+      "summaryEmptyCategory": "尚未选择分类",
+      "summaryPendingAmount": "等待填写金额",
+      "saveRecord": "保存记录",
+      "incompleteWarning": "请填写完整的记账信息"
+    },
+    "filter": {
+      "title": "快速筛选",
+      "description": "先选类型，再按分类缩小范围。",
+      "recordTypeTitle": "记录类型",
+      "allTypes": "全部类型",
+      "categoryHint": "当前共有 {count} 个可选分类",
+      "categoryPending": "选择类型后即可启用分类筛选",
+      "pickTypeFirst": "先选择“支出”或“收入”，再精确到具体分类。",
+      "noCategories": "当前类型还没有分类，可以先在左侧新增一个分类。",
+      "allCategories": "全部分类",
+      "chartHint": "小技巧：点击右侧饼图的某个扇区，会自动把明细筛选到对应的支出分类。"
+    },
+    "list": {
+      "title": "收支明细",
+      "description": "查看、编辑和导出当前筛选结果。",
+      "totalRecords": "共 {count} 条记录",
+      "exportExcel": "导出 Excel",
+      "exportFilenamePrefix": "记账记录",
+      "noNote": "暂无备注",
+      "pageStatus": "当前第 {page} 页，每页 {pageSize} 条。",
+      "emptyTitle": "还没有匹配的记录",
+      "emptyDescription": "可以先添加一笔记录，或者调整左侧筛选条件后再试一次。",
+      "noExportData": "没有可导出的数据",
+      "exportFailed": "导出失败，请稍后重试"
+    },
+    "charts": {
+      "loading": "正在生成图表数据...",
+      "insightBoard": "Insight Board",
+      "title": "数据洞察",
+      "description": "这里展示支出结构、时间趋势和收支汇总，用来快速发现异常波动。",
+      "lockedCategory": "当前锁定：{category}",
+      "clearCategory": "清除分类",
+      "expenseBreakdownTitle": "支出分类占比",
+      "expenseBreakdownDescription": "点击扇区可联动右下方明细列表。",
+      "expenseBreakdownEmptyTitle": "暂无支出分类数据",
+      "expenseBreakdownEmptyDescription": "先新增几笔支出记录，分类占比图才会展示结构变化。",
+      "trendTitle": "支出趋势",
+      "trendDescription": "按日期观察支出起伏，快速定位异常支出日。",
+      "trendEmptyTitle": "暂无趋势数据",
+      "trendEmptyDescription": "当前还没有可绘制的支出趋势，添加记录后会自动生成。",
+      "summaryTitle": "收支汇总",
+      "summaryDescription": "按年、月、日切换维度，对比收入和支出的变化节奏。",
+      "byYear": "按年",
+      "byMonth": "按月",
+      "byDay": "按日",
+      "timeSummaryEmptyTitle": "暂无可汇总的数据",
+      "timeSummaryEmptyDescription": "当前还没有足够的记录来绘制时间维度汇总图，先录入几笔收入或支出即可。",
+      "incomeLegend": "收入",
+      "expenseLegend": "支出",
+      "expenseTooltip": "支出",
+      "uncategorized": "未分类"
+    },
+    "edit": {
+      "dialogTitle": "编辑记录",
+      "dialogDescription": "调整金额、分类或日期后保存，明细列表会立即同步。",
+      "recordTypeDescription": "切换类型时会清空当前分类，请重新选择。",
+      "amountHint": "保存前请确认金额和类型是否匹配。",
+      "dateHint": "用于图表统计和明细排序。",
+      "categoryDescription": "从当前类型的分类中重新选择一项。",
+      "categoryEmpty": "当前类型没有可用分类，请先关闭弹窗后新增分类。",
+      "categoryUnavailable": "当前没有可选分类，建议先关闭弹窗并新增对应分类后再编辑这条记录。",
+      "notePlaceholder": "补充这笔记录的背景，例如消费场景或支付对象。",
+      "summaryPendingAmount": "等待填写金额",
+      "saveChanges": "保存修改"
+    },
+    "categoryDialog": {
+      "description": "先定义名称，再选择一个图标和颜色，让分类在列表和图表里更容易识别。",
+      "previewTitle": "实时预览",
+      "previewDescription": "当前会创建一个 {type} 分类。",
+      "unnamed": "未命名分类",
+      "nameTitle": "分类名称",
+      "namePlaceholder": "例如：餐饮、通勤、工资、奖金",
+      "nameHint": "名称会直接展示在明细列表和图表图例中。",
+      "iconTitle": "图标",
+      "iconDescription": "尽量选择和场景含义一致的图标，后续辨识度会更高。",
+      "iconUnselected": "未选择图标",
+      "colorTitle": "颜色",
+      "colorDescription": "颜色会用于分类按钮和部分视觉提示，不影响数据逻辑。",
+      "summaryPendingName": "等待填写名称",
+      "createCategory": "创建分类",
+      "incompleteWarning": "请填写完整的分类信息",
+      "expenseDialogTitle": "新增支出分类",
+      "incomeDialogTitle": "新增收入分类",
+      "expenseType": "支出",
+      "incomeType": "收入"
+    },
+    "messages": {
+      "ledgerRequired": "请先选择账本",
+      "loginRequired": "请先登录",
+      "recordsSummaryFailed": "获取统计数据失败",
+      "recordsFetchFailed": "获取记录列表失败",
+      "recordAdded": "添加成功",
+      "recordAddFailed": "添加失败",
+      "recordDeleted": "删除成功",
+      "recordDeleteFailed": "删除失败",
+      "recordUpdated": "修改成功",
+      "recordUpdateFailed": "修改失败",
+      "deleteRecordTitle": "删除确认",
+      "deleteRecordDescription": "确定要删除这条记录吗？",
+      "categoriesFetchFailed": "获取分类列表失败",
+      "categoryAddFailed": "添加分类失败",
+      "categoryDeleteFailed": "删除分类失败",
+      "categoryPermission": "当前角色只能查看分类，需要 owner 或 admin 才能维护",
+      "deleteCategoryTitle": "删除确认",
+      "deleteCategoryDescription": "确定要删除{type}分类“{name}”吗？",
+      "categoryDeleted": "已删除{type}分类：{name}",
+      "categoryAdded": "添加分类成功",
+      "categoryRefreshWarning": "分类已创建，但列表刷新失败，请手动刷新"
+    }
+  },
+  "platform": {
+    "search": {
+      "eyebrow": "记录搜索",
+      "title": "记录搜索",
+      "description": "在当前账本里按关键字、分类、日期和成员快速找记录。刚保存的记录如果暂时没出现，稍后刷新一下即可。",
+      "notice": "如果刚新增、修改或删除记录，搜索结果可能会稍晚一点更新。遇到这种情况先刷新一次，不代表记录丢失。",
+      "resultDescription": "搜索结果只显示当前账本里的记录，可按关键字、分类、日期、类型和成员继续缩小范围。",
+      "refreshAction": "刷新结果",
+      "summary": {
+        "matchesLabel": "匹配结果",
+        "matchesHint": "当前命中的记录数",
+        "bestMatchLabel": "最佳匹配",
+        "bestMatchHint": "最接近本次搜索条件的匹配度",
+        "scopeLabel": "搜索范围",
+        "scopeHint": "当前搜索使用的账本范围"
+      },
+      "filters": {
+        "title": "搜索条件",
+        "description": "可以直接输入关键字，也可以按成员、分类、日期和类型筛选。没有关键字时，也会按筛选条件返回结果。",
+        "queryLabel": "全文关键字",
+        "queryPlaceholder": "例如：lunch、coffee、salary",
+        "memberLabel": "成员",
+        "allMembers": "全部成员",
+        "memberFallback": "成员 #{id}",
+        "allTypes": "全部类型",
+        "allCategories": "全部分类",
+        "categoryNameLabel": "分类名称",
+        "categoryNamePlaceholder": "可直接输入分类名",
+        "startDateLabel": "开始日期",
+        "endDateLabel": "结束日期",
+        "dateOptional": "可留空",
+        "limitLabel": "返回条数",
+        "limitOption": "{count} 条",
+        "searchAction": "开始搜索",
+        "resetAction": "重置并刷新"
+      },
+      "states": {
+        "errorTitle": "搜索失败",
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "搜索页是账本维度功能，先到“账本中心”切到目标账本再继续。",
+        "ledgerRequiredAction": "前往账本中心",
+        "ledgerFallback": "请先选择账本",
+        "loadingTitle": "正在查询搜索结果...",
+        "loadingDescription": "当前会综合全文关键字与筛选条件一起检索。"
+      },
+      "empty": {
+        "idleTitle": "输入条件后开始搜索",
+        "idleDescription": "可以输入关键字，也可以直接按成员、分类、日期和类型组合筛选。",
+        "filteredTitle": "当前没有匹配结果",
+        "filteredDescription": "可以尝试放宽日期范围、清空分类限制，或者稍后再试一次。",
+        "ledgerTitle": "当前账本还没有可展示的搜索结果",
+        "ledgerDescription": "可以先新增记录，或者输入关键字缩小范围后再试。"
+      },
+      "results": {
+        "scoreLabel": "匹配度 {score}",
+        "recordId": "记录 ID：{id}",
+        "member": "成员：{name}",
+        "memberFallback": "成员 #{id}",
+        "date": "日期：{value}",
+        "updated": "更新：{value}",
+        "noNote": "这条记录没有备注。",
+        "amountLabel": "金额",
+        "noTimestamp": "未记录"
+      },
+      "errors": {
+        "invalidDateRange": "结束日期不能早于开始日期",
+        "fetchFailed": "搜索记录失败"
+      }
+    },
+    "categories": {
+      "eyebrow": "账本分类",
+      "title": "分类管理",
+      "description": "这里集中管理当前账本下的收入和支出分类，后续也会继续补编辑能力和权限态。",
+      "workspaceDescription": "分类现在已经切到当前账本维度。后续 owner/admin 和 member 的差异化权限会继续补齐。",
+      "countBadge": "{count} 项",
+      "summary": {
+        "expenseLabel": "支出分类",
+        "expenseHint": "当前支出分类数量",
+        "incomeLabel": "收入分类",
+        "incomeHint": "当前收入分类数量"
+      },
+      "actions": {
+        "addExpense": "新增支出分类",
+        "addIncome": "新增收入分类"
+      },
+      "states": {
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "分类管理已经切到账本维度，先选择目标账本再维护收入和支出分类。",
+        "ledgerRequiredAction": "前往账本中心",
+        "ledgerFallback": "请先选择账本",
+        "readOnlyTitle": "当前角色为只读",
+        "readOnlyDescription": "你仍然可以查看当前账本的分类结构，但新增和删除分类需要 owner 或 admin 权限。"
+      },
+      "expense": {
+        "title": "支出分类",
+        "description": "用于账本记录、筛选和图表归类。",
+        "emptyTitle": "还没有支出分类",
+        "emptyDescription": "先创建几个高频分类，首页录入会更顺手。"
+      },
+      "income": {
+        "title": "收入分类",
+        "description": "统一管理工资、奖金、报销等收入来源。",
+        "emptyTitle": "还没有收入分类",
+        "emptyDescription": "补几个收入类型后，统计页的收入结构会更清晰。"
+      }
+    },
+    "budgets": {
+      "eyebrow": "预算工作区",
+      "title": "预算中心",
+      "description": "预算已经从记账首页里拆出来，开始围绕当前账本承接月预算、消耗进度和阈值提醒规则。",
+      "workspaceDescription": "当前预算列表已经基于 ledger 上下文运行，后面通知中心和统计页都会复用这里的规则状态。",
+      "summary": {
+        "budgetsLabel": "预算数量",
+        "budgetsHint": "当前月份预算数量",
+        "plannedLabel": "总额度",
+        "plannedHint": "预算总额度",
+        "alertsLabel": "提醒预算",
+        "alertsHint": "超支或阈值命中预算"
+      },
+      "actions": {
+        "refresh": "刷新预算",
+        "applyFilters": "应用筛选"
+      },
+      "filters": {
+        "yearLabel": "年份",
+        "yearOption": "{year} 年",
+        "monthLabel": "月份",
+        "monthOption": "{month} 月",
+        "allTypes": "全部类型",
+        "allCategories": "全部分类"
+      },
+      "form": {
+        "title": "创建预算",
+        "description": "预算会绑定到当前账本和月份。分类可以留空，表示账本级总预算。",
+        "readOnlyHint": "当前角色可以查看预算，但不能新增、删除预算或修改阈值规则。需要 owner / admin 权限。",
+        "nameLabel": "预算名称",
+        "namePlaceholder": "例如：本月餐饮预算",
+        "categoryPlaceholder": "账本总预算可留空",
+        "amountLabel": "额度",
+        "notesPlaceholder": "可以写清预算用途、范围或者本月需要关注的支出。",
+        "submitAction": "创建并刷新预算"
+      },
+      "states": {
+        "errorTitle": "预算工作区加载失败",
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "预算现在是账本维度功能，先到“账本中心”选择当前上下文后再继续。",
+        "ledgerRequiredAction": "前往账本中心",
+        "ledgerFallback": "请先选择账本",
+        "loadingTitle": "正在加载预算与分类信息...",
+        "loadingDescription": "当前会同时刷新预算列表和分类选项。",
+        "emptyTitle": "这个月份还没有预算",
+        "emptyDescription": "可以直接用右侧表单创建第一条预算，后端规则和通知链路会在这里逐步接起来。"
+      },
+      "cards": {
+        "expenseBudget": "支出预算",
+        "incomeBudget": "收入预算",
+        "exceededBadge": "已超支",
+        "ledgerTotal": "账本总预算",
+        "meta": "{category} · {year} 年 {month} 月",
+        "budgetLabel": "预算",
+        "spentLabel": "已使用",
+        "remainingLabel": "剩余",
+        "usageLabel": "预算使用率",
+        "thresholdHit": "已触发 {threshold}%"
+      },
+      "rules": {
+        "title": "提醒规则",
+        "description": "后端会根据阈值回流通知日志和预算命中状态。",
+        "addAction": "新增规则",
+        "enabled": "已启用",
+        "disabled": "未启用",
+        "empty": "还没有提醒规则，可以先补一个 80% 或 100% 阈值。"
+      },
+      "ruleDialog": {
+        "title": "新增预算提醒规则",
+        "description": "当预算使用率达到指定阈值时，后端会把规则命中状态回流到通知中心和预算进度里。",
+        "currentBudgetLabel": "当前预算",
+        "thresholdBadge": "阈值",
+        "thresholdLabel": "阈值百分比",
+        "statusLabel": "规则状态",
+        "disabledTemporarily": "暂不启用",
+        "notificationTitleLabel": "通知标题",
+        "notificationTitlePlaceholder": "例如：餐饮预算即将用完",
+        "notificationMessageLabel": "通知内容",
+        "notificationMessagePlaceholder": "例如：本月餐饮预算已经达到 80%，请留意接下来几天的支出节奏。",
+        "submitAction": "保存规则",
+        "incompleteWarning": "请完整填写预算规则"
+      },
+      "dialogs": {
+        "deleteBudgetTitle": "删除预算",
+        "deleteBudgetDescription": "确认删除预算“{name}”吗？",
+        "deleteRuleTitle": "删除规则",
+        "deleteRuleDescription": "确认删除 {threshold}% 阈值规则吗？"
+      },
+      "messages": {
+        "created": "预算创建成功",
+        "deleted": "预算已删除",
+        "ruleCreated": "预算规则已创建",
+        "ruleDeleted": "预算规则已删除"
+      },
+      "errors": {
+        "workspaceFetchFailed": "获取预算信息失败",
+        "ledgerRequired": "请先选择账本",
+        "formIncomplete": "请完整填写预算名称和额度",
+        "createFailed": "创建预算失败",
+        "deletePermission": "当前角色不能删除预算",
+        "deleteFailed": "删除预算失败",
+        "ruleCreatePermission": "当前角色不能新增预算规则",
+        "ruleCreateFailed": "创建预算规则失败",
+        "ruleDeletePermission": "当前角色不能删除预算规则",
+        "ruleDeleteFailed": "删除预算规则失败"
+      }
+    },
+    "notifications": {
+      "eyebrow": "通知中心",
+      "title": "通知中心",
+      "description": "通知开始从顶部即时提醒升级成可筛选、可回溯、可管理的历史中心。预算预警、导出结果和系统消息都会在这里汇总。",
+      "summary": {
+        "unreadLabel": "未读通知",
+        "unreadHint": "当前未读通知",
+        "loadedLabel": "本次加载",
+        "loadedHint": "本次列表已加载数量",
+        "streamLabel": "实时流",
+        "streamHint": "顶部状态与通知中心同步"
+      },
+      "list": {
+        "title": "我的通知",
+        "description": "SSE 负责实时回流，通知日志负责历史列表与未读状态。筛选条件会同时影响“全部已读”的作用范围。"
+      },
+      "actions": {
+        "markFilteredRead": "标记当前筛选为已读",
+        "markRead": "标记已读"
+      },
+      "filters": {
+        "allTypes": "全部类型",
+        "unreadOnly": "只看未读",
+        "limitLabel": "加载数量",
+        "limitOption": "{count} 条"
+      },
+      "states": {
+        "errorTitle": "通知列表加载失败",
+        "streamUnavailableTitle": "实时通知当前不可用",
+        "loadingTitle": "正在加载通知列表...",
+        "loadingDescription": "会同时刷新当前筛选下的通知列表和未读数。",
+        "emptyTitle": "当前没有匹配的通知",
+        "emptyDescription": "预算预警、导出完成和系统消息后续都会沉淀到这里。"
+      },
+      "types": {
+        "success": "成功",
+        "warning": "提醒",
+        "info": "信息",
+        "error": "错误"
+      },
+      "status": {
+        "read": "已读",
+        "unread": "未读"
+      },
+      "connection": {
+        "reconnecting": "通知流正在重连中。历史列表仍然可用，但新的实时消息可能会稍有延迟。",
+        "connecting": "通知流正在建立连接。若列表正常加载，可稍等几秒让实时消息恢复。",
+        "error": "通知流当前未连上，建议稍后刷新页面或检查网络。历史通知不会丢失。",
+        "idle": "通知流尚未连接，当前页面仍可查看历史通知。"
+      },
+      "messages": {
+        "markedRead": "通知已标记为已读",
+        "noUnread": "当前筛选下没有未读通知",
+        "markedFilteredRead": "已更新当前筛选通知状态",
+        "justNow": "刚刚"
+      },
+      "errors": {
+        "fetchFailed": "获取通知列表失败",
+        "markReadFailed": "标记通知失败",
+        "markAllReadFailed": "批量标记已读失败"
+      }
+    },
+    "statistics": {
+      "eyebrow": "账本统计",
+      "title": "统计分析",
+      "description": "按当前账本查看周期总览、趋势变化和分类结构，快速判断收入、支出和结余的波动。",
+      "summary": {
+        "incomeLabel": "收入",
+        "incomeHint": "相较上一周期的变化",
+        "expenseLabel": "支出",
+        "expenseHint": "相较上一周期的变化",
+        "balanceLabel": "结余",
+        "balanceHint": "相较上一周期的变化"
+      },
+      "window": {
+        "title": "当前分析窗口",
+        "description": "这里显示本次统计窗口和上一周期的对比基线，方便快速判断变化是否异常。",
+        "rangeLabel": "时间范围",
+        "previousLabel": "上一周期",
+        "previousHint": "用于计算本页所有变化比例",
+        "recordsLabel": "记录数",
+        "recordsHint": "收入 {income} · 支出 {expense}",
+        "anchorLabel": "统计锚点",
+        "anchorHint": "当前筛选使用的参考日期"
+      },
+      "ledgerDescription": "当前页直接调用账本统计接口，可按周、月、年切换周期，并选择成员进一步缩小范围。",
+      "actions": {
+        "refresh": "刷新统计",
+        "applyFilters": "应用筛选"
+      },
+      "filters": {
+        "anchorPlaceholder": "选择参考日期",
+        "memberPlaceholder": "全部成员",
+        "allMembers": "全部成员",
+        "memberFallback": "成员 #{id}",
+        "period": {
+          "week": "按周",
+          "month": "按月",
+          "year": "按年"
+        },
+        "granularity": {
+          "day": "按日",
+          "month": "按月"
+        }
+      },
+      "states": {
+        "errorTitle": "统计数据加载失败",
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "统计页完全基于当前账本上下文运行，先切换到目标账本再查看趋势和分类结构。",
+        "ledgerRequiredAction": "前往账本中心",
+        "loadingTitle": "正在加载统计结果...",
+        "loadingDescription": "系统正在按当前账本、周期和筛选条件重新计算统计窗口。",
+        "emptyTitle": "当前窗口还没有统计数据",
+        "emptyDescription": "可以切换周期、调整锚点日期，或者先在当前账本补充记录后再回来查看。"
+      },
+      "trend": {
+        "title": "趋势 buckets",
+        "description": "按 {granularity} 聚合收入、支出和记录数。",
+        "bucketCount": "{count} 个 bucket",
+        "records": "{count} 条记录",
+        "income": "收入",
+        "expense": "支出",
+        "empty": "当前窗口里还没有可展示的趋势数据。"
+      },
+      "categories": {
+        "title": "分类占比",
+        "description": "按当前窗口统计收入与支出分类结构。",
+        "expenseTitle": "支出分类",
+        "incomeTitle": "收入分类",
+        "count": "{count} 个分类",
+        "expenseEmpty": "当前窗口没有支出分类数据。",
+        "incomeEmpty": "当前窗口没有收入分类数据。"
+      },
+      "messages": {
+        "noBaseline": "上一周期无可比较基线",
+        "vsPrevious": "{value}% 对比上一周期"
+      },
+      "errors": {
+        "fetchFailed": "获取统计数据失败"
+      }
+    },
+    "ledgers": {
+      "eyebrow": "账本工作区",
+      "title": "账本中心",
+      "description": "这里承接平台化后的账本上下文。账本列表、创建和当前上下文都会从这里开始，预算、通知、导出和搜索也会围绕这里的选择工作。",
+      "summary": {
+        "ledgersLabel": "账本数量",
+        "ledgersHint": "当前可访问账本数量",
+        "contextLabel": "当前上下文",
+        "contextHint": "当前平台上下文"
+      },
+      "list": {
+        "title": "我的账本",
+        "description": "默认账本、共享账本和后续平台能力都会从这里进入。",
+        "refresh": "刷新列表",
+        "loadErrorTitle": "账本列表加载失败",
+        "loadingTitle": "正在加载账本列表...",
+        "loadingDescription": "系统正在同步你当前可访问的账本和默认上下文。",
+        "emptyTitle": "还没有可用账本",
+        "emptyDescription": "可以先创建一个 shared、family 或 project 类型的账本。",
+        "defaultBadge": "默认",
+        "contextDescription": "当前阶段先把账本上下文接起来，后续预算、通知、导出和搜索页面都会默认基于这里的选择工作。",
+        "currentContext": "当前上下文",
+        "setCurrentContext": "设为当前上下文",
+        "membersAction": "成员与邀请"
+      },
+      "create": {
+        "title": "创建账本",
+        "description": "当前后端支持 shared / family / project 三种类型。",
+        "nameLabel": "账本名称",
+        "namePlaceholder": "例如：Family Budget",
+        "typeLabel": "账本类型",
+        "submit": "创建并加入账本上下文",
+        "nextTitle": "下一步接入",
+        "steps": [
+          "把当前账本挂到预算、通知、导出和搜索页面。",
+          "再把记录与分类接口迁到 /api/ledgers/{ledgerId}/...。",
+          "最后把成员和邀请页接成真实管理页。"
+        ]
+      },
+      "types": {
+        "shared": "共享账本",
+        "family": "家庭账本",
+        "project": "项目账本"
+      },
+      "messages": {
+        "contextSwitched": "已切换当前平台上下文",
+        "nameRequired": "请输入账本名称",
+        "created": "账本创建成功",
+        "currentLedgerFallback": "未选择账本"
+      },
+      "errors": {
+        "createFailed": "创建账本失败"
+      }
+    },
+    "members": {
+      "eyebrow": "账本成员",
+      "title": "成员与邀请",
+      "description": "查看成员、创建邀请、追踪邀请状态，并接受发给当前账号邮箱的待加入账本邀请。",
+      "summary": {
+        "membersLabel": "成员",
+        "membersHint": "当前账本成员数量",
+        "invitesLabel": "邀请",
+        "invitesHint": "当前账本邀请数量",
+        "roleLabel": "角色",
+        "roleHint": "当前页面可见权限基于此角色"
+      },
+      "inviteForm": {
+        "title": "创建邀请",
+        "description": "只有 owner / admin 可以创建邀请。邀请会按邮箱匹配当前账号，接受后会自动刷新账本列表。",
+        "readOnly": "当前角色只能查看成员，不能创建邀请。需要 owner / admin，或者平台级更高权限。",
+        "emailLabel": "受邀邮箱",
+        "emailPlaceholder": "teammate@example.com",
+        "roleLabel": "角色",
+        "daysLabel": "有效期（天）",
+        "submit": "创建邀请",
+        "roles": {
+          "admin": "管理员",
+          "member": "普通成员"
+        }
+      },
+      "myInvites": {
+        "title": "我的待接受邀请",
+        "description": "这里显示当前账号邮箱匹配到的邀请。接受后会把新账本同步进 ledger 上下文。",
+        "refresh": "刷新",
+        "pendingCount": "待处理 {count}",
+        "resolvedCount": "已处理 {count}",
+        "accept": "接受邀请",
+        "empty": "当前没有待接受的邀请。"
+      },
+      "workspace": {
+        "description": "当前页面围绕路由里的 ledgerId 展示成员与邀请。如果这不是当前平台上下文，可以在这里一键切换。",
+        "refresh": "刷新页面",
+        "setCurrent": "设为当前账本"
+      },
+      "states": {
+        "errorTitle": "成员协作数据加载失败",
+        "ledgerMissingTitle": "当前账本不在你的可访问列表中",
+        "ledgerMissingDescription": "可以先回到账本中心刷新列表，或者确认你已经接受对应邀请。",
+        "ledgerMissingAction": "返回账本中心",
+        "loadingTitle": "正在加载成员与邀请信息...",
+        "loadingDescription": "系统正在同步成员列表、账本邀请和当前账号待接受邀请。"
+      },
+      "membersList": {
+        "title": "成员列表",
+        "description": "展示 owner / admin / member 角色和加入时间。",
+        "count": "{count} 人",
+        "currentUser": "当前用户",
+        "emailMissing": "未提供邮箱",
+        "joinedAt": "加入时间：{value}",
+        "empty": "当前账本还没有成员数据。"
+      },
+      "ledgerInvites": {
+        "title": "账本邀请",
+        "description": "追踪待处理、已接受和已过期的邀请状态。",
+        "count": "{count} 条",
+        "noPermission": "当前角色没有邀请查看权限，需 owner / admin。",
+        "copyCode": "复制邀请码",
+        "reinvite": "重新邀请",
+        "inviteCode": "邀请码：{code}",
+        "expiresAt": "过期时间：{value}",
+        "createdAt": "创建时间：{value}",
+        "acceptedAt": "接受时间：{value}",
+        "filteredEmpty": "当前筛选下没有匹配的邀请",
+        "empty": "当前账本还没有邀请记录。",
+        "filters": {
+          "all": "全部",
+          "pending": "待处理",
+          "accepted": "已接受",
+          "expired": "已过期"
+        }
+      },
+      "messages": {
+        "emailRequired": "请输入受邀邮箱",
+        "emailInvalid": "请输入有效的邮箱地址",
+        "alreadyMember": "该邮箱对应用户已经是当前账本成员",
+        "duplicatePendingInvite": "该邮箱已经有待处理邀请，可以直接复制邀请码",
+        "inviteCreated": "邀请已创建",
+        "inviteAccepted": "邀请已接受",
+        "inviteCodeCopied": "邀请码已复制",
+        "reinviteFilled": "已将邀请信息回填到表单，可直接重新创建",
+        "inviteUnavailable": "当前邀请已经不可接受",
+        "inviteCodeMissing": "当前邀请没有可复制的邀请码",
+        "contextSwitched": "已切换当前账本上下文",
+        "reinviteForbidden": "当前角色无法重新创建邀请"
+      },
+      "errors": {
+        "pendingFetchFailed": "获取待接受邀请失败",
+        "fetchFailed": "获取成员与邀请信息失败",
+        "createInviteFailed": "创建邀请失败",
+        "acceptInviteFailed": "接受邀请失败",
+        "copyInviteCodeFailed": "复制邀请码失败"
+      }
+    },
+    "exports": {
+      "eyebrow": "导出任务",
+      "title": "导出任务",
+      "description": "导出已经升级成可追踪状态、可回看历史、可下载结果的异步任务中心。",
+      "summary": {
+        "jobsLabel": "任务数",
+        "jobsHint": "当前加载的导出任务",
+        "activeLabel": "处理中",
+        "activeHint": "正在排队或处理中",
+        "completedLabel": "已完成",
+        "completedHint": "已可下载任务"
+      },
+      "create": {
+        "title": "创建导出任务",
+        "description": "创建成功后，后端会先写一条入队通知；任务完成或失败后，通知中心也会同步收到结果。",
+        "permissionHint": "当前角色可以创建自己的导出任务，但如果要按其他成员导出，需要 owner / admin 权限。",
+        "typeLabel": "记录类型",
+        "allTypes": "全部类型",
+        "targetMemberLabel": "目标成员",
+        "targetMemberPlaceholder": "普通成员留空即可",
+        "startDateLabel": "开始日期",
+        "endDateLabel": "结束日期",
+        "dateOptional": "可留空",
+        "submit": "创建导出任务"
+      },
+      "workspace": {
+        "description": "导出任务按当前账本列出。普通成员默认只看到自己创建的任务，owner / admin 会看到当前账本下的全部任务。",
+        "refresh": "刷新任务",
+        "openNotifications": "打开通知中心",
+        "limitPlaceholder": "加载数量",
+        "limitOption": "{count} 条",
+        "pollingLabel": "自动轮询处理中任务",
+        "pollingStatus": "当前状态：{status}"
+      },
+      "states": {
+        "errorTitle": "导出任务加载失败",
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "导出任务是账本维度功能，先到“账本中心”切到目标账本再继续。",
+        "ledgerRequiredAction": "前往账本中心",
+        "loadingTitle": "正在加载导出任务...",
+        "loadingDescription": "会按当前账本读取最近的导出任务和状态。",
+        "emptyTitle": "当前还没有导出任务",
+        "emptyDescription": "可以先创建一条任务，后端会异步处理并通过通知中心回流结果。"
+      },
+      "jobs": {
+        "createdAt": "创建于 {value}",
+        "fallbackName": "导出任务 #{id}",
+        "jobId": "任务 ID：{id}",
+        "requestedBy": "请求人：{value}",
+        "targetMember": "目标成员：{value}",
+        "currentUser": "当前用户",
+        "recordCount": "记录数：{count}",
+        "downloadCount": "下载次数：{count}",
+        "startDate": "开始日期：{value}",
+        "endDate": "结束日期：{value}",
+        "unlimited": "未限制",
+        "startedAt": "开始处理：{value}",
+        "completedAt": "完成时间：{value}",
+        "notStarted": "尚未开始",
+        "notCompleted": "尚未完成",
+        "download": "下载结果",
+        "refreshStatus": "刷新状态",
+        "status": {
+          "pending": "排队中",
+          "running": "处理中",
+          "completed": "已完成",
+          "failed": "已失败"
+        }
+      },
+      "messages": {
+        "ledgerRequired": "请先选择账本",
+        "invalidDateRange": "结束日期不能早于开始日期",
+        "crossMemberForbidden": "当前角色只能创建自己的导出任务",
+        "created": "导出任务已创建，后端开始排队处理",
+        "downloadStarted": "导出文件已开始下载",
+        "pollingOff": "自动轮询已关闭",
+        "noActiveJobs": "当前没有处理中任务",
+        "pollingActive": "正在轮询处理中任务",
+        "pollingReady": "已开启自动轮询",
+        "ledgerFallback": "请先选择账本"
+      },
+      "errors": {
+        "fetchFailed": "获取导出任务失败",
+        "createFailed": "创建导出任务失败",
+        "refreshFailed": "刷新导出任务失败",
+        "downloadFailed": "下载导出文件失败"
+      }
+    }
+  },
+  "billing": {
+    "checkout": {
+      "eyebrow": "订阅与账单",
+      "stripeHosted": "Stripe 托管支付",
+      "priceLabel": "价格",
+      "defaultPlanName": "Pro 月付",
+      "defaultPlanDescription": "按月订阅，可在 Stripe 中管理账单与支付方式。",
+      "serviceSyncingLabel": "正在同步状态",
+      "intervalMonth": "/月",
+      "intervalYear": "/年",
+      "heroDescription": "购买后将跳转到 Stripe 完成支付。返回后，订阅结果仍然后端为准。",
+      "section": {
+        "activeTitle": "当前订阅",
+        "availableTitle": "购买前确认",
+        "errorTitle": "状态获取失败",
+        "loadingTitle": "正在同步状态",
+        "blockedTitle": "当前状态",
+        "activeDescription": "这里展示的是当前有效订阅和后续管理入口。",
+        "availableDescription": "当前环境已经允许购买，你可以直接继续。",
+        "errorDescription": "这不是 ready=false，而是前端没有成功拿到支付状态。",
+        "loadingDescription": "页面正在向后端同步支付状态、套餐和订阅信息。",
+        "blockedDescription": "当前环境还没有开放购买。"
+      },
+      "cards": {
+        "plan": "套餐",
+        "subscriptionStatus": "订阅状态",
+        "paymentStatus": "支付状态",
+        "subscriptionEmpty": "当前还没有生效中的订阅。",
+        "statusUnavailable": "未能读取到后端支付状态。",
+        "paymentAvailable": "当前可以继续购买当前套餐。",
+        "paymentBlocked": "当前还不能继续购买当前套餐。"
+      },
+      "states": {
+        "subscribedTitle": "你已经开通当前套餐",
+        "subscribedCancelHint": "当前订阅已设置为到期后自动取消。",
+        "subscribedManageHint": "如需修改账单或支付方式，可直接进入 Stripe 管理页。",
+        "availableTitle": "当前可以购买",
+        "availableDescription": "点击上方主按钮即可跳转到 Stripe 完成支付。支付完成后，成功页会继续向后端确认真实订阅状态。",
+        "errorTitle": "支付状态没有取到",
+        "errorDescription": "这时前端不会把它误当成 ready=false。请先刷新状态；如果仍失败，再检查当前登录态或当前环境的 /api 代理是否命中了正确后端。",
+        "blockedTitle": "当前暂时不能购买",
+        "blockedDescription": "后端支付状态当前没有开放购买。你可以稍后刷新状态，或先继续使用记账功能。"
+      },
+      "actions": {
+        "refreshStatus": "刷新状态",
+        "retryStatus": "重新获取状态",
+        "manageSubscription": "管理订阅",
+        "buyNow": "立即购买",
+        "blocked": "暂不可购买",
+        "checking": "正在检查",
+        "cancelSubscription": "取消订阅",
+        "cancelScheduled": "已设置到期取消"
+      },
+      "hints": {
+        "checking": "正在检查支付状态，请稍等。",
+        "statusError": "{message}。请先刷新状态；如果仍失败，请确认当前环境的登录态和 /api 代理。",
+        "blocked": "支付服务当前未开放，暂时无法购买。",
+        "activeCancel": "你的订阅仍然有效，并已设置在当前周期结束后自动取消。",
+        "activeManage": "你已经开通当前套餐，可以直接前往 Stripe 管理订阅。",
+        "buy": "点击购买后会跳转到 Stripe 安全支付页面完成付款。",
+        "retry": "先重新检查支付状态，再决定是否继续购买。",
+        "loading": "页面正在读取后端支付状态。",
+        "manage": "查看账单、支付方式和当前订阅设置。",
+        "preparing": "支付服务正在准备中，请稍后再试。",
+        "checkout": "前往 Stripe 完成当前套餐的支付。"
+      },
+      "messages": {
+        "statusUnavailable": "状态获取失败",
+        "paymentAvailable": "支付可用",
+        "paymentBlocked": "支付暂不可用",
+        "subscriptionNone": "未开通",
+        "subscriptionActive": "订阅有效",
+        "subscriptionTrialing": "试用中",
+        "subscriptionPastDue": "待补款",
+        "subscriptionCanceled": "已取消",
+        "subscriptionUnpaid": "未支付",
+        "periodMissing": "当前没有有效订阅周期",
+        "periodCancelRange": "{start} - {end}（到期后取消）",
+        "periodRange": "{start} - {end}",
+        "periodCancelUntil": "当前周期到 {end} 结束后取消",
+        "periodUntil": "当前周期到 {end} 结束",
+        "periodUnknown": "后端暂未返回订阅周期时间"
+      },
+      "confirm": {
+        "cancelTitle": "取消订阅",
+        "cancelDescription": "取消订阅会在当前计费周期结束后生效，确认继续吗？",
+        "confirm": "确认取消",
+        "cancel": "我再想想"
+      },
+      "errors": {
+        "statusFetchFailed": "支付状态获取失败",
+        "plansFetchFailed": "套餐信息获取失败，先显示默认套餐。",
+        "subscriptionFetchFailed": "订阅状态获取失败，先按未订阅展示。",
+        "portalUrlMissing": "后端未返回可用的订阅管理地址",
+        "portalOpenFailed": "打开订阅管理失败，请稍后重试",
+        "paymentBlocked": "支付暂不可用",
+        "serviceNotReady": "支付服务当前未准备完成",
+        "checkoutUrlMissing": "后端未返回可用的支付地址",
+        "checkoutFailed": "发起支付失败，请稍后重试",
+        "cancelFailed": "取消订阅失败，请稍后重试"
+      }
+    },
+    "result": {
+      "eyebrow": "支付返回页",
+      "successTitleChecking": "正在确认支付结果",
+      "successTitleConfirmed": "订阅状态已确认",
+      "successTitleTimeout": "支付已返回，等待后端确认",
+      "successDescriptionChecking": "Stripe 已经跳回前端。页面正在按约定轮询订阅与订单接口，只有拿到后端确认结果后，才会把状态展示为已生效。",
+      "successDescriptionConfirmed": "前端已经从后端订阅或订单接口里拿到了有效结果。你现在看到的是已确认状态，而不是本地臆测。",
+      "successDescriptionTimeout": "Stripe 已经跳回前端，但在限定轮询次数内还没有拿到订阅生效或订单 paid 的结果。请稍后重试，或回到账单页继续查看。",
+      "cancelTitle": "你已离开支付流程",
+      "cancelDescription": "这只表示你离开了 Stripe Checkout。当前订阅状态以后端为准，前端不会把这次返回解释为购买成功或失败。",
+      "alert": {
+        "confirmed": "后端已经确认支付结果，当前页面展示的是已确认状态。",
+        "timeout": "轮询次数已经用完，但还没有拿到有效订阅或 paid 订单。你可以稍后继续重试。",
+        "checking": "页面正在每 2 秒轮询一次订阅与订单接口，最多 10 次。",
+        "cancel": "当前页面只表示你已经离开支付页，并不代表系统已经记录新的订阅状态。"
+      },
+      "session": {
+        "title": "会话标识",
+        "description": "仅用于排查和对账展示，不直接代表业务成功。",
+        "present": "已返回 session_id",
+        "missing": "未返回 session_id",
+        "missingValue": "当前地址未携带可展示的 session_id"
+      },
+      "backendSummary": {
+        "title": "后端结果摘要",
+        "confirmedBy": "确认方式：{value}",
+        "period": "订阅周期：{value}",
+        "latestOrder": "最新订单：{value}",
+        "orderTime": "订单时间：{value}",
+        "missingOrderNo": "后端未返回订单号"
+      },
+      "summaryCards": {
+        "polling": "轮询进度",
+        "pollingHint": "按约定每 2 秒轮询一次，最多 10 次。",
+        "subscription": "订阅状态",
+        "order": "最新订单",
+        "missingOrderNo": "后端暂未返回订单号",
+        "flow": "流程状态",
+        "flowValue": "已离开支付页",
+        "flowHint": "只表示用户流程结束，并不代表新的订阅状态。",
+        "verification": "订阅确认",
+        "verificationValue": "没有变更",
+        "verificationHint": "当前页面没有拿到任何新的后端订阅确认结果。",
+        "next": "后续操作",
+        "nextValue": "可以再试",
+        "nextHint": "你可以回到账单页重新查看状态，或再次发起购买流程。"
+      },
+      "side": {
+        "title": "下一步建议",
+        "confirmed": "支付结果已经被后端确认。你现在可以回到账单页继续管理订阅，或者直接返回记账页。",
+        "timeout": "如果后端稍后才落库，你可以重新进入这个页面再次确认，或回到账单页手动刷新。",
+        "checking": "页面正在等后端同步订阅与订单状态。只要拿到 active 订阅或 paid 订单，就会自动停止轮询。",
+        "cancelTitle": "保持当前判断",
+        "cancelDescription": "如果你只是中途离开，这不会影响你继续回到账单页重新发起流程，或者直接返回记账页继续使用当前功能。"
+      },
+      "actions": {
+        "retry": "重新确认结果",
+        "polling": "轮询中...",
+        "backToBilling": "返回订阅页",
+        "backToAccounting": "返回记账页"
+      },
+      "cancelPage": {
+        "whatNextTitle": "你可以怎么做",
+        "notesTitle": "页面说明",
+        "notesDescription": "为了避免误导，这个页面不会直接写成“支付取消成功”或“升级失败”。它只表示用户流程返回，业务状态依然以后端为准。",
+        "steps": {
+          "review": {
+            "title": "回到账单页重新查看状态",
+            "description": "账单页会重新读取后端支付状态、套餐和当前订阅。"
+          },
+          "retry": {
+            "title": "如果只是暂时离开，可稍后再试",
+            "description": "当前前端会重新请求 checkout session，而不是继续依赖写死的 Payment Link。"
+          },
+          "continue": {
+            "title": "继续使用当前记账功能",
+            "description": "退出支付流程不会影响你继续记录、筛选和查看图表。"
+          }
+        }
+      },
+      "messages": {
+        "subscriptionNone": "未开通",
+        "subscriptionActive": "订阅有效",
+        "subscriptionTrialing": "试用中",
+        "subscriptionPastDue": "待补款",
+        "subscriptionCanceled": "已取消",
+        "subscriptionUnpaid": "未支付",
+        "subscriptionCancelAtPeriodEnd": "当前有效，到期后取消",
+        "orderPending": "待支付",
+        "orderCheckoutCreated": "已创建会话",
+        "orderPaid": "已支付",
+        "orderFailed": "支付失败",
+        "orderCanceled": "已取消",
+        "orderRefunded": "已退款",
+        "notReady": "后端暂未返回",
+        "confirmedBySubscription": "已通过订阅状态确认生效",
+        "confirmedByOrder": "已通过最新订单确认支付完成",
+        "confirmedWaiting": "轮询结束，仍在等待后端确认",
+        "confirmedChecking": "正在等待后端同步订单与订阅状态",
+        "confirmedUnknown": "尚未确认",
+        "noOrder": "暂无订单记录",
+        "noPeriod": "当前没有有效订阅周期",
+        "periodUntil": "当前周期到 {date} 结束",
+        "periodRange": "{start} - {end}",
+        "periodUnknown": "后端暂未返回订阅周期时间",
+        "pollingConfirmed": "已在第 {count} 次轮询确认",
+        "pollingTimeout": "已轮询 {count} 次，仍未拿到确认结果",
+        "pollingReady": "准备开始轮询，最多 {count} 次",
+        "pollingProgress": "第 {current} / {total} 次轮询"
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "request_failed": "请求失败",
+      "bad_request": "请求参数有误",
+      "unauthorized": "登录已过期，请重新登录",
+      "forbidden": "没有权限进行此操作",
+      "not_found": "请求的资源不存在",
+      "conflict": "当前请求与现有状态冲突",
+      "server_error": "服务器内部错误",
+      "network_error": "网络请求失败，请检查网络连接",
+      "config_error": "请求配置错误"
+    },
+    "auth": {
+      "invalid_credentials": "用户名或密码不正确"
+    },
+    "category": {
+      "invalid_type": "分类类型无效"
+    },
+    "record": {
+      "invalid_type": "记录类型无效",
+      "type_mismatch": "记录类型必须与所选分类类型一致"
+    },
+    "ledger": {
+      "invite": {
+        "already_member": "该邮箱对应用户已经是当前账本成员",
+        "email_mismatch": "当前登录邮箱与邀请目标邮箱不一致"
+      }
+    },
+    "budget": {
+      "duplicate_budget": "同一月份、类型和分类范围的预算已经存在",
+      "invalid_period": "预算年月范围无效"
+    },
+    "export": {
+      "job_not_ready": "导出任务尚未完成，请稍后再试"
+    }
+  },
+  "notifications": {
+    "defaults": {
+      "title": "新通知",
+      "message": "你有一条新的平台通知。",
+      "toastTitle": "新消息"
+    },
+    "events": {
+      "budget": {
+        "threshold_reached": {
+          "title": "预算提醒",
+          "message": "预算“{budgetName}”已达到 {threshold}% 使用率。"
+        },
+        "threshold_cleared": {
+          "title": "预算状态恢复",
+          "message": "预算“{budgetName}”已回落到提醒阈值以下。"
+        }
+      },
+      "export": {
+        "job_queued": {
+          "title": "导出已创建",
+          "message": "导出任务已加入队列，生成完成后会再次通知你。"
+        },
+        "job_ready": {
+          "title": "导出已就绪",
+          "message": "导出文件“{fileName}”已生成，可以开始下载。"
+        },
+        "job_failed": {
+          "title": "导出失败",
+          "message": "导出任务未能完成，请稍后重试。"
+        }
+      },
+      "ledger": {
+        "invite_received": {
+          "title": "收到新邀请",
+          "message": "你收到了加入账本“{ledgerName}”的邀请。"
+        },
+        "invite_accepted": {
+          "title": "邀请已接受",
+          "message": "成员已接受账本“{ledgerName}”的邀请。"
+        }
+      },
+      "record": {
+        "balance_warning": {
+          "title": "收支提醒",
+          "message": "当前账本余额波动较大，请留意最近记录。"
+        }
+      }
+    }
+  }
+}
