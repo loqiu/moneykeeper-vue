@@ -46,15 +46,15 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
-          <router-link to="/billing" class="no-underline">
+        <div class="flex flex-col gap-3 lg:ml-auto lg:flex-row lg:items-stretch lg:justify-end">
+          <router-link to="/billing" class="no-underline lg:flex">
             <button
               type="button"
-              class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-w-[260px]"
+              class="flex w-full items-center justify-between gap-4 rounded-[28px] border border-amber-200 bg-gradient-to-r from-amber-100 via-orange-50 to-white px-5 py-3 text-left shadow-sm transition-transform hover:-translate-y-0.5 lg:min-h-[104px] lg:min-w-[320px] lg:max-w-[360px]"
             >
-              <div>
-                <div class="text-sm font-semibold text-slate-900">{{ t('topbar.upgradeTitle') }}</div>
-                <div class="mt-1 text-xs text-slate-500">{{ t('topbar.upgradeDescription') }}</div>
+              <div class="min-w-0 max-w-[240px]">
+                <div class="whitespace-nowrap text-sm font-semibold text-slate-900">{{ t('topbar.upgradeTitle') }}</div>
+                <div class="mt-1 text-xs leading-6 text-slate-500">{{ t('topbar.upgradeDescription') }}</div>
               </div>
               <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400 text-slate-900">
                 <el-icon :size="20"><Star /></el-icon>
@@ -62,14 +62,14 @@
             </button>
           </router-link>
 
-          <div class="flex items-center justify-between gap-3 rounded-[28px] border border-slate-200 bg-slate-900 px-4 py-3 text-white shadow-sm sm:justify-start">
+          <div class="flex items-center justify-between gap-3 rounded-[28px] border border-slate-200 bg-slate-900 px-4 py-3 text-white shadow-sm sm:justify-start lg:min-w-[360px]">
             <div class="flex items-center gap-3">
               <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10 text-sm font-semibold text-white backdrop-blur">
                 {{ userInitial }}
               </div>
-              <div>
-                <div class="text-sm font-semibold text-white">{{ displayName }}</div>
-                <div class="mt-1 text-xs text-slate-300">{{ connectionDetail }}</div>
+              <div class="min-w-0">
+                <div class="truncate text-sm font-semibold text-white">{{ displayName }}</div>
+                <div class="mt-1 max-w-[180px] text-xs leading-5 text-slate-300">{{ connectionDetail }}</div>
               </div>
             </div>
 
