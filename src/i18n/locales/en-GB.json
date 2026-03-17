@@ -860,6 +860,94 @@
         "acceptInviteFailed": "Failed to accept the invite",
         "copyInviteCodeFailed": "Failed to copy the invite code"
       }
+    },
+    "exports": {
+      "eyebrow": "Export Jobs",
+      "title": "Export jobs",
+      "description": "Exports now run as trackable async jobs with history, status, and downloadable results.",
+      "summary": {
+        "jobsLabel": "Jobs",
+        "jobsHint": "Export jobs currently loaded",
+        "activeLabel": "Active",
+        "activeHint": "Queued or running right now",
+        "completedLabel": "Completed",
+        "completedHint": "Ready to download"
+      },
+      "create": {
+        "title": "Create export job",
+        "description": "After creation, the backend writes a queued notification first. Completion or failure also flows back into Notification Centre.",
+        "permissionHint": "Your current role can create your own export jobs, but exporting on behalf of another member requires owner or admin access.",
+        "typeLabel": "Record type",
+        "allTypes": "All types",
+        "targetMemberLabel": "Target member",
+        "targetMemberPlaceholder": "Leave empty for your own records",
+        "startDateLabel": "Start date",
+        "endDateLabel": "End date",
+        "dateOptional": "Optional",
+        "submit": "Create export job"
+      },
+      "workspace": {
+        "description": "Export jobs are listed in the current ledger. Members see jobs they created; owners and admins can review every job in this ledger.",
+        "refresh": "Refresh jobs",
+        "openNotifications": "Open Notification Centre",
+        "limitPlaceholder": "Load count",
+        "limitOption": "{count} rows",
+        "pollingLabel": "Auto-refresh active jobs",
+        "pollingStatus": "Status: {status}"
+      },
+      "states": {
+        "errorTitle": "Failed to load export jobs",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Export jobs work in ledger context. Switch to the target ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "loadingTitle": "Loading export jobs...",
+        "loadingDescription": "Recent export jobs and their status are being read for the current ledger.",
+        "emptyTitle": "There are no export jobs yet",
+        "emptyDescription": "Create the first job and the backend will process it asynchronously before notifying you."
+      },
+      "jobs": {
+        "createdAt": "Created {value}",
+        "fallbackName": "Export job #{id}",
+        "jobId": "Job ID: {id}",
+        "requestedBy": "Requested by: {value}",
+        "targetMember": "Target member: {value}",
+        "currentUser": "Current user",
+        "recordCount": "Records: {count}",
+        "downloadCount": "Downloads: {count}",
+        "startDate": "Start date: {value}",
+        "endDate": "End date: {value}",
+        "unlimited": "No limit",
+        "startedAt": "Started: {value}",
+        "completedAt": "Completed: {value}",
+        "notStarted": "Not started",
+        "notCompleted": "Not completed",
+        "download": "Download result",
+        "refreshStatus": "Refresh status",
+        "status": {
+          "pending": "Queued",
+          "running": "Running",
+          "completed": "Completed",
+          "failed": "Failed"
+        }
+      },
+      "messages": {
+        "ledgerRequired": "Choose a ledger first",
+        "invalidDateRange": "End date cannot be earlier than the start date",
+        "crossMemberForbidden": "Your current role can only create export jobs for your own records",
+        "created": "Export job created. The backend has started queueing it.",
+        "downloadStarted": "The export download has started",
+        "pollingOff": "Auto-refresh is off",
+        "noActiveJobs": "There are no active jobs right now",
+        "pollingActive": "Refreshing active jobs",
+        "pollingReady": "Auto-refresh is enabled",
+        "ledgerFallback": "Choose a ledger first"
+      },
+      "errors": {
+        "fetchFailed": "Failed to load export jobs",
+        "createFailed": "Failed to create the export job",
+        "refreshFailed": "Failed to refresh the export job",
+        "downloadFailed": "Failed to download the export file"
+      }
     }
   },
   "errors": {

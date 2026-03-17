@@ -860,6 +860,303 @@
         "acceptInviteFailed": "接受邀请失败",
         "copyInviteCodeFailed": "复制邀请码失败"
       }
+    },
+    "exports": {
+      "eyebrow": "导出任务",
+      "title": "导出任务",
+      "description": "导出已经升级成可追踪状态、可回看历史、可下载结果的异步任务中心。",
+      "summary": {
+        "jobsLabel": "任务数",
+        "jobsHint": "当前加载的导出任务",
+        "activeLabel": "处理中",
+        "activeHint": "正在排队或处理中",
+        "completedLabel": "已完成",
+        "completedHint": "已可下载任务"
+      },
+      "create": {
+        "title": "创建导出任务",
+        "description": "创建成功后，后端会先写一条入队通知；任务完成或失败后，通知中心也会同步收到结果。",
+        "permissionHint": "当前角色可以创建自己的导出任务，但如果要按其他成员导出，需要 owner / admin 权限。",
+        "typeLabel": "记录类型",
+        "allTypes": "全部类型",
+        "targetMemberLabel": "目标成员",
+        "targetMemberPlaceholder": "普通成员留空即可",
+        "startDateLabel": "开始日期",
+        "endDateLabel": "结束日期",
+        "dateOptional": "可留空",
+        "submit": "创建导出任务"
+      },
+      "workspace": {
+        "description": "导出任务按当前账本列出。普通成员默认只看到自己创建的任务，owner / admin 会看到当前账本下的全部任务。",
+        "refresh": "刷新任务",
+        "openNotifications": "打开通知中心",
+        "limitPlaceholder": "加载数量",
+        "limitOption": "{count} 条",
+        "pollingLabel": "自动轮询处理中任务",
+        "pollingStatus": "当前状态：{status}"
+      },
+      "states": {
+        "errorTitle": "导出任务加载失败",
+        "ledgerRequiredTitle": "请先选择账本",
+        "ledgerRequiredDescription": "导出任务是账本维度功能，先到“账本中心”切到目标账本再继续。",
+        "ledgerRequiredAction": "前往账本中心",
+        "loadingTitle": "正在加载导出任务...",
+        "loadingDescription": "会按当前账本读取最近的导出任务和状态。",
+        "emptyTitle": "当前还没有导出任务",
+        "emptyDescription": "可以先创建一条任务，后端会异步处理并通过通知中心回流结果。"
+      },
+      "jobs": {
+        "createdAt": "创建于 {value}",
+        "fallbackName": "导出任务 #{id}",
+        "jobId": "任务 ID：{id}",
+        "requestedBy": "请求人：{value}",
+        "targetMember": "目标成员：{value}",
+        "currentUser": "当前用户",
+        "recordCount": "记录数：{count}",
+        "downloadCount": "下载次数：{count}",
+        "startDate": "开始日期：{value}",
+        "endDate": "结束日期：{value}",
+        "unlimited": "未限制",
+        "startedAt": "开始处理：{value}",
+        "completedAt": "完成时间：{value}",
+        "notStarted": "尚未开始",
+        "notCompleted": "尚未完成",
+        "download": "下载结果",
+        "refreshStatus": "刷新状态",
+        "status": {
+          "pending": "排队中",
+          "running": "处理中",
+          "completed": "已完成",
+          "failed": "已失败"
+        }
+      },
+      "messages": {
+        "ledgerRequired": "请先选择账本",
+        "invalidDateRange": "结束日期不能早于开始日期",
+        "crossMemberForbidden": "当前角色只能创建自己的导出任务",
+        "created": "导出任务已创建，后端开始排队处理",
+        "downloadStarted": "导出文件已开始下载",
+        "pollingOff": "自动轮询已关闭",
+        "noActiveJobs": "当前没有处理中任务",
+        "pollingActive": "正在轮询处理中任务",
+        "pollingReady": "已开启自动轮询",
+        "ledgerFallback": "请先选择账本"
+      },
+      "errors": {
+        "fetchFailed": "获取导出任务失败",
+        "createFailed": "创建导出任务失败",
+        "refreshFailed": "刷新导出任务失败",
+        "downloadFailed": "下载导出文件失败"
+      }
+    }
+  },
+  "billing": {
+    "checkout": {
+      "eyebrow": "订阅与账单",
+      "stripeHosted": "Stripe 托管支付",
+      "priceLabel": "价格",
+      "heroDescription": "购买后将跳转到 Stripe 完成支付。返回后，订阅结果仍然后端为准。",
+      "section": {
+        "activeTitle": "当前订阅",
+        "availableTitle": "购买前确认",
+        "errorTitle": "状态获取失败",
+        "loadingTitle": "正在同步状态",
+        "blockedTitle": "当前状态",
+        "activeDescription": "这里展示的是当前有效订阅和后续管理入口。",
+        "availableDescription": "当前环境已经允许购买，你可以直接继续。",
+        "errorDescription": "这不是 ready=false，而是前端没有成功拿到支付状态。",
+        "loadingDescription": "页面正在向后端同步支付状态、套餐和订阅信息。",
+        "blockedDescription": "当前环境还没有开放购买。"
+      },
+      "cards": {
+        "plan": "套餐",
+        "subscriptionStatus": "订阅状态",
+        "paymentStatus": "支付状态",
+        "subscriptionEmpty": "当前还没有生效中的订阅。",
+        "statusUnavailable": "未能读取到后端支付状态。",
+        "paymentAvailable": "当前可以继续购买当前套餐。",
+        "paymentBlocked": "当前还不能继续购买当前套餐。"
+      },
+      "states": {
+        "subscribedTitle": "你已经开通当前套餐",
+        "subscribedCancelHint": "当前订阅已设置为到期后自动取消。",
+        "subscribedManageHint": "如需修改账单或支付方式，可直接进入 Stripe 管理页。",
+        "availableTitle": "当前可以购买",
+        "availableDescription": "点击上方主按钮即可跳转到 Stripe 完成支付。支付完成后，成功页会继续向后端确认真实订阅状态。",
+        "errorTitle": "支付状态没有取到",
+        "errorDescription": "这时前端不会把它误当成 ready=false。请先刷新状态；如果仍失败，再检查当前登录态或当前环境的 /api 代理是否命中了正确后端。",
+        "blockedTitle": "当前暂时不能购买",
+        "blockedDescription": "后端支付状态当前没有开放购买。你可以稍后刷新状态，或先继续使用记账功能。"
+      },
+      "actions": {
+        "refreshStatus": "刷新状态",
+        "retryStatus": "重新获取状态",
+        "manageSubscription": "管理订阅",
+        "buyNow": "立即购买",
+        "blocked": "暂不可购买",
+        "checking": "正在检查",
+        "cancelSubscription": "取消订阅",
+        "cancelScheduled": "已设置到期取消"
+      },
+      "hints": {
+        "checking": "正在检查支付状态，请稍等。",
+        "statusError": "{message}。请先刷新状态；如果仍失败，请确认当前环境的登录态和 /api 代理。",
+        "blocked": "支付服务当前未开放，暂时无法购买。",
+        "activeCancel": "你的订阅仍然有效，并已设置在当前周期结束后自动取消。",
+        "activeManage": "你已经开通当前套餐，可以直接前往 Stripe 管理订阅。",
+        "buy": "点击购买后会跳转到 Stripe 安全支付页面完成付款。",
+        "retry": "先重新检查支付状态，再决定是否继续购买。",
+        "loading": "页面正在读取后端支付状态。",
+        "manage": "查看账单、支付方式和当前订阅设置。",
+        "preparing": "支付服务正在准备中，请稍后再试。",
+        "checkout": "前往 Stripe 完成当前套餐的支付。"
+      },
+      "messages": {
+        "statusUnavailable": "状态获取失败",
+        "paymentAvailable": "支付可用",
+        "paymentBlocked": "支付暂不可用",
+        "subscriptionNone": "未开通",
+        "subscriptionActive": "订阅有效",
+        "subscriptionTrialing": "试用中",
+        "subscriptionPastDue": "待补款",
+        "subscriptionCanceled": "已取消",
+        "subscriptionUnpaid": "未支付",
+        "periodMissing": "当前没有有效订阅周期",
+        "periodCancelRange": "{start} - {end}（到期后取消）",
+        "periodRange": "{start} - {end}",
+        "periodCancelUntil": "当前周期到 {end} 结束后取消",
+        "periodUntil": "当前周期到 {end} 结束",
+        "periodUnknown": "后端暂未返回订阅周期时间"
+      },
+      "confirm": {
+        "cancelTitle": "取消订阅",
+        "cancelDescription": "取消订阅会在当前计费周期结束后生效，确认继续吗？",
+        "confirm": "确认取消",
+        "cancel": "我再想想"
+      },
+      "errors": {
+        "statusFetchFailed": "支付状态获取失败",
+        "plansFetchFailed": "套餐信息获取失败，先显示默认套餐。",
+        "subscriptionFetchFailed": "订阅状态获取失败，先按未订阅展示。",
+        "portalUrlMissing": "后端未返回可用的订阅管理地址",
+        "portalOpenFailed": "打开订阅管理失败，请稍后重试",
+        "paymentBlocked": "支付暂不可用",
+        "serviceNotReady": "支付服务当前未准备完成",
+        "checkoutUrlMissing": "后端未返回可用的支付地址",
+        "checkoutFailed": "发起支付失败，请稍后重试",
+        "cancelFailed": "取消订阅失败，请稍后重试"
+      }
+    },
+    "result": {
+      "eyebrow": "支付返回页",
+      "successTitleChecking": "正在确认支付结果",
+      "successTitleConfirmed": "订阅状态已确认",
+      "successTitleTimeout": "支付已返回，等待后端确认",
+      "successDescriptionChecking": "Stripe 已经跳回前端。页面正在按约定轮询订阅与订单接口，只有拿到后端确认结果后，才会把状态展示为已生效。",
+      "successDescriptionConfirmed": "前端已经从后端订阅或订单接口里拿到了有效结果。你现在看到的是已确认状态，而不是本地臆测。",
+      "successDescriptionTimeout": "Stripe 已经跳回前端，但在限定轮询次数内还没有拿到订阅生效或订单 paid 的结果。请稍后重试，或回到账单页继续查看。",
+      "cancelTitle": "你已离开支付流程",
+      "cancelDescription": "这只表示你离开了 Stripe Checkout。当前订阅状态以后端为准，前端不会把这次返回解释为购买成功或失败。",
+      "alert": {
+        "confirmed": "后端已经确认支付结果，当前页面展示的是已确认状态。",
+        "timeout": "轮询次数已经用完，但还没有拿到有效订阅或 paid 订单。你可以稍后继续重试。",
+        "checking": "页面正在每 2 秒轮询一次订阅与订单接口，最多 10 次。",
+        "cancel": "当前页面只表示你已经离开支付页，并不代表系统已经记录新的订阅状态。"
+      },
+      "session": {
+        "title": "会话标识",
+        "description": "仅用于排查和对账展示，不直接代表业务成功。",
+        "present": "已返回 session_id",
+        "missing": "未返回 session_id",
+        "missingValue": "当前地址未携带可展示的 session_id"
+      },
+      "backendSummary": {
+        "title": "后端结果摘要",
+        "confirmedBy": "确认方式：{value}",
+        "period": "订阅周期：{value}",
+        "latestOrder": "最新订单：{value}",
+        "orderTime": "订单时间：{value}",
+        "missingOrderNo": "后端未返回订单号"
+      },
+      "summaryCards": {
+        "polling": "轮询进度",
+        "pollingHint": "按约定每 2 秒轮询一次，最多 10 次。",
+        "subscription": "订阅状态",
+        "order": "最新订单",
+        "missingOrderNo": "后端暂未返回订单号",
+        "flow": "流程状态",
+        "flowValue": "已离开支付页",
+        "flowHint": "只表示用户流程结束，并不代表新的订阅状态。",
+        "verification": "订阅确认",
+        "verificationValue": "没有变更",
+        "verificationHint": "当前页面没有拿到任何新的后端订阅确认结果。",
+        "next": "后续操作",
+        "nextValue": "可以再试",
+        "nextHint": "你可以回到账单页重新查看状态，或再次发起购买流程。"
+      },
+      "side": {
+        "title": "下一步建议",
+        "confirmed": "支付结果已经被后端确认。你现在可以回到账单页继续管理订阅，或者直接返回记账页。",
+        "timeout": "如果后端稍后才落库，你可以重新进入这个页面再次确认，或回到账单页手动刷新。",
+        "checking": "页面正在等后端同步订阅与订单状态。只要拿到 active 订阅或 paid 订单，就会自动停止轮询。",
+        "cancelTitle": "保持当前判断",
+        "cancelDescription": "如果你只是中途离开，这不会影响你继续回到账单页重新发起流程，或者直接返回记账页继续使用当前功能。"
+      },
+      "actions": {
+        "retry": "重新确认结果",
+        "polling": "轮询中...",
+        "backToBilling": "返回订阅页",
+        "backToAccounting": "返回记账页"
+      },
+      "cancelPage": {
+        "whatNextTitle": "你可以怎么做",
+        "notesTitle": "页面说明",
+        "notesDescription": "为了避免误导，这个页面不会直接写成“支付取消成功”或“升级失败”。它只表示用户流程返回，业务状态依然以后端为准。",
+        "steps": {
+          "review": {
+            "title": "回到账单页重新查看状态",
+            "description": "账单页会重新读取后端支付状态、套餐和当前订阅。"
+          },
+          "retry": {
+            "title": "如果只是暂时离开，可稍后再试",
+            "description": "当前前端会重新请求 checkout session，而不是继续依赖写死的 Payment Link。"
+          },
+          "continue": {
+            "title": "继续使用当前记账功能",
+            "description": "退出支付流程不会影响你继续记录、筛选和查看图表。"
+          }
+        }
+      },
+      "messages": {
+        "subscriptionNone": "未开通",
+        "subscriptionActive": "订阅有效",
+        "subscriptionTrialing": "试用中",
+        "subscriptionPastDue": "待补款",
+        "subscriptionCanceled": "已取消",
+        "subscriptionUnpaid": "未支付",
+        "subscriptionCancelAtPeriodEnd": "当前有效，到期后取消",
+        "orderPending": "待支付",
+        "orderCheckoutCreated": "已创建会话",
+        "orderPaid": "已支付",
+        "orderFailed": "支付失败",
+        "orderCanceled": "已取消",
+        "orderRefunded": "已退款",
+        "notReady": "后端暂未返回",
+        "confirmedBySubscription": "已通过订阅状态确认生效",
+        "confirmedByOrder": "已通过最新订单确认支付完成",
+        "confirmedWaiting": "轮询结束，仍在等待后端确认",
+        "confirmedChecking": "正在等待后端同步订单与订阅状态",
+        "confirmedUnknown": "尚未确认",
+        "noOrder": "暂无订单记录",
+        "noPeriod": "当前没有有效订阅周期",
+        "periodUntil": "当前周期到 {date} 结束",
+        "periodRange": "{start} - {end}",
+        "periodUnknown": "后端暂未返回订阅周期时间",
+        "pollingConfirmed": "已在第 {count} 次轮询确认",
+        "pollingTimeout": "已轮询 {count} 次，仍未拿到确认结果",
+        "pollingReady": "准备开始轮询，最多 {count} 次",
+        "pollingProgress": "第 {current} / {total} 次轮询"
+      }
     }
   },
   "errors": {

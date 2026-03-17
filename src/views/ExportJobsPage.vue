@@ -1,25 +1,25 @@
 <template>
   <PlatformPageShell
-    eyebrow="Export Jobs"
-    title="导出任务"
-    description="导出已经不再假设同步完成，而是升级成可追踪状态、可回看历史、可下载结果的异步任务中心。"
+    :eyebrow="t('platform.exports.eyebrow')"
+    :title="t('platform.exports.title')"
+    :description="t('platform.exports.description')"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Jobs</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.exports.summary.jobsLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ jobs.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前加载的导出任务</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.exports.summary.jobsHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Active</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.exports.summary.activeLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ activeJobCount }}</p>
-          <p class="mt-2 text-xs text-slate-300">正在排队或处理中</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.exports.summary.activeHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Completed</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.exports.summary.completedLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ completedJobCount }}</p>
-          <p class="mt-2 text-xs text-slate-300">已可下载任务</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.exports.summary.completedHint') }}</p>
         </div>
       </div>
     </template>
@@ -27,9 +27,9 @@
     <template #aside>
       <article class="rounded-[32px] border border-white/70 bg-white/92 p-6 shadow-[0_20px_60px_rgba(148,163,184,0.16)] backdrop-blur">
         <div>
-          <h2 class="text-xl font-semibold text-slate-900">创建导出任务</h2>
+          <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.exports.create.title') }}</h2>
           <p class="mt-2 text-sm leading-6 text-slate-500">
-            创建成功后，后端会先写一条入队通知；任务完成或失败后，通知中心也会同步收到结果。
+            {{ t('platform.exports.create.description') }}
           </p>
         </div>
 
@@ -37,12 +37,12 @@
           v-if="hasLedgerContext && !canManageCrossMemberExports"
           class="mt-5 rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-5 text-sm leading-6 text-slate-600"
         >
-          当前角色可以创建自己的导出任务，但如果要按其他成员 ID 导出，需要 owner / admin 权限。
+          {{ t('platform.exports.create.permissionHint') }}
         </div>
 
         <el-form class="mt-5 space-y-4" label-position="top" @submit.prevent>
-          <el-form-item label="记录类型">
-            <el-select v-model="form.type" clearable class="w-full" placeholder="全部类型">
+          <el-form-item :label="t('platform.exports.create.typeLabel')">
+            <el-select v-model="form.type" clearable class="w-full" :placeholder="t('platform.exports.create.allTypes')">
               <el-option
                 v-for="option in typeOptions"
                 :key="option.value"
@@ -52,34 +52,41 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="目标成员 ID">
-            <el-input-number
+          <el-form-item :label="t('platform.exports.create.targetMemberLabel')">
+            <el-select
               v-model="form.userId"
-              :min="1"
-              controls-position="right"
-              class="!w-full"
-              placeholder="普通成员留空即可"
-            />
+              clearable
+              class="w-full"
+              :disabled="!canManageCrossMemberExports"
+              :placeholder="t('platform.exports.create.targetMemberPlaceholder')"
+            >
+              <el-option
+                v-for="member in memberOptions"
+                :key="member.value"
+                :label="member.label"
+                :value="member.value"
+              />
+            </el-select>
           </el-form-item>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <el-form-item label="开始日期">
+            <el-form-item :label="t('platform.exports.create.startDateLabel')">
               <el-date-picker
                 v-model="form.startDate"
                 type="date"
                 value-format="YYYY-MM-DD"
                 class="!w-full"
-                placeholder="可留空"
+                :placeholder="t('platform.exports.create.dateOptional')"
               />
             </el-form-item>
 
-            <el-form-item label="结束日期">
+            <el-form-item :label="t('platform.exports.create.endDateLabel')">
               <el-date-picker
                 v-model="form.endDate"
                 type="date"
                 value-format="YYYY-MM-DD"
                 class="!w-full"
-                placeholder="可留空"
+                :placeholder="t('platform.exports.create.dateOptional')"
               />
             </el-form-item>
           </div>
@@ -91,7 +98,7 @@
             :loading="isSubmitting"
             @click="handleCreateExportJob"
           >
-            创建导出任务
+            {{ t('platform.exports.create.submit') }}
           </el-button>
         </el-form>
       </article>
@@ -103,39 +110,39 @@
           <div>
             <h2 class="text-xl font-semibold text-slate-900">{{ currentLedgerName }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
-              导出任务按当前 ledger 列出。普通成员默认只看到自己创建的任务，平台 admin 会看到当前账本下的全部任务。
+              {{ t('platform.exports.workspace.description') }}
             </p>
           </div>
 
           <div class="flex flex-wrap gap-3">
-            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadJobs">刷新任务</el-button>
+            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadJobs">{{ t('platform.exports.workspace.refresh') }}</el-button>
             <router-link
               to="/notifications"
               class="inline-flex items-center justify-center rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-white"
             >
-              打开通知中心
+              {{ t('platform.exports.workspace.openNotifications') }}
             </router-link>
           </div>
         </div>
 
         <div class="mt-5 grid gap-4 lg:grid-cols-[minmax(0,220px)_auto]">
-          <el-select v-model="filters.limit" class="w-full" placeholder="加载数量">
+          <el-select v-model="filters.limit" class="w-full" :placeholder="t('platform.exports.workspace.limitPlaceholder')">
             <el-option
               v-for="option in limitOptions"
               :key="option"
-              :label="`${option} 条`"
+              :label="t('platform.exports.workspace.limitOption', { count: option })"
               :value="option"
             />
           </el-select>
 
           <div class="flex h-[42px] items-center justify-between rounded-[18px] border border-slate-200 bg-white px-4">
-            <span class="text-sm text-slate-700">自动轮询处理中任务</span>
+            <span class="text-sm text-slate-700">{{ t('platform.exports.workspace.pollingLabel') }}</span>
             <el-switch v-model="autoRefreshEnabled" />
           </div>
         </div>
 
         <p class="mt-4 text-sm text-slate-500">
-          当前状态：{{ pollingStatusLabel }}
+          {{ t('platform.exports.workspace.pollingStatus', { status: pollingStatusLabel }) }}
         </p>
       </section>
 
@@ -144,24 +151,24 @@
         variant="error"
         compact
         :centered="false"
-        title="导出任务加载失败"
+        :title="t('platform.exports.states.errorTitle')"
         :description="errorMessage"
-        action-label="重试"
+        :action-label="t('common.refresh')"
         @action="loadJobs"
       />
 
       <PlatformStateCard
-        v-if="!hasLedgerContext"
+        v-else-if="!hasLedgerContext"
         variant="warning"
-        title="请先选择账本"
-        description="导出任务是账本维度功能，先到“账本中心”切到目标账本再继续。"
+        :title="t('platform.exports.states.ledgerRequiredTitle')"
+        :description="t('platform.exports.states.ledgerRequiredDescription')"
       >
         <template #actions>
           <router-link
             to="/ledgers"
             class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-slate-50"
           >
-            前往账本中心
+            {{ t('platform.exports.states.ledgerRequiredAction') }}
           </router-link>
         </template>
       </PlatformStateCard>
@@ -169,15 +176,15 @@
       <PlatformStateCard
         v-else-if="isLoading"
         variant="loading"
-        title="正在加载导出任务..."
-        description="会按当前账本读取最近的导出任务和状态。"
+        :title="t('platform.exports.states.loadingTitle')"
+        :description="t('platform.exports.states.loadingDescription')"
       />
 
       <PlatformStateCard
         v-else-if="!jobs.length"
         variant="empty"
-        title="当前还没有导出任务"
-        description="可以先创建一条任务，后端会异步处理并通过通知中心回流结果。"
+        :title="t('platform.exports.states.emptyTitle')"
+        :description="t('platform.exports.states.emptyDescription')"
       />
 
       <section v-else class="space-y-4">
@@ -194,26 +201,26 @@
                   {{ jobStatusLabel(job.status) }}
                 </span>
                 <span v-if="job.recordType" class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600">
-                  {{ job.recordType === 'expense' ? '支出' : '收入' }}
+                  {{ job.recordType === 'expense' ? t('common.expense') : t('common.income') }}
                 </span>
-                <span class="text-xs text-slate-400">创建于 {{ formatDateTime(job.createdAt) }}</span>
+                <span class="text-xs text-slate-400">{{ t('platform.exports.jobs.createdAt', { value: formatDateTime(job.createdAt) }) }}</span>
               </div>
 
-              <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ job.fileName || `导出任务 #${job.id}` }}</h3>
+              <h3 class="mt-3 text-lg font-semibold text-slate-900">{{ job.fileName || t('platform.exports.jobs.fallbackName', { id: job.id }) }}</h3>
 
               <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500">
-                <span>任务 ID：{{ job.id }}</span>
-                <span>请求人：{{ job.requestedByUserId || '-' }}</span>
-                <span>目标成员：{{ job.targetUserId || '当前用户' }}</span>
-                <span>记录数：{{ job.recordCount }}</span>
-                <span>下载次数：{{ job.downloadCount }}</span>
+                <span>{{ t('platform.exports.jobs.jobId', { id: job.id }) }}</span>
+                <span>{{ t('platform.exports.jobs.requestedBy', { value: job.requestedByUserId || '-' }) }}</span>
+                <span>{{ t('platform.exports.jobs.targetMember', { value: targetMemberLabel(job.targetUserId) }) }}</span>
+                <span>{{ t('platform.exports.jobs.recordCount', { count: job.recordCount }) }}</span>
+                <span>{{ t('platform.exports.jobs.downloadCount', { count: job.downloadCount }) }}</span>
               </div>
 
               <div class="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500">
-                <span>开始日期：{{ job.startDate || '未限制' }}</span>
-                <span>结束日期：{{ job.endDate || '未限制' }}</span>
-                <span>开始处理：{{ formatDateTime(job.startedAt, '尚未开始') }}</span>
-                <span>完成时间：{{ formatDateTime(job.completedAt, '尚未完成') }}</span>
+                <span>{{ t('platform.exports.jobs.startDate', { value: job.startDate || t('platform.exports.jobs.unlimited') }) }}</span>
+                <span>{{ t('platform.exports.jobs.endDate', { value: job.endDate || t('platform.exports.jobs.unlimited') }) }}</span>
+                <span>{{ t('platform.exports.jobs.startedAt', { value: formatDateTime(job.startedAt, t('platform.exports.jobs.notStarted')) }) }}</span>
+                <span>{{ t('platform.exports.jobs.completedAt', { value: formatDateTime(job.completedAt, t('platform.exports.jobs.notCompleted')) }) }}</span>
               </div>
 
               <p v-if="job.errorMessage" class="mt-4 rounded-[20px] border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
@@ -228,7 +235,7 @@
                 :disabled="job.status !== 'completed'"
                 @click="handleDownloadJob(job)"
               >
-                下载结果
+                {{ t('platform.exports.jobs.download') }}
               </el-button>
 
               <el-button
@@ -236,7 +243,7 @@
                 class="!rounded-full !px-4"
                 @click="handleRefreshJob(job)"
               >
-                刷新状态
+                {{ t('platform.exports.jobs.refreshStatus') }}
               </el-button>
             </div>
           </div>
@@ -250,6 +257,7 @@
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import {
@@ -258,9 +266,12 @@ import {
   fetchLedgerExportJob,
   fetchLedgerExportJobs
 } from '@/api/modules/exportJobs'
+import { fetchLedgerMembers } from '@/api/modules/ledgers'
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
 import { useNotificationStore } from '@/stores/notification'
+
+const { t, locale } = useI18n()
 
 const POLL_INTERVAL = 5000
 
@@ -276,6 +287,7 @@ const errorMessage = ref('')
 const jobs = ref([])
 const autoRefreshEnabled = ref(true)
 const pollTimer = ref(null)
+const memberOptions = ref([])
 
 const filters = reactive({
   limit: 20
@@ -290,48 +302,44 @@ const form = reactive({
 
 const limitOptions = [20, 50, 100]
 
-const typeOptions = [
-  { label: '支出', value: 'expense' },
-  { label: '收入', value: 'income' }
-]
+const typeOptions = computed(() => [
+  { label: t('common.expense'), value: 'expense' },
+  { label: t('common.income'), value: 'income' }
+])
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
-const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const currentLedgerName = computed(() => currentLedger.value?.name || t('platform.exports.messages.ledgerFallback'))
 const canManageCrossMemberExports = computed(() => ['owner', 'admin'].includes(currentLedger.value?.memberRole || ''))
 const activeJobCount = computed(() => jobs.value.filter((job) => ['pending', 'running'].includes(job.status)).length)
 const completedJobCount = computed(() => jobs.value.filter((job) => job.status === 'completed').length)
 const pollingStatusLabel = computed(() => {
   if (!hasLedgerContext.value) {
-    return '请先选择账本'
+    return t('platform.exports.messages.ledgerFallback')
   }
 
   if (!autoRefreshEnabled.value) {
-    return '自动轮询已关闭'
+    return t('platform.exports.messages.pollingOff')
   }
 
   if (activeJobCount.value === 0) {
-    return '当前没有处理中任务'
+    return t('platform.exports.messages.noActiveJobs')
   }
 
-  return isPolling.value ? '正在轮询处理中任务' : '已开启自动轮询'
+  return isPolling.value ? t('platform.exports.messages.pollingActive') : t('platform.exports.messages.pollingReady')
 })
 
-const buildQuery = () => ({
-  limit: filters.limit
-})
+const buildQuery = () => ({ limit: filters.limit })
 
 const stopPolling = () => {
   if (pollTimer.value) {
     clearInterval(pollTimer.value)
     pollTimer.value = null
   }
-
   isPolling.value = false
 }
 
 const maybeStartPolling = () => {
   const hasActiveJobs = jobs.value.some((job) => ['pending', 'running'].includes(job.status))
-
   if (!autoRefreshEnabled.value || !hasActiveJobs || !hasLedgerContext.value) {
     stopPolling()
     return
@@ -345,7 +353,6 @@ const maybeStartPolling = () => {
     if (isPolling.value) {
       return
     }
-
     loadJobs({ silent: true })
   }, POLL_INTERVAL)
 }
@@ -353,7 +360,6 @@ const maybeStartPolling = () => {
 const saveBlobAsFile = (blob, fileName) => {
   const link = document.createElement('a')
   const blobUrl = window.URL.createObjectURL(blob)
-
   link.href = blobUrl
   link.download = fileName
   document.body.appendChild(link)
@@ -367,6 +373,19 @@ const resetForm = () => {
   form.type = ''
   form.startDate = ''
   form.endDate = ''
+}
+
+const loadMembers = async () => {
+  if (!currentLedgerId.value) {
+    memberOptions.value = []
+    return
+  }
+
+  const members = await fetchLedgerMembers(currentLedgerId.value)
+  memberOptions.value = members.map((member) => ({
+    value: Number(member.userId),
+    label: member.email ? `${member.username || t('platform.search.filters.memberFallback', { id: member.userId })} (${member.email})` : (member.username || t('platform.search.filters.memberFallback', { id: member.userId }))
+  }))
 }
 
 const loadJobs = async ({ silent = false } = {}) => {
@@ -388,7 +407,7 @@ const loadJobs = async ({ silent = false } = {}) => {
     jobs.value = await fetchLedgerExportJobs(currentLedgerId.value, buildQuery())
     maybeStartPolling()
   } catch (error) {
-    errorMessage.value = getApiErrorMessage(error, '获取导出任务失败')
+    errorMessage.value = getApiErrorMessage(error, t('platform.exports.errors.fetchFailed'))
     stopPolling()
   } finally {
     if (!silent) {
@@ -402,29 +421,28 @@ const loadJobs = async ({ silent = false } = {}) => {
 
 const handleCreateExportJob = async () => {
   if (!hasLedgerContext.value) {
-    ElMessage.warning('请先选择账本')
+    ElMessage.warning(t('platform.exports.messages.ledgerRequired'))
     return
   }
 
   if (form.startDate && form.endDate && form.endDate < form.startDate) {
-    ElMessage.warning('结束日期不能早于开始日期')
+    ElMessage.warning(t('platform.exports.messages.invalidDateRange'))
     return
   }
 
   if (form.userId && !canManageCrossMemberExports.value) {
-    ElMessage.warning('当前角色只能创建自己的导出任务')
+    ElMessage.warning(t('platform.exports.messages.crossMemberForbidden'))
     return
   }
 
   isSubmitting.value = true
-
   try {
     await createLedgerExportJob(currentLedgerId.value, form)
     resetForm()
     await Promise.all([loadJobs(), notificationStore.refreshUnreadCount()])
-    ElMessage.success('导出任务已创建，后端开始排队处理')
+    ElMessage.success(t('platform.exports.messages.created'))
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '创建导出任务失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.exports.errors.createFailed')))
   } finally {
     isSubmitting.value = false
   }
@@ -436,7 +454,7 @@ const handleRefreshJob = async (job) => {
     jobs.value = jobs.value.map((item) => (item.id === job.id ? updatedJob : item))
     maybeStartPolling()
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '刷新导出任务失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.exports.errors.refreshFailed')))
   }
 }
 
@@ -447,28 +465,15 @@ const handleDownloadJob = async (job) => {
     const { blob, filename } = await downloadLedgerExportJob(currentLedgerId.value, job.id)
     saveBlobAsFile(blob, filename || job.fileName || `ledger-export-${job.id}.xlsx`)
     await loadJobs({ silent: true })
-    ElMessage.success('导出文件已开始下载')
+    ElMessage.success(t('platform.exports.messages.downloadStarted'))
   } catch (error) {
-    ElMessage.error(getApiErrorMessage(error, '下载导出文件失败'))
+    ElMessage.error(getApiErrorMessage(error, t('platform.exports.errors.downloadFailed')))
   } finally {
     downloadingJobId.value = null
   }
 }
 
-const jobStatusLabel = (status) => {
-  switch (status) {
-    case 'pending':
-      return '排队中'
-    case 'running':
-      return '处理中'
-    case 'completed':
-      return '已完成'
-    case 'failed':
-      return '已失败'
-    default:
-      return status
-  }
-}
+const jobStatusLabel = (status) => t(`platform.exports.jobs.status.${status}`, status)
 
 const jobStatusBadgeClass = (status) => {
   switch (status) {
@@ -500,12 +505,19 @@ const jobCardClass = (status) => {
   }
 }
 
-const formatDateTime = (value, fallback = '未记录') => {
+const targetMemberLabel = (userId) => {
+  if (!userId) {
+    return t('platform.exports.jobs.currentUser')
+  }
+  return memberOptions.value.find((member) => member.value === Number(userId))?.label || `#${userId}`
+}
+
+const formatDateTime = (value, fallback = t('common.status.notRecorded')) => {
   if (!value) {
     return fallback
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(locale.value, {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
@@ -526,10 +538,11 @@ watch(
     if (!ledgerId) {
       jobs.value = []
       stopPolling()
+      memberOptions.value = []
       return
     }
 
-    await loadJobs()
+    await Promise.all([loadMembers(), loadJobs()])
   },
   { immediate: true }
 )
