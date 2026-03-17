@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useLedgerStore } from '@/stores/ledger'
@@ -12,9 +13,8 @@ import {
 } from '@/api/modules/records'
 import { getApiErrorMessage } from '@/api/response'
 
-const LEDGER_REQUIRED_MESSAGE = '请先选择账本'
-
 export function useRecord() {
+  const { t } = useI18n()
   const { userId } = storeToRefs(useUserStore())
   const ledgerStore = useLedgerStore()
   const { currentLedgerId } = storeToRefs(ledgerStore)
@@ -79,7 +79,7 @@ export function useRecord() {
 
   const ensureLedgerContext = () => {
     if (!currentLedgerId.value) {
-      ElMessage.warning(LEDGER_REQUIRED_MESSAGE)
+      ElMessage.warning(t('accounting.messages.ledgerRequired'))
       return false
     }
 
@@ -98,7 +98,7 @@ export function useRecord() {
       totalExpense.value = summary.totalExpense
       balance.value = summary.balance
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '获取统计数据失败'))
+      ElMessage.error(getApiErrorMessage(error, t('accounting.messages.recordsSummaryFailed')))
     }
   }
 
@@ -116,7 +116,7 @@ export function useRecord() {
       await loadSummary(params)
       return data
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '获取记录列表失败'))
+      ElMessage.error(getApiErrorMessage(error, t('accounting.messages.recordsFetchFailed')))
       allRecords.value = []
       resetSummary()
       return []
@@ -148,7 +148,7 @@ export function useRecord() {
     }
 
     if (!record.amount || !record.categoryId) {
-      ElMessage.warning('请填写完整的记账信息')
+      ElMessage.warning(t('accounting.form.incompleteWarning'))
       return
     }
 
@@ -156,9 +156,9 @@ export function useRecord() {
       await createLedgerRecord(currentLedgerId.value, userId.value, record)
       await fetchRecords()
       resetNewRecord()
-      ElMessage.success('添加成功')
+      ElMessage.success(t('accounting.messages.recordAdded'))
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '添加失败'))
+      ElMessage.error(getApiErrorMessage(error, t('accounting.messages.recordAddFailed')))
     }
   }
 
@@ -174,21 +174,21 @@ export function useRecord() {
       }
 
       await ElMessageBox.confirm(
-        '确定要删除这条记录吗？',
-        '删除确认',
+        t('accounting.messages.deleteRecordDescription'),
+        t('accounting.messages.deleteRecordTitle'),
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: t('common.confirm'),
+          cancelButtonText: t('common.cancel'),
           type: 'warning'
         }
       )
 
       await deleteLedgerRecord(currentLedgerId.value, recordId)
       await fetchRecords()
-      ElMessage.success('删除成功')
+      ElMessage.success(t('accounting.messages.recordDeleted'))
     } catch (error) {
       if (error !== 'cancel') {
-        ElMessage.error(getApiErrorMessage(error, '删除失败'))
+        ElMessage.error(getApiErrorMessage(error, t('accounting.messages.recordDeleteFailed')))
       }
     }
   }
@@ -211,7 +211,7 @@ export function useRecord() {
     }
 
     if (!editingRecord.value.amount || !editingRecord.value.categoryId) {
-      ElMessage.warning('请填写完整的记账信息')
+      ElMessage.warning(t('accounting.form.incompleteWarning'))
       return
     }
 
@@ -223,10 +223,10 @@ export function useRecord() {
 
       await updateLedgerRecord(currentLedgerId.value, recordId, editingRecord.value)
       await fetchRecords()
-      ElMessage.success('修改成功')
+      ElMessage.success(t('accounting.messages.recordUpdated'))
       editingRecord.value = null
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '修改失败'))
+      ElMessage.error(getApiErrorMessage(error, t('accounting.messages.recordUpdateFailed')))
     }
   }
 

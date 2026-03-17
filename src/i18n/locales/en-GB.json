@@ -1,0 +1,428 @@
+{
+  "common": {
+    "moneyKeeper": "MoneyKeeper",
+    "currentUserFallback": "Current user",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm",
+    "edit": "Edit",
+    "delete": "Delete",
+    "actions": "Actions",
+    "refresh": "Refresh",
+    "reset": "Reset",
+    "login": "Sign in",
+    "register": "Create account",
+    "mainPage": "Main page",
+    "ledgerCenter": "Ledger centre",
+    "loadingLedger": "Loading ledger...",
+    "ledgerContextReserved": "Ledger context reserved",
+    "userRole": "Current role: {role}.",
+    "memberRoleFallback": "member",
+    "localeLabel": "Language",
+    "localeZh": "中文",
+    "localeEn": "English",
+    "all": "All",
+    "optional": "Optional",
+    "setToday": "Set today",
+    "date": "Date",
+    "amount": "Amount",
+    "type": "Type",
+    "category": "Category",
+    "note": "Note",
+    "unclassified": "Unclassified",
+    "income": "Income",
+    "expense": "Expense",
+    "notAvailable": "No records yet"
+  },
+  "nav": {
+    "home": {
+      "label": "Home",
+      "description": "Accounting overview"
+    },
+    "ledgers": {
+      "label": "Ledgers",
+      "description": "List and context"
+    },
+    "categories": {
+      "label": "Categories",
+      "description": "Ledger categories"
+    },
+    "budgets": {
+      "label": "Budgets",
+      "description": "Rules and thresholds"
+    },
+    "statistics": {
+      "label": "Statistics",
+      "description": "Periods and mix"
+    },
+    "search": {
+      "label": "Search",
+      "description": "Records and filters"
+    },
+    "exports": {
+      "label": "Exports",
+      "description": "Export jobs"
+    },
+    "notifications": {
+      "label": "Notifications",
+      "description": "Notification centre"
+    }
+  },
+  "topbar": {
+    "workspaceTitle": "Platform Workspace",
+    "workspaceSubtitle": "Ledgers, budgets, notifications, exports, and billing all start here.",
+    "currentUser": "Current user: {name}",
+    "upgradeTitle": "Upgrade to Pro",
+    "upgradeDescription": "Check billing status and unlock exports, notifications, and later platform features.",
+    "support": "Contact support",
+    "userAgreement": "User agreement",
+    "privacyPolicy": "Privacy policy",
+    "deleteAccount": "Delete account",
+    "logout": "Sign out",
+    "ledgerContextTitle": "Ledger Context",
+    "ledgerDescription": "Ledger centre is now connected, and later platform pages will default to this ledger context.",
+    "ledgerDescriptionWithRole": "Current role: {role}. Budgets, notifications, exports, and search will default to this ledger.",
+    "agreementDescription": "Please confirm you have read and understood the terms below before using the app.",
+    "privacyDescription": "The following content explains how the app handles and protects your data.",
+    "connection": {
+      "connected": "Realtime notifications active",
+      "connecting": "Connecting notifications",
+      "reconnecting": "Reconnecting",
+      "error": "Notification connection issue",
+      "idle": "Notifications offline",
+      "detailConnected": "Notifications and state updates are active",
+      "detailConnecting": "Establishing realtime notification connection",
+      "detailReconnecting": "Trying to restore realtime notifications (attempt {count})",
+      "detailError": "Realtime notifications are currently unavailable. Refresh again shortly to retry.",
+      "detailIdle": "Realtime notification connection has not been established yet"
+    }
+  },
+  "auth": {
+    "loginPage": {
+      "tag": "Account Access",
+      "heroTitle": "Keep your finances in motion after sign-in",
+      "heroDescription": "Capture records, apply filters, analyse charts, and export data in one place. The sign-in view now follows the same visual language as the main product.",
+      "stats": {
+        "workspace": {
+          "label": "Single entry",
+          "value": "1 place",
+          "description": "Sign in and continue inside one accounting, filtering, and analysis workspace."
+        },
+        "capability": {
+          "label": "Core tools",
+          "value": "4 areas",
+          "description": "Records, filters, charts, and exports now form one connected workflow."
+        },
+        "access": {
+          "label": "Access modes",
+          "value": "2 ways",
+          "description": "Username/password and Google sign-in are both supported."
+        }
+      },
+      "highlights": {
+        "flowTitle": "A clearer accounting flow",
+        "flowDescription": "Create, filter, inspect, and review details without jumping between mismatched screens.",
+        "categoryTitle": "A steadier category model",
+        "categoryDescription": "Category id and category name are now separated, making later linking and editing more stable."
+      },
+      "welcomeTitle": "Welcome back",
+      "welcomeDescription": "Sign in to continue using your accounting workspace, charts, and export tools.",
+      "redirectHint": "After sign-in you will continue to: {path}",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "usernameRangePlaceholder": "3-50 characters",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "passwordMinPlaceholder": "At least 6 characters",
+      "ctaTitle": "Ready to continue",
+      "ctaDescription": "Signing in restores your records, filters, and notification state.",
+      "noAccount": "No account yet?",
+      "registerNow": "Create one now",
+      "orGoogle": "or continue with Google",
+      "thirdParty": "Third-party sign-in",
+      "createAccount": "Create a new account",
+      "createAccountDescription": "Fill in the basics to enter the accounting app, then refine your setup over time.",
+      "registerHighlights": [
+        "Enter the accounting workspace right away",
+        "Track categories and time periods later",
+        "Keep using exports and billing entry points"
+      ],
+      "email": "Email",
+      "emailPlaceholder": "example@email.com",
+      "firstName": "First name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last name",
+      "lastNamePlaceholder": "Enter your last name",
+      "phone": "Phone number",
+      "phonePlaceholder": "Enter your phone number",
+      "submitDescription": "After submitting, return to sign-in and use the new account to enter the workspace."
+    },
+    "messages": {
+      "loginSuccess": "Signed in successfully",
+      "loginFailed": "Sign-in failed. Please try again later.",
+      "logoutSuccess": "Signed out successfully",
+      "logoutFailed": "Sign-out failed. Please try again later.",
+      "googleLoginSuccess": "Google sign-in succeeded",
+      "googleLoginFailed": "Google sign-in failed",
+      "registerSuccess": "Account created. Please sign in.",
+      "registerFailed": "Registration failed. Please try again later."
+    },
+    "validation": {
+      "usernameRequired": "Please enter your username",
+      "passwordRequired": "Please enter your password",
+      "usernameRange": "Username must be between 3 and 50 characters",
+      "passwordRange": "Password must be between 6 and 255 characters",
+      "emailRequired": "Please enter your email",
+      "emailInvalid": "Please enter a valid email address",
+      "emailRange": "Email must not exceed 255 characters",
+      "firstNameRequired": "Please enter your first name",
+      "firstNameRange": "First name must not exceed 50 characters",
+      "lastNameRequired": "Please enter your last name",
+      "lastNameRange": "Last name must not exceed 50 characters",
+      "phoneRequired": "Please enter your phone number",
+      "phoneInvalid": "Please enter a valid phone number"
+    }
+  },
+  "accounting": {
+    "heroTag": "{monthLabel}",
+    "heroTitle": "My accounting workspace",
+    "heroDescription": "Keep quick entry, filtering, and trend analysis on one screen. The top summary shows the full dataset while filters focus the detail list.",
+    "recentUpdate": "Latest update",
+    "recentUpdateHint": "Date of the most recent record",
+    "filterStatus": "Filter state",
+    "filterEnabled": "Active",
+    "filterIdle": "No filters",
+    "filterIdleHint": "Viewing all records",
+    "categoryCount": "Category count",
+    "categoryCountHint": "Combined income and expense categories",
+    "filtersActiveTitle": "Detail list filters are active",
+    "filtersActiveSummary": "{count} records matched. Income {income}, expense {expense}, balance {balance}.",
+    "filtersActiveHint": "Charts and top summaries still show the full dataset while the detail area focuses on the filtered result.",
+    "clearFilters": "Clear filters",
+    "quickEntryTitle": "Add a record",
+    "quickEntryDescription": "Capture today's income or expense quickly.",
+    "filterTitle": "Filter records",
+    "filterDescription": "Use category and type to locate the records you need.",
+    "summary": {
+      "incomeTitle": "Total income",
+      "incomeHint": "Accumulated value of all income records",
+      "expenseTitle": "Total expense",
+      "expenseHint": "Accumulated value of all expense records",
+      "balanceTitle": "Current balance",
+      "balanceHint": "Income minus expense",
+      "countTitle": "Record count",
+      "countHintActive": "Records matched by the current filters",
+      "countHintIdle": "Records currently loaded"
+    },
+    "form": {
+      "recordTypeTitle": "Record type",
+      "recordTypeDescription": "Switching between income and expense also refreshes the available categories.",
+      "amountHint": "Supports two decimals and will be normalised before submission.",
+      "dateHint": "Defaults to today, but you can also backfill older records.",
+      "datePlaceholder": "Choose a date",
+      "categoryDescription": "Choose the category that best matches this record.",
+      "categoryEmpty": "No categories exist for this type yet. Add one first.",
+      "categoryPrompt": "There are no selectable categories yet. Add a {type} category to continue.",
+      "addCategory": "Add category",
+      "notePlaceholder": "Add context for this record, such as the scenario, merchant, or payment method.",
+      "summaryEmptyCategory": "No category selected yet",
+      "summaryPendingAmount": "Waiting for amount",
+      "saveRecord": "Save record",
+      "incompleteWarning": "Please complete the record before saving"
+    },
+    "filter": {
+      "title": "Quick filters",
+      "description": "Pick a type first, then narrow the result with categories.",
+      "recordTypeTitle": "Record type",
+      "allTypes": "All types",
+      "categoryHint": "{count} categories are available right now",
+      "categoryPending": "Choose a type to enable category filters",
+      "pickTypeFirst": "Choose expense or income first, then narrow down to a specific category.",
+      "noCategories": "There are no categories for this type yet. Add one from the left panel first.",
+      "allCategories": "All categories",
+      "chartHint": "Tip: click a slice in the chart on the right to filter the detail list to that expense category."
+    },
+    "list": {
+      "title": "Record details",
+      "description": "Review, edit, and export the current filtered result.",
+      "totalRecords": "{count} records",
+      "exportExcel": "Export Excel",
+      "exportFilenamePrefix": "moneykeeper-records",
+      "noNote": "No note",
+      "pageStatus": "Page {page}, {pageSize} rows per page.",
+      "emptyTitle": "No matching records yet",
+      "emptyDescription": "Add a record first, or adjust the filters on the left and try again.",
+      "noExportData": "There is no data to export",
+      "exportFailed": "Export failed. Please try again later."
+    },
+    "charts": {
+      "loading": "Preparing chart data...",
+      "insightBoard": "Insight Board",
+      "title": "Insights",
+      "description": "This area shows expense mix, time trends, and income-versus-expense summaries so unusual movement is easier to spot.",
+      "lockedCategory": "Locked category: {category}",
+      "clearCategory": "Clear category",
+      "expenseBreakdownTitle": "Expense category mix",
+      "expenseBreakdownDescription": "Click a slice to link the detail list below.",
+      "expenseBreakdownEmptyTitle": "No expense category data yet",
+      "expenseBreakdownEmptyDescription": "Add a few expense records first and the category mix will start to show changes in structure.",
+      "trendTitle": "Expense trend",
+      "trendDescription": "Track changes in spending over time and spot unusual spending days quickly.",
+      "trendEmptyTitle": "No trend data yet",
+      "trendEmptyDescription": "There is not enough expense data to draw a trend yet. Add some records and it will appear automatically.",
+      "summaryTitle": "Income and expense summary",
+      "summaryDescription": "Switch between yearly, monthly, and daily views to compare how income and expense move over time.",
+      "byYear": "By year",
+      "byMonth": "By month",
+      "byDay": "By day",
+      "timeSummaryEmptyTitle": "No summary data yet",
+      "timeSummaryEmptyDescription": "There is not enough data to draw the time summary. Add a few income or expense records first.",
+      "incomeLegend": "Income",
+      "expenseLegend": "Expense",
+      "expenseTooltip": "Expense",
+      "uncategorized": "Unclassified"
+    },
+    "edit": {
+      "dialogTitle": "Edit record",
+      "dialogDescription": "Adjust the amount, category, or date, then save and the detail list will update right away.",
+      "recordTypeDescription": "Changing the type clears the current category so you can choose again.",
+      "amountHint": "Make sure the amount matches the selected type before saving.",
+      "dateHint": "Used for chart summaries and sorting in the detail list.",
+      "categoryDescription": "Pick a new category from the categories available for this type.",
+      "categoryEmpty": "There are no categories for this type yet. Close the dialog and add one first.",
+      "categoryUnavailable": "There are no selectable categories right now. Close the dialog, add the matching category, then edit this record again.",
+      "notePlaceholder": "Add more background for this record, such as the spending context or payee.",
+      "summaryPendingAmount": "Waiting for amount",
+      "saveChanges": "Save changes"
+    },
+    "categoryDialog": {
+      "description": "Start with a name, then choose an icon and colour so the category is easier to recognise in lists and charts.",
+      "previewTitle": "Live preview",
+      "previewDescription": "This will create an {type} category.",
+      "unnamed": "Untitled category",
+      "nameTitle": "Category name",
+      "namePlaceholder": "For example: Meals, commute, salary, bonus",
+      "nameHint": "The name appears directly in detail lists and chart legends.",
+      "iconTitle": "Icon",
+      "iconDescription": "Choose an icon that matches the scenario so it stays easier to scan later.",
+      "iconUnselected": "No icon selected",
+      "colorTitle": "Colour",
+      "colorDescription": "Colour is used in category buttons and visual accents only. It does not affect the data model.",
+      "summaryPendingName": "Waiting for a name",
+      "createCategory": "Create category",
+      "incompleteWarning": "Please complete the category before saving",
+      "expenseDialogTitle": "Add expense category",
+      "incomeDialogTitle": "Add income category",
+      "expenseType": "expense",
+      "incomeType": "income"
+    },
+    "messages": {
+      "ledgerRequired": "Please choose a ledger first",
+      "loginRequired": "Please sign in first",
+      "recordsSummaryFailed": "Failed to load the summary",
+      "recordsFetchFailed": "Failed to load records",
+      "recordAdded": "Record added",
+      "recordAddFailed": "Failed to add the record",
+      "recordDeleted": "Record deleted",
+      "recordDeleteFailed": "Failed to delete the record",
+      "recordUpdated": "Record updated",
+      "recordUpdateFailed": "Failed to update the record",
+      "deleteRecordTitle": "Delete record",
+      "deleteRecordDescription": "Are you sure you want to delete this record?",
+      "categoriesFetchFailed": "Failed to load categories",
+      "categoryAddFailed": "Failed to add the category",
+      "categoryDeleteFailed": "Failed to delete the category",
+      "categoryPermission": "Your current role can view categories only. Owner or admin access is required to manage them.",
+      "deleteCategoryTitle": "Delete category",
+      "deleteCategoryDescription": "Delete the {type} category “{name}”?",
+      "categoryDeleted": "{type} category deleted: {name}",
+      "categoryAdded": "Category added"
+    }
+  },
+  "errors": {
+    "common": {
+      "request_failed": "Request failed",
+      "bad_request": "The request parameters are invalid",
+      "unauthorized": "Your session has expired. Please sign in again.",
+      "forbidden": "You do not have permission to perform this action",
+      "not_found": "The requested resource was not found",
+      "conflict": "The request conflicts with the current state",
+      "server_error": "An internal server error occurred",
+      "network_error": "Network request failed. Please check your connection.",
+      "config_error": "The request could not be sent"
+    },
+    "auth": {
+      "invalid_credentials": "The username or password is incorrect"
+    },
+    "category": {
+      "invalid_type": "The category type is invalid"
+    },
+    "record": {
+      "invalid_type": "The record type is invalid",
+      "type_mismatch": "The record type must match the selected category type"
+    },
+    "ledger": {
+      "invite": {
+        "already_member": "The invited email already belongs to a member of this ledger",
+        "email_mismatch": "The signed-in email does not match the invited email"
+      }
+    },
+    "budget": {
+      "duplicate_budget": "A budget already exists for the same month, type, and category scope",
+      "invalid_period": "The budget period is invalid"
+    },
+    "export": {
+      "job_not_ready": "The export job is not ready yet"
+    }
+  },
+  "notifications": {
+    "defaults": {
+      "title": "New notification",
+      "message": "You have a new platform update.",
+      "toastTitle": "New message"
+    },
+    "events": {
+      "budget": {
+        "threshold_reached": {
+          "title": "Budget alert",
+          "message": "Budget “{budgetName}” has reached {threshold}% usage."
+        },
+        "threshold_cleared": {
+          "title": "Budget back in range",
+          "message": "Budget “{budgetName}” is now back below the alert threshold."
+        }
+      },
+      "export": {
+        "job_queued": {
+          "title": "Export queued",
+          "message": "Your export job has been queued. You will be notified when it is ready."
+        },
+        "job_ready": {
+          "title": "Export ready",
+          "message": "The export file “{fileName}” is ready to download."
+        },
+        "job_failed": {
+          "title": "Export failed",
+          "message": "The export job could not be completed. Please try again later."
+        }
+      },
+      "ledger": {
+        "invite_received": {
+          "title": "New invite",
+          "message": "You have been invited to join ledger “{ledgerName}”."
+        },
+        "invite_accepted": {
+          "title": "Invite accepted",
+          "message": "A member accepted the invite for ledger “{ledgerName}”."
+        }
+      },
+      "record": {
+        "balance_warning": {
+          "title": "Balance alert",
+          "message": "The current ledger balance has moved sharply. Review the latest records."
+        }
+      }
+    }
+  }
+}

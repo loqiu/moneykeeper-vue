@@ -16,31 +16,31 @@
             <div class="max-w-2xl space-y-4">
               <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm text-slate-100 backdrop-blur">
                 <el-icon><Calendar /></el-icon>
-                <span>{{ currentMonthLabel }}</span>
+                <span>{{ t('accounting.heroTag', { monthLabel: currentMonthLabel }) }}</span>
               </div>
               <div class="space-y-3">
-                <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">我的记账台</h1>
+                <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{{ t('accounting.heroTitle') }}</h1>
                 <p class="max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
-                  把记一笔、筛选和趋势分析放在同一屏里。顶部总览展示全量数据，筛选用于快速聚焦明细记录。
+                  {{ t('accounting.heroDescription') }}
                 </p>
               </div>
             </div>
 
             <div class="grid gap-3 sm:grid-cols-3 lg:min-w-[420px]">
               <div class="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">最近更新</div>
+                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('accounting.recentUpdate') }}</div>
                 <div class="mt-3 text-xl font-semibold">{{ latestRecordDate }}</div>
-                <div class="mt-1 text-xs text-slate-300">最近一笔记录的日期</div>
+                <div class="mt-1 text-xs text-slate-300">{{ t('accounting.recentUpdateHint') }}</div>
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">筛选状态</div>
-                <div class="mt-3 text-xl font-semibold">{{ hasActiveFilters ? '已启用' : '未筛选' }}</div>
-                <div class="mt-1 text-xs text-slate-300">{{ hasActiveFilters ? activeFilterTags.join(' / ') : '查看全部记录' }}</div>
+                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('accounting.filterStatus') }}</div>
+                <div class="mt-3 text-xl font-semibold">{{ hasActiveFilters ? t('accounting.filterEnabled') : t('accounting.filterIdle') }}</div>
+                <div class="mt-1 text-xs text-slate-300">{{ hasActiveFilters ? activeFilterTags.join(' / ') : t('accounting.filterIdleHint') }}</div>
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">分类总数</div>
+                <div class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('accounting.categoryCount') }}</div>
                 <div class="mt-3 text-xl font-semibold">{{ categoryCount }}</div>
-                <div class="mt-1 text-xs text-slate-300">支出和收入分类总和</div>
+                <div class="mt-1 text-xs text-slate-300">{{ t('accounting.categoryCountHint') }}</div>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
         <div class="space-y-3">
           <div class="flex items-center gap-2 text-sm font-semibold text-amber-900">
             <el-icon><Filter /></el-icon>
-            <span>明细列表已启用筛选</span>
+            <span>{{ t('accounting.filtersActiveTitle') }}</span>
           </div>
           <div class="flex flex-wrap gap-2">
             <span
@@ -86,9 +86,14 @@
             </span>
           </div>
           <p class="text-sm text-amber-800">
-            当前命中 {{ filteredCount }} 条记录，收入 {{ formatCurrency(filteredIncome) }}，支出 {{ formatCurrency(filteredExpense) }}，结余 {{ formatCurrency(filteredBalance) }}。
+            {{ t('accounting.filtersActiveSummary', {
+              count: filteredCount,
+              income: formatCurrency(filteredIncome),
+              expense: formatCurrency(filteredExpense),
+              balance: formatCurrency(filteredBalance)
+            }) }}
           </p>
-          <p class="text-xs text-amber-700/80">图表和顶部总览保持展示全部数据，明细区按当前筛选结果聚焦。</p>
+          <p class="text-xs text-amber-700/80">{{ t('accounting.filtersActiveHint') }}</p>
         </div>
 
         <el-button
@@ -96,7 +101,7 @@
           @click="resetFilters"
         >
           <el-icon class="mr-1"><RefreshRight /></el-icon>
-          清除筛选
+          {{ t('accounting.clearFilters') }}
         </el-button>
       </section>
 
@@ -108,8 +113,8 @@
                 <el-icon :size="20"><Plus /></el-icon>
               </div>
               <div>
-                <h2 class="text-xl font-semibold text-slate-900">记一笔</h2>
-                <p class="text-sm text-slate-500">快速录入今天的收支。</p>
+                <h2 class="text-xl font-semibold text-slate-900">{{ t('accounting.quickEntryTitle') }}</h2>
+                <p class="text-sm text-slate-500">{{ t('accounting.quickEntryDescription') }}</p>
               </div>
             </div>
             <AddRecordForm
@@ -128,8 +133,8 @@
                 <el-icon :size="20"><Filter /></el-icon>
               </div>
               <div>
-                <h2 class="text-xl font-semibold text-slate-900">筛选记录</h2>
-                <p class="text-sm text-slate-500">用分类和类型快速定位目标记录。</p>
+                <h2 class="text-xl font-semibold text-slate-900">{{ t('accounting.filterTitle') }}</h2>
+                <p class="text-sm text-slate-500">{{ t('accounting.filterDescription') }}</p>
               </div>
             </div>
             <CategoryFilter
@@ -192,6 +197,7 @@
 
 <script setup>
 import { computed, defineAsyncComponent, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Calendar, DataAnalysis, Filter, Plus, RefreshRight, Wallet } from '@element-plus/icons-vue'
 import AddRecordForm from '@/components/AddRecordForm.vue'
 import CategoryFilter from '@/components/CategoryFilter.vue'
@@ -205,6 +211,7 @@ const EditRecordDialog = defineAsyncComponent(() => import('@/components/EditRec
 const AddCategoryDialog = defineAsyncComponent(() => import('@/components/AddCategoryDialog.vue'))
 
 const userStore = useUserStore()
+const { t, locale } = useI18n()
 
 const {
   newRecord,
@@ -248,7 +255,7 @@ const formatCurrency = (value) => {
 }
 
 const currentMonthLabel = computed(() => {
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(locale.value, {
     year: 'numeric',
     month: 'long'
   }).format(new Date())
@@ -265,7 +272,7 @@ const latestRecordDate = computed(() => {
     .sort()
     .slice(-1)[0]
 
-  return latest || '暂无记录'
+  return latest || t('common.notAvailable')
 })
 
 const hasActiveFilters = computed(() => {
@@ -276,7 +283,7 @@ const activeFilterTags = computed(() => {
   const tags = []
 
   if (filterState.value.type) {
-    tags.push(filterState.value.type === 'expense' ? '支出' : '收入')
+    tags.push(filterState.value.type === 'expense' ? t('common.expense') : t('common.income'))
   }
 
   if (filterState.value.category) {
@@ -312,33 +319,33 @@ const filteredBalance = computed(() => filteredIncome.value - filteredExpense.va
 
 const summaryCards = computed(() => ([
   {
-    title: '总收入',
+    title: t('accounting.summary.incomeTitle'),
     value: formatCurrency(totalIncome.value),
-    hint: '所有收入记录的累计金额',
+    hint: t('accounting.summary.incomeHint'),
     icon: Wallet,
     className: 'border-emerald-100 bg-emerald-50/80',
     iconClass: 'bg-emerald-500 text-white'
   },
   {
-    title: '总支出',
+    title: t('accounting.summary.expenseTitle'),
     value: formatCurrency(totalExpense.value),
-    hint: '所有支出记录的累计金额',
+    hint: t('accounting.summary.expenseHint'),
     icon: DataAnalysis,
     className: 'border-rose-100 bg-rose-50/80',
     iconClass: 'bg-rose-500 text-white'
   },
   {
-    title: '当前结余',
+    title: t('accounting.summary.balanceTitle'),
     value: formatCurrency(balance.value),
-    hint: '收入减去支出的净值',
+    hint: t('accounting.summary.balanceHint'),
     icon: Calendar,
     className: 'border-cyan-100 bg-cyan-50/80',
     iconClass: 'bg-cyan-500 text-white'
   },
   {
-    title: '明细条数',
+    title: t('accounting.summary.countTitle'),
     value: String(pagination.value.total || 0),
-    hint: hasActiveFilters.value ? '当前筛选命中的记录条数' : '当前已载入的记录条数',
+    hint: hasActiveFilters.value ? t('accounting.summary.countHintActive') : t('accounting.summary.countHintIdle'),
     icon: Filter,
     className: 'border-amber-100 bg-amber-50/80',
     iconClass: 'bg-amber-500 text-white'

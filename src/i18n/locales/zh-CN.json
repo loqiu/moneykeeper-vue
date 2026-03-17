@@ -1,0 +1,428 @@
+{
+  "common": {
+    "moneyKeeper": "MoneyKeeper",
+    "currentUserFallback": "当前用户",
+    "close": "关闭",
+    "cancel": "取消",
+    "save": "保存",
+    "confirm": "确定",
+    "edit": "编辑",
+    "delete": "删除",
+    "actions": "操作",
+    "refresh": "刷新",
+    "reset": "重置",
+    "login": "登录",
+    "register": "创建账户",
+    "mainPage": "主页面",
+    "ledgerCenter": "账本中心",
+    "loadingLedger": "正在加载账本...",
+    "ledgerContextReserved": "账本上下文已预留",
+    "userRole": "当前角色：{role}。",
+    "memberRoleFallback": "member",
+    "localeLabel": "语言",
+    "localeZh": "中文",
+    "localeEn": "English",
+    "all": "全部",
+    "optional": "可选",
+    "setToday": "设为今天",
+    "date": "日期",
+    "amount": "金额",
+    "type": "类型",
+    "category": "分类",
+    "note": "备注",
+    "unclassified": "未分类",
+    "income": "收入",
+    "expense": "支出",
+    "notAvailable": "暂无记录"
+  },
+  "nav": {
+    "home": {
+      "label": "主页",
+      "description": "记账与总览"
+    },
+    "ledgers": {
+      "label": "账本",
+      "description": "账本列表与上下文"
+    },
+    "categories": {
+      "label": "分类",
+      "description": "账本分类管理"
+    },
+    "budgets": {
+      "label": "预算",
+      "description": "预算与阈值规则"
+    },
+    "statistics": {
+      "label": "统计",
+      "description": "周期分析与占比"
+    },
+    "search": {
+      "label": "搜索",
+      "description": "记录检索与筛选"
+    },
+    "exports": {
+      "label": "导出",
+      "description": "导出任务中心"
+    },
+    "notifications": {
+      "label": "通知",
+      "description": "通知中心"
+    }
+  },
+  "topbar": {
+    "workspaceTitle": "平台工作台",
+    "workspaceSubtitle": "账本、预算、通知、导出和订阅入口都在这里。",
+    "currentUser": "当前用户：{name}",
+    "upgradeTitle": "升级到专业版",
+    "upgradeDescription": "查看支付状态并解锁导出、通知和后续平台能力。",
+    "support": "联系支持",
+    "userAgreement": "用户协议",
+    "privacyPolicy": "隐私政策",
+    "deleteAccount": "删除账号",
+    "logout": "退出登录",
+    "ledgerContextTitle": "Ledger Context",
+    "ledgerDescription": "账本中心已经接入，后续平台页面会默认基于这里的账本上下文工作。",
+    "ledgerDescriptionWithRole": "当前角色：{role}。预算、通知、导出和搜索页面会默认围绕这个账本扩展。",
+    "agreementDescription": "使用前请确认你已阅读并理解以下条款内容。",
+    "privacyDescription": "以下内容说明了应用如何处理和保护你的数据。",
+    "connection": {
+      "connected": "实时通知正常",
+      "connecting": "正在连接通知",
+      "reconnecting": "正在重新连接",
+      "error": "通知连接异常",
+      "idle": "通知未连接",
+      "detailConnected": "通知与状态更新已开启",
+      "detailConnecting": "正在建立实时通知连接",
+      "detailReconnecting": "正在尝试恢复实时通知（第 {count} 次）",
+      "detailError": "当前未连上实时通知，可稍后刷新页面重试",
+      "detailIdle": "当前尚未建立实时通知连接"
+    }
+  },
+  "auth": {
+    "loginPage": {
+      "tag": "Account Access",
+      "heroTitle": "登录后继续整理你的财务节奏",
+      "heroDescription": "在同一处完成记账、筛选、图表分析和导出。登录页现在和主应用使用同一套视觉语言，避免体验断层。",
+      "stats": {
+        "workspace": {
+          "label": "统一入口",
+          "value": "1 处",
+          "description": "登录后进入同一套记账、筛选和分析工作台。"
+        },
+        "capability": {
+          "label": "核心能力",
+          "value": "4 项",
+          "description": "记录、筛选、图表和导出已串成完整主流程。"
+        },
+        "access": {
+          "label": "访问方式",
+          "value": "2 种",
+          "description": "支持用户名密码和 Google 登录。"
+        }
+      },
+      "highlights": {
+        "flowTitle": "更清晰的记账主线",
+        "flowDescription": "新增、筛选、洞察和明细不再分散在不同风格的页面里。",
+        "categoryTitle": "更稳定的分类模型",
+        "categoryDescription": "分类 ID 和分类名已经拆开，后续联动和编辑更稳定。"
+      },
+      "welcomeTitle": "欢迎回来",
+      "welcomeDescription": "登录后即可继续使用记账台、图表和导出能力。",
+      "redirectHint": "登录后将继续前往：{path}",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入用户名",
+      "usernameRangePlaceholder": "3-50 个字符",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "passwordMinPlaceholder": "至少 6 位",
+      "ctaTitle": "准备开始",
+      "ctaDescription": "登录后会恢复你的记录、筛选和通知状态。",
+      "noAccount": "还没有账户？",
+      "registerNow": "立即注册",
+      "orGoogle": "或使用 Google 登录",
+      "thirdParty": "第三方登录",
+      "createAccount": "创建新账户",
+      "createAccountDescription": "填写基础信息后即可进入记账页，后续再逐步完善你的数据习惯。",
+      "registerHighlights": [
+        "完成后即可进入记账页",
+        "支持后续按分类与时间追踪",
+        "可继续使用导出与支付入口"
+      ],
+      "email": "邮箱",
+      "emailPlaceholder": "example@email.com",
+      "firstName": "名字",
+      "firstNamePlaceholder": "请输入名字",
+      "lastName": "姓氏",
+      "lastNamePlaceholder": "请输入姓氏",
+      "phone": "手机号",
+      "phonePlaceholder": "请输入手机号",
+      "submitDescription": "提交后即可返回登录并使用新账户进入记账页。"
+    },
+    "messages": {
+      "loginSuccess": "登录成功",
+      "loginFailed": "登录失败，请稍后重试",
+      "logoutSuccess": "退出登录成功",
+      "logoutFailed": "退出登录失败，请稍后重试",
+      "googleLoginSuccess": "Google 登录成功",
+      "googleLoginFailed": "Google 登录失败",
+      "registerSuccess": "注册成功，请登录",
+      "registerFailed": "注册失败，请稍后重试"
+    },
+    "validation": {
+      "usernameRequired": "请输入用户名",
+      "passwordRequired": "请输入密码",
+      "usernameRange": "用户名长度应在 3 到 50 个字符之间",
+      "passwordRange": "密码长度应在 6 到 255 个字符之间",
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "请输入正确的邮箱格式",
+      "emailRange": "邮箱长度不能超过 255 个字符",
+      "firstNameRequired": "请输入名字",
+      "firstNameRange": "名字长度不能超过 50 个字符",
+      "lastNameRequired": "请输入姓氏",
+      "lastNameRange": "姓氏长度不能超过 50 个字符",
+      "phoneRequired": "请输入手机号",
+      "phoneInvalid": "请输入正确的手机号格式"
+    }
+  },
+  "accounting": {
+    "heroTag": "{monthLabel}",
+    "heroTitle": "我的记账台",
+    "heroDescription": "把记一笔、筛选和趋势分析放在同一屏里。顶部总览展示全量数据，筛选用于快速聚焦明细记录。",
+    "recentUpdate": "最近更新",
+    "recentUpdateHint": "最近一笔记录的日期",
+    "filterStatus": "筛选状态",
+    "filterEnabled": "已启用",
+    "filterIdle": "未筛选",
+    "filterIdleHint": "查看全部记录",
+    "categoryCount": "分类总数",
+    "categoryCountHint": "支出和收入分类总和",
+    "filtersActiveTitle": "明细列表已启用筛选",
+    "filtersActiveSummary": "当前命中 {count} 条记录，收入 {income}，支出 {expense}，结余 {balance}。",
+    "filtersActiveHint": "图表和顶部总览保持展示全部数据，明细区按当前筛选结果聚焦。",
+    "clearFilters": "清除筛选",
+    "quickEntryTitle": "记一笔",
+    "quickEntryDescription": "快速录入今天的收支。",
+    "filterTitle": "筛选记录",
+    "filterDescription": "用分类和类型快速定位目标记录。",
+    "summary": {
+      "incomeTitle": "总收入",
+      "incomeHint": "所有收入记录的累计金额",
+      "expenseTitle": "总支出",
+      "expenseHint": "所有支出记录的累计金额",
+      "balanceTitle": "当前结余",
+      "balanceHint": "收入减去支出的净值",
+      "countTitle": "明细条数",
+      "countHintActive": "当前筛选命中的记录条数",
+      "countHintIdle": "当前已载入的记录条数"
+    },
+    "form": {
+      "recordTypeTitle": "记录类型",
+      "recordTypeDescription": "切换收入或支出，会自动切换可选分类。",
+      "amountHint": "支持两位小数，提交前会自动按数字格式处理。",
+      "dateHint": "默认使用今天，你也可以补录历史记录。",
+      "datePlaceholder": "选择日期",
+      "categoryDescription": "选择一个最贴近本笔记录的分类。",
+      "categoryEmpty": "当前类型还没有分类，先新增一个分类。",
+      "categoryPrompt": "当前还没有可选分类，先新增一个 {type} 分类再继续。",
+      "addCategory": "新增分类",
+      "notePlaceholder": "写下这笔记录的背景，例如场景、对象或支付方式。",
+      "summaryEmptyCategory": "尚未选择分类",
+      "summaryPendingAmount": "等待填写金额",
+      "saveRecord": "保存记录",
+      "incompleteWarning": "请填写完整的记账信息"
+    },
+    "filter": {
+      "title": "快速筛选",
+      "description": "先选类型，再按分类缩小范围。",
+      "recordTypeTitle": "记录类型",
+      "allTypes": "全部类型",
+      "categoryHint": "当前共有 {count} 个可选分类",
+      "categoryPending": "选择类型后即可启用分类筛选",
+      "pickTypeFirst": "先选择“支出”或“收入”，再精确到具体分类。",
+      "noCategories": "当前类型还没有分类，可以先在左侧新增一个分类。",
+      "allCategories": "全部分类",
+      "chartHint": "小技巧：点击右侧饼图的某个扇区，会自动把明细筛选到对应的支出分类。"
+    },
+    "list": {
+      "title": "收支明细",
+      "description": "查看、编辑和导出当前筛选结果。",
+      "totalRecords": "共 {count} 条记录",
+      "exportExcel": "导出 Excel",
+      "exportFilenamePrefix": "记账记录",
+      "noNote": "暂无备注",
+      "pageStatus": "当前第 {page} 页，每页 {pageSize} 条。",
+      "emptyTitle": "还没有匹配的记录",
+      "emptyDescription": "可以先添加一笔记录，或者调整左侧筛选条件后再试一次。",
+      "noExportData": "没有可导出的数据",
+      "exportFailed": "导出失败，请稍后重试"
+    },
+    "charts": {
+      "loading": "正在生成图表数据...",
+      "insightBoard": "Insight Board",
+      "title": "数据洞察",
+      "description": "这里展示支出结构、时间趋势和收支汇总，用来快速发现异常波动。",
+      "lockedCategory": "当前锁定：{category}",
+      "clearCategory": "清除分类",
+      "expenseBreakdownTitle": "支出分类占比",
+      "expenseBreakdownDescription": "点击扇区可联动右下方明细列表。",
+      "expenseBreakdownEmptyTitle": "暂无支出分类数据",
+      "expenseBreakdownEmptyDescription": "先新增几笔支出记录，分类占比图才会展示结构变化。",
+      "trendTitle": "支出趋势",
+      "trendDescription": "按日期观察支出起伏，快速定位异常支出日。",
+      "trendEmptyTitle": "暂无趋势数据",
+      "trendEmptyDescription": "当前还没有可绘制的支出趋势，添加记录后会自动生成。",
+      "summaryTitle": "收支汇总",
+      "summaryDescription": "按年、月、日切换维度，对比收入和支出的变化节奏。",
+      "byYear": "按年",
+      "byMonth": "按月",
+      "byDay": "按日",
+      "timeSummaryEmptyTitle": "暂无可汇总的数据",
+      "timeSummaryEmptyDescription": "当前还没有足够的记录来绘制时间维度汇总图，先录入几笔收入或支出即可。",
+      "incomeLegend": "收入",
+      "expenseLegend": "支出",
+      "expenseTooltip": "支出",
+      "uncategorized": "未分类"
+    },
+    "edit": {
+      "dialogTitle": "编辑记录",
+      "dialogDescription": "调整金额、分类或日期后保存，明细列表会立即同步。",
+      "recordTypeDescription": "切换类型时会清空当前分类，请重新选择。",
+      "amountHint": "保存前请确认金额和类型是否匹配。",
+      "dateHint": "用于图表统计和明细排序。",
+      "categoryDescription": "从当前类型的分类中重新选择一项。",
+      "categoryEmpty": "当前类型没有可用分类，请先关闭弹窗后新增分类。",
+      "categoryUnavailable": "当前没有可选分类，建议先关闭弹窗并新增对应分类后再编辑这条记录。",
+      "notePlaceholder": "补充这笔记录的背景，例如消费场景或支付对象。",
+      "summaryPendingAmount": "等待填写金额",
+      "saveChanges": "保存修改"
+    },
+    "categoryDialog": {
+      "description": "先定义名称，再选择一个图标和颜色，让分类在列表和图表里更容易识别。",
+      "previewTitle": "实时预览",
+      "previewDescription": "当前会创建一个 {type} 分类。",
+      "unnamed": "未命名分类",
+      "nameTitle": "分类名称",
+      "namePlaceholder": "例如：餐饮、通勤、工资、奖金",
+      "nameHint": "名称会直接展示在明细列表和图表图例中。",
+      "iconTitle": "图标",
+      "iconDescription": "尽量选择和场景含义一致的图标，后续辨识度会更高。",
+      "iconUnselected": "未选择图标",
+      "colorTitle": "颜色",
+      "colorDescription": "颜色会用于分类按钮和部分视觉提示，不影响数据逻辑。",
+      "summaryPendingName": "等待填写名称",
+      "createCategory": "创建分类",
+      "incompleteWarning": "请填写完整的分类信息",
+      "expenseDialogTitle": "新增支出分类",
+      "incomeDialogTitle": "新增收入分类",
+      "expenseType": "支出",
+      "incomeType": "收入"
+    },
+    "messages": {
+      "ledgerRequired": "请先选择账本",
+      "loginRequired": "请先登录",
+      "recordsSummaryFailed": "获取统计数据失败",
+      "recordsFetchFailed": "获取记录列表失败",
+      "recordAdded": "添加成功",
+      "recordAddFailed": "添加失败",
+      "recordDeleted": "删除成功",
+      "recordDeleteFailed": "删除失败",
+      "recordUpdated": "修改成功",
+      "recordUpdateFailed": "修改失败",
+      "deleteRecordTitle": "删除确认",
+      "deleteRecordDescription": "确定要删除这条记录吗？",
+      "categoriesFetchFailed": "获取分类列表失败",
+      "categoryAddFailed": "添加分类失败",
+      "categoryDeleteFailed": "删除分类失败",
+      "categoryPermission": "当前角色只能查看分类，需要 owner 或 admin 才能维护",
+      "deleteCategoryTitle": "删除确认",
+      "deleteCategoryDescription": "确定要删除{type}分类“{name}”吗？",
+      "categoryDeleted": "已删除{type}分类：{name}",
+      "categoryAdded": "添加分类成功"
+    }
+  },
+  "errors": {
+    "common": {
+      "request_failed": "请求失败",
+      "bad_request": "请求参数有误",
+      "unauthorized": "登录已过期，请重新登录",
+      "forbidden": "没有权限进行此操作",
+      "not_found": "请求的资源不存在",
+      "conflict": "当前请求与现有状态冲突",
+      "server_error": "服务器内部错误",
+      "network_error": "网络请求失败，请检查网络连接",
+      "config_error": "请求配置错误"
+    },
+    "auth": {
+      "invalid_credentials": "用户名或密码不正确"
+    },
+    "category": {
+      "invalid_type": "分类类型无效"
+    },
+    "record": {
+      "invalid_type": "记录类型无效",
+      "type_mismatch": "记录类型必须与所选分类类型一致"
+    },
+    "ledger": {
+      "invite": {
+        "already_member": "该邮箱对应用户已经是当前账本成员",
+        "email_mismatch": "当前登录邮箱与邀请目标邮箱不一致"
+      }
+    },
+    "budget": {
+      "duplicate_budget": "同一月份、类型和分类范围的预算已经存在",
+      "invalid_period": "预算年月范围无效"
+    },
+    "export": {
+      "job_not_ready": "导出任务尚未完成，请稍后再试"
+    }
+  },
+  "notifications": {
+    "defaults": {
+      "title": "新通知",
+      "message": "你有一条新的平台通知。",
+      "toastTitle": "新消息"
+    },
+    "events": {
+      "budget": {
+        "threshold_reached": {
+          "title": "预算提醒",
+          "message": "预算“{budgetName}”已达到 {threshold}% 使用率。"
+        },
+        "threshold_cleared": {
+          "title": "预算状态恢复",
+          "message": "预算“{budgetName}”已回落到提醒阈值以下。"
+        }
+      },
+      "export": {
+        "job_queued": {
+          "title": "导出已创建",
+          "message": "导出任务已加入队列，生成完成后会再次通知你。"
+        },
+        "job_ready": {
+          "title": "导出已就绪",
+          "message": "导出文件“{fileName}”已生成，可以开始下载。"
+        },
+        "job_failed": {
+          "title": "导出失败",
+          "message": "导出任务未能完成，请稍后重试。"
+        }
+      },
+      "ledger": {
+        "invite_received": {
+          "title": "收到新邀请",
+          "message": "你收到了加入账本“{ledgerName}”的邀请。"
+        },
+        "invite_accepted": {
+          "title": "邀请已接受",
+          "message": "成员已接受账本“{ledgerName}”的邀请。"
+        }
+      },
+      "record": {
+        "balance_warning": {
+          "title": "收支提醒",
+          "message": "当前账本余额波动较大，请留意最近记录。"
+        }
+      }
+    }
+  }
+}

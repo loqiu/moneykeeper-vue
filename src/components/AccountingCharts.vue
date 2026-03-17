@@ -2,16 +2,16 @@
   <div v-if="loading" class="flex h-[420px] items-center justify-center">
     <div class="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-sm text-slate-500">
       <div class="h-3 w-3 animate-ping rounded-full bg-sky-500"></div>
-      <span>正在生成图表数据...</span>
+      <span>{{ t('accounting.charts.loading') }}</span>
     </div>
   </div>
 
   <div v-else class="space-y-6">
     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div>
-        <p class="text-sm font-medium uppercase tracking-[0.24em] text-slate-400">Insight Board</p>
-        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-900">数据洞察</h2>
-        <p class="mt-2 text-sm leading-6 text-slate-500">这里展示支出结构、时间趋势和收支汇总，用来快速发现异常波动。</p>
+        <p class="text-sm font-medium uppercase tracking-[0.24em] text-slate-400">{{ t('accounting.charts.insightBoard') }}</p>
+        <h2 class="mt-2 text-2xl font-semibold tracking-tight text-slate-900">{{ t('accounting.charts.title') }}</h2>
+        <p class="mt-2 text-sm leading-6 text-slate-500">{{ t('accounting.charts.description') }}</p>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
@@ -19,7 +19,7 @@
           v-if="selectedCategory"
           class="rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900"
         >
-          当前锁定：{{ selectedCategory }}
+          {{ t('accounting.charts.lockedCategory', { category: selectedCategory }) }}
         </span>
         <el-button
           v-if="selectedCategory"
@@ -27,7 +27,7 @@
           @click="$emit('update:selectedCategory', '')"
         >
           <el-icon class="mr-1"><RefreshRight /></el-icon>
-          清除分类
+          {{ t('accounting.charts.clearCategory') }}
         </el-button>
       </div>
     </div>
@@ -40,8 +40,8 @@
               <el-icon :size="22"><PieChartIcon /></el-icon>
             </div>
             <div>
-              <h3 class="font-semibold text-slate-900">支出分类占比</h3>
-              <p class="mt-1 text-sm text-slate-500">点击扇区可联动右下方明细列表。</p>
+              <h3 class="font-semibold text-slate-900">{{ t('accounting.charts.expenseBreakdownTitle') }}</h3>
+              <p class="mt-1 text-sm text-slate-500">{{ t('accounting.charts.expenseBreakdownDescription') }}</p>
             </div>
           </div>
         </div>
@@ -54,7 +54,11 @@
             autoresize
           />
         </div>
-        <EmptyChartState v-else title="暂无支出分类数据" description="先新增几笔支出记录，分类占比图才会展示结构变化。" />
+        <EmptyChartState
+          v-else
+          :title="t('accounting.charts.expenseBreakdownEmptyTitle')"
+          :description="t('accounting.charts.expenseBreakdownEmptyDescription')"
+        />
       </section>
 
       <section class="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm xl:col-span-7">
@@ -63,15 +67,19 @@
             <el-icon :size="22"><TrendCharts /></el-icon>
           </div>
           <div>
-            <h3 class="font-semibold text-slate-900">支出趋势</h3>
-            <p class="mt-1 text-sm text-slate-500">按日期观察支出起伏，快速定位异常支出日。</p>
+            <h3 class="font-semibold text-slate-900">{{ t('accounting.charts.trendTitle') }}</h3>
+            <p class="mt-1 text-sm text-slate-500">{{ t('accounting.charts.trendDescription') }}</p>
           </div>
         </div>
 
         <div v-if="hasLineData" class="h-[300px] w-full">
           <v-chart class="chart" :option="lineOption" autoresize />
         </div>
-        <EmptyChartState v-else title="暂无趋势数据" description="当前还没有可绘制的支出趋势，添加记录后会自动生成。" />
+        <EmptyChartState
+          v-else
+          :title="t('accounting.charts.trendEmptyTitle')"
+          :description="t('accounting.charts.trendEmptyDescription')"
+        />
       </section>
 
       <section class="rounded-[28px] border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white shadow-sm xl:col-span-12">
@@ -81,8 +89,8 @@
               <el-icon :size="22"><Histogram /></el-icon>
             </div>
             <div>
-              <h3 class="font-semibold">收支汇总</h3>
-              <p class="mt-1 text-sm text-slate-300">按年、月、日切换维度，对比收入和支出的变化节奏。</p>
+              <h3 class="font-semibold">{{ t('accounting.charts.summaryTitle') }}</h3>
+              <p class="mt-1 text-sm text-slate-300">{{ t('accounting.charts.summaryDescription') }}</p>
             </div>
           </div>
 
@@ -105,9 +113,9 @@
         </div>
         <div v-else class="rounded-3xl border border-white/10 bg-white/5 px-6 py-12 text-center text-slate-300">
           <el-icon :size="28" class="mb-3 text-amber-300"><WarningFilled /></el-icon>
-          <div class="text-base font-medium text-white">暂无可汇总的数据</div>
+          <div class="text-base font-medium text-white">{{ t('accounting.charts.timeSummaryEmptyTitle') }}</div>
           <p class="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-300">
-            当前还没有足够的记录来绘制时间维度汇总图，先录入几笔收入或支出即可。
+            {{ t('accounting.charts.timeSummaryEmptyDescription') }}
           </p>
         </div>
       </section>
@@ -117,6 +125,7 @@
 
 <script setup>
 import { computed, defineComponent, defineEmits, defineProps, h } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { PieChart, LineChart, BarChart } from 'echarts/charts'
@@ -160,12 +169,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:timeUnit', 'update:selectedCategory'])
+const { t } = useI18n()
 
-const timeOptions = [
-  { value: 'year', label: '按年' },
-  { value: 'month', label: '按月' },
-  { value: 'day', label: '按日' }
-]
+const timeOptions = computed(() => ([
+  { value: 'year', label: t('accounting.charts.byYear') },
+  { value: 'month', label: t('accounting.charts.byMonth') },
+  { value: 'day', label: t('accounting.charts.byDay') }
+]))
 
 const pieData = computed(() => props.pieOption?.series?.[0]?.data || [])
 const lineData = computed(() => props.lineOption?.series?.[0]?.data || [])

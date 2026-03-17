@@ -1,6 +1,23 @@
 <template>
-  <router-view></router-view>
+  <el-config-provider :locale="elementPlusLocale">
+    <router-view></router-view>
+  </el-config-provider>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+import en from 'element-plus/dist/locale/en.mjs'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import { storeToRefs } from 'pinia'
+import { useLocaleStore } from '@/stores/locale'
+
+const localeStore = useLocaleStore()
+const { locale } = storeToRefs(localeStore)
+
+const elementPlusLocale = computed(() => {
+  return locale.value === 'en-GB' ? en : zhCn
+})
+</script>
 
 <style>
 #app {

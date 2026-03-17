@@ -1,9 +1,11 @@
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 import { register as registerUser } from '@/api/modules/auth'
 import { getApiErrorMessage } from '@/api/response'
 
 export function useRegister() {
+  const { t } = useI18n()
   const registerDialogVisible = ref(false)
   const loading = ref(false)
   const registerFormRef = ref(null)
@@ -19,29 +21,29 @@ export function useRegister() {
 
   const rules = {
     username: [
-      { required: true, message: '请输入用户名', trigger: 'blur' },
-      { min: 3, max: 50, message: '用户名长度应在 3 到 50 个字符之间', trigger: 'blur' }
+      { required: true, message: t('auth.validation.usernameRequired'), trigger: 'blur' },
+      { min: 3, max: 50, message: t('auth.validation.usernameRange'), trigger: 'blur' }
     ],
     password: [
-      { required: true, message: '请输入密码', trigger: 'blur' },
-      { min: 6, max: 255, message: '密码长度应在 6 到 255 个字符之间', trigger: 'blur' }
+      { required: true, message: t('auth.validation.passwordRequired'), trigger: 'blur' },
+      { min: 6, max: 255, message: t('auth.validation.passwordRange'), trigger: 'blur' }
     ],
     email: [
-      { required: true, message: '请输入邮箱', trigger: 'blur' },
-      { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' },
-      { max: 255, message: '邮箱长度不能超过 255 个字符', trigger: 'blur' }
+      { required: true, message: t('auth.validation.emailRequired'), trigger: 'blur' },
+      { type: 'email', message: t('auth.validation.emailInvalid'), trigger: 'blur' },
+      { max: 255, message: t('auth.validation.emailRange'), trigger: 'blur' }
     ],
     firstName: [
-      { required: true, message: '请输入名字', trigger: 'blur' },
-      { max: 50, message: '名字长度不能超过 50 个字符', trigger: 'blur' }
+      { required: true, message: t('auth.validation.firstNameRequired'), trigger: 'blur' },
+      { max: 50, message: t('auth.validation.firstNameRange'), trigger: 'blur' }
     ],
     lastName: [
-      { required: true, message: '请输入姓氏', trigger: 'blur' },
-      { max: 50, message: '姓氏长度不能超过 50 个字符', trigger: 'blur' }
+      { required: true, message: t('auth.validation.lastNameRequired'), trigger: 'blur' },
+      { max: 50, message: t('auth.validation.lastNameRange'), trigger: 'blur' }
     ],
     phoneNumber: [
-      { required: true, message: '请输入手机号', trigger: 'blur' },
-      { pattern: /^[0-9+\-\s]{5,20}$/, message: '请输入正确的手机号格式', trigger: 'blur' }
+      { required: true, message: t('auth.validation.phoneRequired'), trigger: 'blur' },
+      { pattern: /^[0-9+\-\s]{5,20}$/, message: t('auth.validation.phoneInvalid'), trigger: 'blur' }
     ]
   }
 
@@ -66,11 +68,11 @@ export function useRegister() {
     loading.value = true
     try {
       await registerUser(registerForm.value)
-      ElMessage.success('注册成功，请登录')
+      ElMessage.success(t('auth.messages.registerSuccess'))
       registerDialogVisible.value = false
       resetForm(formEl)
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '注册失败，请稍后重试'))
+      ElMessage.error(getApiErrorMessage(error, t('auth.messages.registerFailed')))
     } finally {
       loading.value = false
     }

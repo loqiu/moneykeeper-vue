@@ -9,6 +9,8 @@ import {
 } from '@/utils/auth'
 import { useNotificationStore } from '@/stores/notification'
 import { getSseSubscribeUrl } from '@/utils/runtimeConfig'
+import { mapRealtimeNotificationPayload } from '@/api/mappers/notificationMapper'
+import { resolveCommonMessage } from '@/i18n/messageResolver'
 
 const MAX_RECONNECT_ATTEMPTS = 5
 const HEARTBEAT_TIMEOUT = 3600000
@@ -41,12 +43,13 @@ const showNotification = (payload) => {
   }
 
   const notificationStore = useNotificationStore()
-  notificationStore.handleIncomingNotification(payload)
+  const normalizedPayload = mapRealtimeNotificationPayload(payload)
+  notificationStore.handleIncomingNotification(normalizedPayload)
 
   ElNotification({
-    title: payload.title || '新消息',
-    message: payload.message || String(payload),
-    type: payload.type || 'info',
+    title: normalizedPayload.title || resolveCommonMessage('notifications.defaults.toastTitle', {}, '新消息'),
+    message: normalizedPayload.message || String(payload),
+    type: normalizedPayload.type || 'info',
     position: 'top-right',
     duration: 4500
   })

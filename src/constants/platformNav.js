@@ -1,50 +1,50 @@
 export const platformNavItems = [
   {
-    label: '主页',
+    labelKey: 'nav.home.label',
     path: '/accounting',
     matchPrefix: '/accounting',
-    description: '记账与总览'
+    descriptionKey: 'nav.home.description'
   },
   {
-    label: '账本',
+    labelKey: 'nav.ledgers.label',
     path: '/ledgers',
     matchPrefix: '/ledgers',
-    description: '账本列表与上下文'
+    descriptionKey: 'nav.ledgers.description'
   },
   {
-    label: '分类',
+    labelKey: 'nav.categories.label',
     path: '/categories',
     matchPrefix: '/categories',
-    description: '账本分类管理'
+    descriptionKey: 'nav.categories.description'
   },
   {
-    label: '预算',
+    labelKey: 'nav.budgets.label',
     path: '/budgets',
     matchPrefix: '/budgets',
-    description: '预算与阈值规则'
+    descriptionKey: 'nav.budgets.description'
   },
   {
-    label: '统计',
+    labelKey: 'nav.statistics.label',
     path: '/statistics',
     matchPrefix: '/statistics',
-    description: '周期分析与占比'
+    descriptionKey: 'nav.statistics.description'
   },
   {
-    label: '搜索',
+    labelKey: 'nav.search.label',
     path: '/search',
     matchPrefix: '/search',
-    description: '记录检索与筛选'
+    descriptionKey: 'nav.search.description'
   },
   {
-    label: '导出',
+    labelKey: 'nav.exports.label',
     path: '/exports',
     matchPrefix: '/exports',
-    description: '导出任务中心'
+    descriptionKey: 'nav.exports.description'
   },
   {
-    label: '通知',
+    labelKey: 'nav.notifications.label',
     path: '/notifications',
     matchPrefix: '/notifications',
-    description: '通知中心'
+    descriptionKey: 'nav.notifications.description'
   }
 ]
