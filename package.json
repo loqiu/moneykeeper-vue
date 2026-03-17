@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "npm run build && wrangler dev"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -39,7 +41,8 @@
     "postcss": "^8.5.6",
     "sass": "^1.81.0",
     "sass-loader": "^16.0.3",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "wrangler": "^4.71.0"
   },
   "eslintConfig": {
     "root": true,

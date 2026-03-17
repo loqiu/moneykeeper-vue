@@ -337,7 +337,284 @@
       "deleteCategoryTitle": "Delete category",
       "deleteCategoryDescription": "Delete the {type} category “{name}”?",
       "categoryDeleted": "{type} category deleted: {name}",
-      "categoryAdded": "Category added"
+      "categoryAdded": "Category added",
+      "categoryRefreshWarning": "The category was created, but the list could not be refreshed. Please refresh manually."
+    }
+  },
+  "platform": {
+    "search": {
+      "eyebrow": "Record Search",
+      "title": "Record search",
+      "description": "Search records inside the current ledger by keyword, category, date, and member. If a new record does not appear immediately, refresh again in a moment.",
+      "notice": "If you have just created, updated, or deleted a record, search results may update slightly later. Refresh once first; it does not mean the record is lost.",
+      "resultDescription": "Results only show records from the current ledger. Keep narrowing the result with keywords, categories, dates, types, and members.",
+      "refreshAction": "Refresh results",
+      "summary": {
+        "matchesLabel": "Matches",
+        "matchesHint": "Records matched right now",
+        "bestMatchLabel": "Best match",
+        "bestMatchHint": "Closest match score for the current search",
+        "scopeLabel": "Scope",
+        "scopeHint": "Ledger used by this search"
+      },
+      "filters": {
+        "title": "Search filters",
+        "description": "Enter a keyword directly or combine member, category, date, and type filters. Without a keyword, filters alone still return results.",
+        "queryLabel": "Keyword",
+        "queryPlaceholder": "For example: lunch, coffee, salary",
+        "memberLabel": "Member",
+        "allMembers": "All members",
+        "memberFallback": "Member #{id}",
+        "allTypes": "All types",
+        "allCategories": "All categories",
+        "categoryNameLabel": "Category name",
+        "categoryNamePlaceholder": "Type a category name directly",
+        "startDateLabel": "Start date",
+        "endDateLabel": "End date",
+        "dateOptional": "Optional",
+        "limitLabel": "Result size",
+        "limitOption": "{count} rows",
+        "searchAction": "Search now",
+        "resetAction": "Reset and refresh"
+      },
+      "states": {
+        "errorTitle": "Search failed",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Search works in ledger context. Switch to the target ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "loadingTitle": "Searching records...",
+        "loadingDescription": "Keyword and filter conditions are being queried together."
+      },
+      "empty": {
+        "idleTitle": "Start with a search condition",
+        "idleDescription": "Enter a keyword or combine member, category, date, and type filters directly.",
+        "filteredTitle": "No matching results",
+        "filteredDescription": "Try widening the date range, clearing category filters, or trying again shortly.",
+        "ledgerTitle": "No searchable records in this ledger yet",
+        "ledgerDescription": "Create a record first, or add a keyword to narrow the scope and try again."
+      },
+      "results": {
+        "scoreLabel": "Match {score}",
+        "recordId": "Record ID: {id}",
+        "member": "Member: {name}",
+        "memberFallback": "Member #{id}",
+        "date": "Date: {value}",
+        "updated": "Updated: {value}",
+        "noNote": "This record has no note.",
+        "amountLabel": "Amount",
+        "noTimestamp": "Not recorded"
+      },
+      "errors": {
+        "invalidDateRange": "End date cannot be earlier than the start date",
+        "fetchFailed": "Failed to search records"
+      }
+    },
+    "categories": {
+      "eyebrow": "Ledger Categories",
+      "title": "Category management",
+      "description": "Manage income and expense categories for the current ledger in one place. Editing and finer permission states will be added next.",
+      "workspaceDescription": "Categories now run in the current ledger context. Role differences between owner/admin and member will continue to be refined.",
+      "countBadge": "{count} items",
+      "summary": {
+        "expenseLabel": "Expense",
+        "expenseHint": "Current expense category count",
+        "incomeLabel": "Income",
+        "incomeHint": "Current income category count"
+      },
+      "actions": {
+        "addExpense": "Add expense category",
+        "addIncome": "Add income category"
+      },
+      "states": {
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Category management is ledger-based now. Choose the target ledger before managing income and expense categories.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "readOnlyTitle": "Read-only role",
+        "readOnlyDescription": "You can still review the category structure for this ledger, but only owners or admins can add or delete categories."
+      },
+      "expense": {
+        "title": "Expense categories",
+        "description": "Used for records, filters, and chart grouping in this ledger.",
+        "emptyTitle": "No expense categories yet",
+        "emptyDescription": "Create a few high-frequency categories first to make quick entry smoother."
+      },
+      "income": {
+        "title": "Income categories",
+        "description": "Manage salary, bonus, reimbursement, and other income sources in one place.",
+        "emptyTitle": "No income categories yet",
+        "emptyDescription": "Add a few income types to make the statistics view clearer."
+      }
+    },
+    "budgets": {
+      "eyebrow": "Budget Workspace",
+      "title": "Budget centre",
+      "description": "Budgets have been split out from the accounting homepage and now track monthly plans, usage progress, and alert thresholds for the current ledger.",
+      "workspaceDescription": "This budget list now runs in ledger context, and notifications plus statistics will reuse the rule state shown here.",
+      "summary": {
+        "budgetsLabel": "Budgets",
+        "budgetsHint": "Budgets in the current month",
+        "plannedLabel": "Planned",
+        "plannedHint": "Total planned amount",
+        "alertsLabel": "Alerts",
+        "alertsHint": "Budgets with overruns or triggered thresholds"
+      },
+      "actions": {
+        "refresh": "Refresh budgets",
+        "applyFilters": "Apply filters"
+      },
+      "filters": {
+        "yearLabel": "Year",
+        "yearOption": "{year}",
+        "monthLabel": "Month",
+        "monthOption": "{month}",
+        "allTypes": "All types",
+        "allCategories": "All categories"
+      },
+      "form": {
+        "title": "Create budget",
+        "description": "A budget is bound to the current ledger and month. Leave category empty for a ledger-wide total budget.",
+        "readOnlyHint": "Your current role can view budgets but cannot create, delete, or update threshold rules. Owner or admin access is required.",
+        "nameLabel": "Budget name",
+        "namePlaceholder": "For example: Monthly dining budget",
+        "categoryPlaceholder": "Leave empty for a ledger-wide budget",
+        "amountLabel": "Amount",
+        "notesPlaceholder": "Use notes to explain the budget purpose, scope, or spending to watch closely this month.",
+        "submitAction": "Create and refresh"
+      },
+      "states": {
+        "errorTitle": "Budget workspace failed to load",
+        "ledgerRequiredTitle": "Choose a ledger first",
+        "ledgerRequiredDescription": "Budgets now run in ledger context. Choose the current ledger in Ledger Centre before continuing.",
+        "ledgerRequiredAction": "Open Ledger Centre",
+        "ledgerFallback": "Choose a ledger first",
+        "loadingTitle": "Loading budgets and categories...",
+        "loadingDescription": "The budget list and category options are being refreshed together.",
+        "emptyTitle": "No budgets for this month yet",
+        "emptyDescription": "Use the form on the right to create the first budget. Rules and notifications will build on it from here."
+      },
+      "cards": {
+        "expenseBudget": "Expense budget",
+        "incomeBudget": "Income budget",
+        "exceededBadge": "Exceeded",
+        "ledgerTotal": "Ledger-wide budget",
+        "meta": "{category} · {year}-{month}",
+        "budgetLabel": "Budget",
+        "spentLabel": "Spent",
+        "remainingLabel": "Remaining",
+        "usageLabel": "Usage",
+        "thresholdHit": "{threshold}% triggered"
+      },
+      "rules": {
+        "title": "Alert rules",
+        "description": "Backend notifications and budget hit state are driven by these thresholds.",
+        "addAction": "Add rule",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "empty": "No alert rules yet. Start with an 80% or 100% threshold."
+      },
+      "ruleDialog": {
+        "title": "Add budget alert rule",
+        "description": "When budget usage reaches the selected threshold, the backend sends the hit state back into notifications and budget progress.",
+        "currentBudgetLabel": "Current budget",
+        "thresholdBadge": "Threshold",
+        "thresholdLabel": "Threshold percentage",
+        "statusLabel": "Rule status",
+        "disabledTemporarily": "Disabled for now",
+        "notificationTitleLabel": "Notification title",
+        "notificationTitlePlaceholder": "For example: Dining budget is almost used up",
+        "notificationMessageLabel": "Notification message",
+        "notificationMessagePlaceholder": "For example: This month's dining budget has reached 80%. Keep a close eye on spending over the next few days.",
+        "submitAction": "Save rule",
+        "incompleteWarning": "Please complete the budget rule first"
+      },
+      "dialogs": {
+        "deleteBudgetTitle": "Delete budget",
+        "deleteBudgetDescription": "Delete budget “{name}”?",
+        "deleteRuleTitle": "Delete rule",
+        "deleteRuleDescription": "Delete the {threshold}% threshold rule?"
+      },
+      "messages": {
+        "created": "Budget created",
+        "deleted": "Budget deleted",
+        "ruleCreated": "Budget rule created",
+        "ruleDeleted": "Budget rule deleted"
+      },
+      "errors": {
+        "workspaceFetchFailed": "Failed to load budget data",
+        "ledgerRequired": "Choose a ledger first",
+        "formIncomplete": "Please complete the budget name and amount",
+        "createFailed": "Failed to create the budget",
+        "deletePermission": "Your current role cannot delete budgets",
+        "deleteFailed": "Failed to delete the budget",
+        "ruleCreatePermission": "Your current role cannot add budget rules",
+        "ruleCreateFailed": "Failed to create the budget rule",
+        "ruleDeletePermission": "Your current role cannot delete budget rules",
+        "ruleDeleteFailed": "Failed to delete the budget rule"
+      }
+    },
+    "notifications": {
+      "eyebrow": "Notification Center",
+      "title": "Notification centre",
+      "description": "Notifications now move beyond top-bar toasts into a searchable, traceable history centre for budget alerts, export updates, and system events.",
+      "summary": {
+        "unreadLabel": "Unread",
+        "unreadHint": "Unread notifications right now",
+        "loadedLabel": "Loaded",
+        "loadedHint": "Rows loaded this time",
+        "streamLabel": "Stream",
+        "streamHint": "Top bar state stays in sync with this page"
+      },
+      "list": {
+        "title": "My notifications",
+        "description": "SSE handles realtime updates while notification logs handle history and read state. Filters also affect the scope of “mark all as read”."
+      },
+      "actions": {
+        "markFilteredRead": "Mark current filter as read",
+        "markRead": "Mark as read"
+      },
+      "filters": {
+        "allTypes": "All types",
+        "unreadOnly": "Unread only",
+        "limitLabel": "Load count",
+        "limitOption": "{count} rows"
+      },
+      "states": {
+        "errorTitle": "Failed to load notifications",
+        "streamUnavailableTitle": "Realtime notifications are unavailable right now",
+        "loadingTitle": "Loading notifications...",
+        "loadingDescription": "Refreshing both the filtered list and unread counts.",
+        "emptyTitle": "No matching notifications",
+        "emptyDescription": "Budget alerts, completed exports, and system messages will all settle here."
+      },
+      "types": {
+        "success": "Success",
+        "warning": "Warning",
+        "info": "Info",
+        "error": "Error"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "Unread"
+      },
+      "connection": {
+        "reconnecting": "The notification stream is reconnecting. History is still available, but new realtime messages may be slightly delayed.",
+        "connecting": "The notification stream is connecting. If the list loads, wait a few seconds for realtime updates to recover.",
+        "error": "The notification stream is currently offline. Refresh again shortly or check your network. Historical notifications are safe.",
+        "idle": "The notification stream has not connected yet. Historical notifications are still available here."
+      },
+      "messages": {
+        "markedRead": "Notification marked as read",
+        "noUnread": "There are no unread notifications in the current filter",
+        "markedFilteredRead": "Updated notification state for the current filter",
+        "justNow": "Just now"
+      },
+      "errors": {
+        "fetchFailed": "Failed to load notifications",
+        "markReadFailed": "Failed to mark the notification as read",
+        "markAllReadFailed": "Failed to mark filtered notifications as read"
+      }
     }
   },
   "errors": {

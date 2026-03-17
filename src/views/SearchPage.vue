@@ -1,25 +1,25 @@
 <template>
   <PlatformPageShell
-    eyebrow="Record Search"
-    title="记录搜索"
-    description="在当前账本里按关键字、分类、日期和成员快速找记录。刚保存的记录如果暂时没出现，稍后刷新一下即可。"
+    :eyebrow="t('platform.search.eyebrow')"
+    :title="t('platform.search.title')"
+    :description="t('platform.search.description')"
   >
     <template #summary>
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Matches</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.search.summary.matchesLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ results.length }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前命中的记录数</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.search.summary.matchesHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Best Match</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.search.summary.bestMatchLabel') }}</p>
           <p class="mt-2 text-3xl font-semibold">{{ topScore }}</p>
-          <p class="mt-2 text-xs text-slate-300">最接近本次搜索条件的匹配度</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.search.summary.bestMatchHint') }}</p>
         </div>
         <div class="rounded-[24px] border border-white/10 bg-white/10 p-4 backdrop-blur">
-          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">Scope</p>
+          <p class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('platform.search.summary.scopeLabel') }}</p>
           <p class="mt-2 text-lg font-semibold">{{ currentLedgerName }}</p>
-          <p class="mt-2 text-xs text-slate-300">当前搜索使用的账本范围</p>
+          <p class="mt-2 text-xs text-slate-300">{{ t('platform.search.summary.scopeHint') }}</p>
         </div>
       </div>
     </template>
@@ -27,43 +27,64 @@
     <template #aside>
       <article class="rounded-[32px] border border-white/70 bg-white/92 p-6 shadow-[0_20px_60px_rgba(148,163,184,0.16)] backdrop-blur">
         <div>
-          <h2 class="text-xl font-semibold text-slate-900">搜索条件</h2>
+          <h2 class="text-xl font-semibold text-slate-900">{{ t('platform.search.filters.title') }}</h2>
           <p class="mt-2 text-sm leading-6 text-slate-500">
-            可以直接输入关键字，也可以按成员、分类、日期和类型筛选。没有关键字时，也会按筛选条件返回结果。
+            {{ t('platform.search.filters.description') }}
           </p>
         </div>
 
         <el-form class="mt-5 space-y-4" label-position="top" @submit.prevent>
-          <el-form-item label="全文关键字">
+          <el-form-item :label="t('platform.search.filters.queryLabel')">
             <el-input
               v-model="filters.query"
               maxlength="100"
               clearable
-              placeholder="例如：lunch、coffee、salary"
+              :placeholder="t('platform.search.filters.queryPlaceholder')"
             />
           </el-form-item>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <el-form-item label="类型">
-              <el-select v-model="filters.type" clearable class="w-full" placeholder="全部类型">
-                <el-option v-for="option in typeOptions" :key="option.value" :label="option.label" :value="option.value" />
+            <el-form-item :label="t('common.type')">
+              <el-select
+                v-model="filters.type"
+                clearable
+                class="w-full"
+                :placeholder="t('platform.search.filters.allTypes')"
+              >
+                <el-option
+                  v-for="option in typeOptions"
+                  :key="option.value"
+                  :label="option.label"
+                  :value="option.value"
+                />
               </el-select>
             </el-form-item>
 
-            <el-form-item label="成员 ID">
-              <el-input-number
+            <el-form-item :label="t('platform.search.filters.memberLabel')">
+              <el-select
                 v-model="filters.userId"
-                :min="1"
-                controls-position="right"
-                class="!w-full"
-                placeholder="可选"
-              />
+                clearable
+                class="w-full"
+                :placeholder="t('platform.search.filters.allMembers')"
+              >
+                <el-option
+                  v-for="member in memberOptions"
+                  :key="member.userId"
+                  :label="memberLabel(member)"
+                  :value="member.userId"
+                />
+              </el-select>
             </el-form-item>
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <el-form-item label="分类">
-              <el-select v-model="filters.categoryId" clearable class="w-full" placeholder="全部分类">
+            <el-form-item :label="t('common.category')">
+              <el-select
+                v-model="filters.categoryId"
+                clearable
+                class="w-full"
+                :placeholder="t('platform.search.filters.allCategories')"
+              >
                 <el-option
                   v-for="category in categoryList"
                   :key="category.id"
@@ -73,40 +94,50 @@
               </el-select>
             </el-form-item>
 
-            <el-form-item label="分类名称">
-              <el-input v-model="filters.categoryName" clearable maxlength="50" placeholder="可直接输入分类名" />
+            <el-form-item :label="t('platform.search.filters.categoryNameLabel')">
+              <el-input
+                v-model="filters.categoryName"
+                clearable
+                maxlength="50"
+                :placeholder="t('platform.search.filters.categoryNamePlaceholder')"
+              />
             </el-form-item>
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2">
-            <el-form-item label="开始日期">
+            <el-form-item :label="t('platform.search.filters.startDateLabel')">
               <el-date-picker
                 v-model="filters.startDate"
                 type="date"
                 value-format="YYYY-MM-DD"
                 class="!w-full"
-                placeholder="可留空"
+                :placeholder="t('platform.search.filters.dateOptional')"
               />
             </el-form-item>
 
-            <el-form-item label="结束日期">
+            <el-form-item :label="t('platform.search.filters.endDateLabel')">
               <el-date-picker
                 v-model="filters.endDate"
                 type="date"
                 value-format="YYYY-MM-DD"
                 class="!w-full"
-                placeholder="可留空"
+                :placeholder="t('platform.search.filters.dateOptional')"
               />
             </el-form-item>
           </div>
 
-          <el-form-item label="返回条数">
+          <el-form-item :label="t('platform.search.filters.limitLabel')">
             <el-select v-model="filters.limit" class="w-full">
-              <el-option v-for="option in limitOptions" :key="option" :label="`${option} 条`" :value="option" />
+              <el-option
+                v-for="option in limitOptions"
+                :key="option"
+                :label="t('platform.search.filters.limitOption', { count: option })"
+                :value="option"
+              />
             </el-select>
           </el-form-item>
 
-        <div class="flex gap-3">
+          <div class="flex gap-3">
             <el-button
               type="primary"
               class="!flex-1 !rounded-full !border-0 !bg-slate-900 !py-6 hover:!bg-slate-800 disabled:!bg-slate-300"
@@ -114,9 +145,11 @@
               :loading="isLoading"
               @click="loadSearchResults"
             >
-              开始搜索
+              {{ t('platform.search.filters.searchAction') }}
             </el-button>
-            <el-button class="!rounded-full !px-5" @click="resetFilters">重置并刷新</el-button>
+            <el-button class="!rounded-full !px-5" @click="resetFilters">
+              {{ t('platform.search.filters.resetAction') }}
+            </el-button>
           </div>
         </el-form>
       </article>
@@ -124,7 +157,7 @@
 
     <div class="space-y-6">
       <section class="rounded-[28px] border border-amber-200 bg-amber-50/80 p-5 text-sm leading-6 text-amber-900">
-        如果刚新增、修改或删除记录，搜索结果可能会稍晚一点更新。遇到这种情况先刷新一次，不代表记录丢失。
+        {{ t('platform.search.notice') }}
       </section>
 
       <section class="rounded-[28px] border border-slate-200 bg-slate-50/80 p-5">
@@ -132,12 +165,14 @@
           <div>
             <h2 class="text-xl font-semibold text-slate-900">{{ currentLedgerName }}</h2>
             <p class="mt-2 text-sm leading-6 text-slate-500">
-              搜索结果只显示当前账本里的记录，可按关键字、分类、日期、类型和成员继续缩小范围。
+              {{ t('platform.search.resultDescription') }}
             </p>
           </div>
 
           <div class="flex flex-wrap gap-3">
-            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadSearchResults">刷新结果</el-button>
+            <el-button class="!rounded-full !px-4" :loading="isLoading" @click="loadSearchResults">
+              {{ t('platform.search.refreshAction') }}
+            </el-button>
           </div>
         </div>
       </section>
@@ -147,24 +182,24 @@
         variant="error"
         compact
         :centered="false"
-        title="搜索失败"
+        :title="t('platform.search.states.errorTitle')"
         :description="errorMessage"
-        action-label="重试"
+        :action-label="t('common.refresh')"
         @action="loadSearchResults"
       />
 
       <PlatformStateCard
         v-if="!hasLedgerContext"
         variant="warning"
-        title="请先选择账本"
-        description="搜索页是账本维度功能，先到“账本中心”切到目标账本再继续。"
+        :title="t('platform.search.states.ledgerRequiredTitle')"
+        :description="t('platform.search.states.ledgerRequiredDescription')"
       >
         <template #actions>
           <router-link
             to="/ledgers"
             class="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 no-underline transition hover:border-slate-400 hover:bg-slate-50"
           >
-            前往账本中心
+            {{ t('platform.search.states.ledgerRequiredAction') }}
           </router-link>
         </template>
       </PlatformStateCard>
@@ -172,8 +207,8 @@
       <PlatformStateCard
         v-else-if="isLoading"
         variant="loading"
-        title="正在查询搜索结果..."
-        description="当前会综合全文关键字与筛选条件一起检索。"
+        :title="t('platform.search.states.loadingTitle')"
+        :description="t('platform.search.states.loadingDescription')"
       />
 
       <PlatformStateCard
@@ -196,29 +231,29 @@
                   class="rounded-full px-3 py-1 text-xs font-medium"
                   :class="item.type === 'expense' ? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700'"
                 >
-                  {{ item.type === 'expense' ? '支出' : '收入' }}
+                  {{ item.type === 'expense' ? t('common.expense') : t('common.income') }}
                 </span>
                 <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
-                  {{ item.categoryName || '未分类' }}
+                  {{ item.categoryName || t('common.unclassified') }}
                 </span>
                 <span class="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs text-sky-700">
-                  匹配度 {{ formatScore(item.score) }}
+                  {{ t('platform.search.results.scoreLabel', { score: formatScore(item.score) }) }}
                 </span>
               </div>
 
               <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-500">
-                <span>记录 ID：{{ item.id }}</span>
-                <span>成员：{{ item.userId }}</span>
-                <span>日期：{{ item.transactionDate || '-' }}</span>
-                <span>更新：{{ formatDateTime(item.updatedAt) }}</span>
+                <span>{{ t('platform.search.results.recordId', { id: item.id }) }}</span>
+                <span>{{ t('platform.search.results.member', { name: memberName(item.userId) }) }}</span>
+                <span>{{ t('platform.search.results.date', { value: item.transactionDate || '-' }) }}</span>
+                <span>{{ t('platform.search.results.updated', { value: formatDateTime(item.updatedAt) }) }}</span>
               </div>
 
               <p v-if="item.notes" class="mt-4 text-sm leading-7 text-slate-600">{{ item.notes }}</p>
-              <p v-else class="mt-4 text-sm text-slate-400">这条记录没有备注。</p>
+              <p v-else class="mt-4 text-sm text-slate-400">{{ t('platform.search.results.noNote') }}</p>
             </div>
 
             <div class="shrink-0 rounded-[24px] border border-slate-200 bg-slate-50 px-5 py-4 text-right">
-              <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Amount</div>
+              <div class="text-xs uppercase tracking-[0.2em] text-slate-400">{{ t('platform.search.results.amountLabel') }}</div>
               <div class="mt-2 text-2xl font-semibold text-slate-900">{{ formatCurrency(item.amount) }}</div>
             </div>
           </div>
@@ -231,19 +266,16 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 import PlatformPageShell from '@/components/PlatformPageShell.vue'
 import PlatformStateCard from '@/components/PlatformStateCard.vue'
 import { fetchLedgerCategories } from '@/api/modules/categories'
+import { fetchLedgerMembers } from '@/api/modules/ledgers'
 import { searchLedgerRecords } from '@/api/modules/search'
 import { getApiErrorMessage } from '@/api/response'
 import { useLedgerStore } from '@/stores/ledger'
 
-const currencyFormatter = new Intl.NumberFormat('en-GB', {
-  style: 'currency',
-  currency: 'GBP',
-  minimumFractionDigits: 2
-})
-
+const { t, locale } = useI18n()
 const ledgerStore = useLedgerStore()
 const { currentLedgerId, currentLedger } = storeToRefs(ledgerStore)
 
@@ -252,6 +284,7 @@ const hasLoadedResults = ref(false)
 const errorMessage = ref('')
 const results = ref([])
 const categoryList = ref([])
+const memberOptions = ref([])
 
 const defaultFilters = () => ({
   query: '',
@@ -267,22 +300,22 @@ const defaultFilters = () => ({
 const filters = reactive(defaultFilters())
 
 const limitOptions = [20, 50, 100]
-const typeOptions = [
-  { label: '支出', value: 'expense' },
-  { label: '收入', value: 'income' }
-]
+const typeOptions = computed(() => ([
+  { label: t('common.expense'), value: 'expense' },
+  { label: t('common.income'), value: 'income' }
+]))
 
 const hasLedgerContext = computed(() => Boolean(currentLedgerId.value))
-const currentLedgerName = computed(() => currentLedger.value?.name || '请先选择账本')
+const currentLedgerName = computed(() => currentLedger.value?.name || t('platform.search.states.ledgerFallback'))
 const hasActiveFilters = computed(() => {
   return Boolean(
-    filters.query.trim() ||
-      filters.userId ||
-      filters.type ||
-      filters.categoryId ||
-      filters.categoryName.trim() ||
-      filters.startDate ||
-      filters.endDate
+    filters.query.trim()
+      || filters.userId
+      || filters.type
+      || filters.categoryId
+      || filters.categoryName.trim()
+      || filters.startDate
+      || filters.endDate
   )
 })
 const topScore = computed(() => {
@@ -290,26 +323,43 @@ const topScore = computed(() => {
 })
 const emptyStateTitle = computed(() => {
   if (!hasLoadedResults.value) {
-    return '输入条件后开始搜索'
+    return t('platform.search.empty.idleTitle')
   }
 
   if (hasActiveFilters.value) {
-    return '当前没有匹配结果'
+    return t('platform.search.empty.filteredTitle')
   }
 
-  return '当前账本还没有可展示的搜索结果'
+  return t('platform.search.empty.ledgerTitle')
 })
 const emptyStateDescription = computed(() => {
   if (!hasLoadedResults.value) {
-    return '可以输入关键字，也可以直接按成员、分类、日期和类型组合筛选。'
+    return t('platform.search.empty.idleDescription')
   }
 
   if (hasActiveFilters.value) {
-    return '可以尝试放宽日期范围、清空分类限制，或者稍后再试一次。'
+    return t('platform.search.empty.filteredDescription')
   }
 
-  return '可以先新增记录，或者输入关键字缩小范围后再试。'
+  return t('platform.search.empty.ledgerDescription')
 })
+
+const memberLabel = (member) => {
+  if (!member) {
+    return ''
+  }
+
+  if (member.email) {
+    return `${member.username} (${member.email})`
+  }
+
+  return member.username || t('platform.search.filters.memberFallback', { id: member.userId })
+}
+
+const memberName = (userId) => {
+  const matchedMember = memberOptions.value.find((member) => Number(member.userId) === Number(userId))
+  return matchedMember ? memberLabel(matchedMember) : t('platform.search.results.memberFallback', { id: userId })
+}
 
 const buildQuery = () => {
   const query = {
@@ -356,13 +406,22 @@ const loadCategories = async () => {
   categoryList.value = await fetchLedgerCategories(currentLedgerId.value)
 }
 
+const loadMembers = async () => {
+  if (!currentLedgerId.value) {
+    memberOptions.value = []
+    return
+  }
+
+  memberOptions.value = await fetchLedgerMembers(currentLedgerId.value)
+}
+
 const loadSearchResults = async () => {
   if (!currentLedgerId.value) {
     return
   }
 
   if (filters.startDate && filters.endDate && filters.endDate < filters.startDate) {
-    errorMessage.value = '结束日期不能早于开始日期'
+    errorMessage.value = t('platform.search.errors.invalidDateRange')
     return
   }
 
@@ -380,7 +439,7 @@ const loadSearchResults = async () => {
     })
     hasLoadedResults.value = true
   } catch (error) {
-    errorMessage.value = getApiErrorMessage(error, '搜索记录失败')
+    errorMessage.value = getApiErrorMessage(error, t('platform.search.errors.fetchFailed'))
   } finally {
     isLoading.value = false
   }
@@ -391,20 +450,27 @@ const resetFilters = async () => {
   await loadSearchResults()
 }
 
-const formatCurrency = (value) => currencyFormatter.format(Number(value) || 0)
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat(locale.value, {
+    style: 'currency',
+    currency: 'GBP',
+    minimumFractionDigits: 2
+  }).format(Number(value) || 0)
+}
 
 const formatScore = (value) => (Number(value) || 0).toFixed(2)
 
 const formatDateTime = (value) => {
   if (!value) {
-    return '未记录'
+    return t('platform.search.results.noTimestamp')
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(locale.value, {
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
+    hour12: false
   }).format(new Date(value))
 }
 
@@ -413,12 +479,13 @@ watch(
   async (ledgerId) => {
     if (!ledgerId) {
       categoryList.value = []
+      memberOptions.value = []
       results.value = []
       hasLoadedResults.value = false
       return
     }
 
-    await loadCategories()
+    await Promise.all([loadCategories(), loadMembers()])
     await loadSearchResults()
   },
   { immediate: true }

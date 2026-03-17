@@ -43,7 +43,8 @@ export const resolveCategoryIcon = (iconName) => {
 
 
 export const categoryIconClassMap = {
-  ShoppingCart: 'translate-x-[1px] translate-y-[1px]'
+  ShoppingCart: 'translate-x-[1px] translate-y-[1px]',
+  More: 'translate-y-[1px]'
 }
 
 export const resolveCategoryIconClass = (iconName) => {

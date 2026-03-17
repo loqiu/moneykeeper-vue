@@ -85,11 +85,11 @@
         </el-button>
       </div>
 
-      <div v-if="currentCategories.length" class="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
+      <div v-if="currentCategories.length" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
         <div
           v-for="(item, index) in currentCategories"
           :key="item.id ?? index"
-          class="group relative cursor-pointer rounded-3xl border p-3 text-center transition-all"
+          class="group relative cursor-pointer rounded-3xl border px-3 py-4 text-center transition-all"
           :class="Number(localRecord.categoryId) === Number(item.id) ? 'border-slate-900 bg-slate-900 text-white shadow-lg' : 'border-slate-200 bg-slate-50 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white'"
           @click="handleCategorySelect(item)"
         >
@@ -101,12 +101,16 @@
             <el-icon :size="12"><Close /></el-icon>
           </button>
           <div
-            class="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl transition-colors"
+            class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl transition-colors"
             :style="{ backgroundColor: Number(localRecord.categoryId) === Number(item.id) ? 'rgba(255,255,255,0.18)' : item.bgColor || '#f8fafc' }"
           >
             <el-icon :size="20" :class="resolveCategoryIconClass(item.icon)"><component :is="resolveCategoryIcon(item.icon)" /></el-icon>
           </div>
-          <div class="mt-3 text-xs font-medium leading-5" :class="Number(localRecord.categoryId) === Number(item.id) ? 'text-white' : 'text-slate-600'">
+          <div
+            class="mt-3 text-xs font-medium leading-5 break-words [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden"
+            :class="Number(localRecord.categoryId) === Number(item.id) ? 'text-white' : 'text-slate-600'"
+            :title="item.name"
+          >
             {{ item.name }}
           </div>
         </div>

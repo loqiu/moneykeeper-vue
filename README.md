@@ -40,17 +40,6 @@ MoneyKeeper Vue is the web frontend for the MoneyKeeper platform. It started as 
 - Stripe billing pages
 - SSE-powered realtime status updates
 
-## Tech Stack
-
-- Vue 3
-- Vue Router
-- Pinia
-- Element Plus
-- Axios
-- ECharts / Vue-ECharts
-- Tailwind CSS
-- Vue CLI
-
 ## Routes
 
 - `/accounting` — accounting dashboard
@@ -64,6 +53,17 @@ MoneyKeeper Vue is the web frontend for the MoneyKeeper platform. It started as 
 - `/notifications` — notification center
 - `/billing` — billing and checkout
 - `/login` — authentication
+
+## Tech Stack
+
+- Vue 3
+- Vue Router
+- Pinia
+- Element Plus
+- Axios
+- ECharts / Vue-ECharts
+- Tailwind CSS
+- Vue CLI
 
 ## Development
 
@@ -161,4 +161,3 @@ src/
 - keep frontend mappings aligned with the backend handoff
 - continue cleanup of legacy copy and encoding issues
 - prepare for future i18n adoption
-
