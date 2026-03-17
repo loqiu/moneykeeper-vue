@@ -1,31 +1,34 @@
 <template>
   <div class="rounded-[32px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_55px_rgba(148,163,184,0.14)] backdrop-blur sm:p-5">
     <div class="flex flex-col gap-5">
-      <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+      <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto] xl:items-start">
+        <div class="min-w-0">
           <div class="flex items-center gap-4">
             <div class="flex h-14 w-14 items-center justify-center rounded-3xl bg-slate-900 text-lg font-semibold text-white shadow-sm">
               MK
             </div>
-            <div>
+            <div class="min-w-0">
               <p class="text-xs font-semibold uppercase tracking-[0.26em] text-slate-400">{{ t('common.moneyKeeper') }}</p>
               <h2 class="mt-1 text-2xl font-semibold tracking-tight text-slate-900">{{ t('topbar.workspaceTitle') }}</h2>
-              <p class="mt-1 text-sm text-slate-500">{{ t('topbar.workspaceSubtitle') }}</p>
+              <p class="mt-1 max-w-[34rem] text-sm leading-7 text-slate-500">{{ t('topbar.workspaceSubtitle') }}</p>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-2 lg:ml-4">
-            <span class="rounded-full border px-3 py-1 text-xs font-medium" :class="connectionBadgeClass">
+        </div>
+
+        <div class="flex flex-col gap-2 xl:min-w-[360px] xl:items-end">
+          <div class="flex flex-wrap items-center gap-2 xl:justify-end">
+            <span class="whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium" :class="connectionBadgeClass">
               <span class="mr-1 inline-block h-2 w-2 rounded-full" :class="connectionDotClass"></span>
               {{ connectionLabel }}
             </span>
-            <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
+            <span class="inline-flex max-w-[260px] items-center truncate whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
               {{ t('topbar.currentUser', { name: displayName }) }}
             </span>
-            <div class="inline-flex items-center overflow-hidden rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-600">
+            <div class="inline-flex items-center overflow-hidden rounded-full border border-slate-200 bg-white text-xs font-medium text-slate-600 whitespace-nowrap">
               <button
                 type="button"
-                class="px-3 py-1.5 transition"
+                class="min-w-[72px] px-3 py-1.5 text-center transition whitespace-nowrap"
                 :class="locale === 'zh-CN' ? 'bg-slate-900 text-white' : 'hover:bg-slate-50'"
                 @click="setLocale('zh-CN')"
               >
@@ -33,7 +36,7 @@
               </button>
               <button
                 type="button"
-                class="border-l border-slate-200 px-3 py-1.5 transition"
+                class="min-w-[84px] border-l border-slate-200 px-3 py-1.5 text-center transition whitespace-nowrap"
                 :class="locale === 'en-GB' ? 'bg-slate-900 text-white' : 'hover:bg-slate-50'"
                 @click="setLocale('en-GB')"
               >
