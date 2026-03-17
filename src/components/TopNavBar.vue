@@ -46,7 +46,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-3 lg:ml-auto lg:flex-row lg:items-stretch lg:justify-end">
+        <div class="flex flex-col gap-3 lg:ml-auto lg:flex-row lg:items-stretch lg:justify-end xl:col-span-2 xl:w-full">
           <router-link to="/billing" class="no-underline lg:flex">
             <button
               type="button"
