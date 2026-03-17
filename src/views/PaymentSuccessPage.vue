@@ -15,7 +15,7 @@
 
           <div class="space-y-4">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.28em]" :class="heroEyebrowClass">Billing Return</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.28em]" :class="heroEyebrowClass">{{ t('billing.result.eyebrow') }}</p>
               <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">{{ successTitle }}</h1>
               <p class="mt-3 max-w-3xl text-sm leading-7 text-slate-500 sm:text-base">{{ successDescription }}</p>
             </div>
@@ -49,26 +49,26 @@
           <div class="rounded-3xl border border-slate-200 bg-slate-50/80 p-5">
             <div class="flex items-center justify-between gap-3">
               <div>
-                <h2 class="text-lg font-semibold text-slate-900">会话标识</h2>
-                <p class="mt-1 text-sm text-slate-500">仅用于排查和对账展示，不直接代表业务成功。</p>
+                <h2 class="text-lg font-semibold text-slate-900">{{ t('billing.result.session.title') }}</h2>
+                <p class="mt-1 text-sm text-slate-500">{{ t('billing.result.session.description') }}</p>
               </div>
               <span class="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
-                {{ hasSessionId ? '已返回 session_id' : '未返回 session_id' }}
+                {{ hasSessionId ? t('billing.result.session.present') : t('billing.result.session.missing') }}
               </span>
             </div>
 
             <div class="mt-4 rounded-3xl bg-slate-900 px-4 py-4 font-mono text-sm text-slate-100">
-              {{ hasSessionId ? sessionId : '当前地址未携带可展示的 session_id' }}
+              {{ hasSessionId ? sessionId : t('billing.result.session.missingValue') }}
             </div>
           </div>
 
           <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 class="text-lg font-semibold text-slate-900">后端结果摘要</h2>
+            <h2 class="text-lg font-semibold text-slate-900">{{ t('billing.result.backendSummary.title') }}</h2>
             <div class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-              <p><span class="font-medium text-slate-900">确认方式：</span>{{ confirmedByText }}</p>
-              <p><span class="font-medium text-slate-900">订阅周期：</span>{{ currentPeriodText }}</p>
-              <p v-if="latestOrder"><span class="font-medium text-slate-900">最新订单：</span>{{ latestOrder.orderNo || '后端未返回订单号' }}</p>
-              <p v-if="latestOrder"><span class="font-medium text-slate-900">订单时间：</span>{{ formatDate(latestOrder.paidAt || latestOrder.updatedAt || latestOrder.createdAt) }}</p>
+              <p>{{ t('billing.result.backendSummary.confirmedBy', { value: confirmedByText }) }}</p>
+              <p>{{ t('billing.result.backendSummary.period', { value: currentPeriodText }) }}</p>
+              <p v-if="latestOrder">{{ t('billing.result.backendSummary.latestOrder', { value: latestOrder.orderNo || t('billing.result.backendSummary.missingOrderNo') }) }}</p>
+              <p v-if="latestOrder">{{ t('billing.result.backendSummary.orderTime', { value: formatDate(latestOrder.paidAt || latestOrder.updatedAt || latestOrder.createdAt) }) }}</p>
             </div>
           </div>
         </section>
@@ -80,7 +80,7 @@
                 <el-icon :size="20"><InfoFilled /></el-icon>
               </div>
               <div>
-                <h3 class="text-base font-semibold text-emerald-900">下一步建议</h3>
+                <h3 class="text-base font-semibold text-emerald-900">{{ t('billing.result.side.title') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-emerald-800">
                   {{ sideHintText }}
                 </p>
@@ -95,13 +95,13 @@
               :disabled="polling"
               @click="retryVerification"
             >
-              {{ polling ? '轮询中...' : '重新确认结果' }}
+              {{ polling ? t('billing.result.actions.polling') : t('billing.result.actions.retry') }}
             </el-button>
             <el-button class="!h-12 !rounded-full !border-slate-200 !bg-white hover:!bg-slate-50" @click="goBack">
-              返回订阅页
+              {{ t('billing.result.actions.backToBilling') }}
             </el-button>
             <el-button type="primary" class="!h-12 !rounded-full !border-0 !bg-slate-900 hover:!bg-slate-800" @click="goToHome">
-              返回记账页
+              {{ t('billing.result.actions.backToAccounting') }}
             </el-button>
           </div>
         </aside>
@@ -112,6 +112,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   CircleCheckFilled,
   InfoFilled,
@@ -120,6 +121,7 @@ import {
 } from '@element-plus/icons-vue'
 import { usePaymentResult } from '@/composables/usePaymentResult'
 
+const { t } = useI18n()
 const {
   verificationState,
   verificationAlertType,
@@ -142,75 +144,49 @@ const {
 } = usePaymentResult('success')
 
 const heroIcon = computed(() => {
-  if (verificationState.value === 'confirmed') {
-    return CircleCheckFilled
-  }
-
-  if (verificationState.value === 'timeout') {
-    return WarningFilled
-  }
-
+  if (verificationState.value === 'confirmed') return CircleCheckFilled
+  if (verificationState.value === 'timeout') return WarningFilled
   return Loading
 })
 
 const heroIconWrapperClass = computed(() => {
-  if (verificationState.value === 'confirmed') {
-    return 'bg-emerald-100 text-emerald-600'
-  }
-
-  if (verificationState.value === 'timeout') {
-    return 'bg-amber-100 text-amber-600'
-  }
-
+  if (verificationState.value === 'confirmed') return 'bg-emerald-100 text-emerald-600'
+  if (verificationState.value === 'timeout') return 'bg-amber-100 text-amber-600'
   return 'bg-cyan-100 text-cyan-600'
 })
 
-const heroIconClass = computed(() => {
-  return verificationState.value === 'checking' ? 'animate-spin' : ''
-})
+const heroIconClass = computed(() => (verificationState.value === 'checking' ? 'animate-spin' : ''))
 
 const heroEyebrowClass = computed(() => {
-  if (verificationState.value === 'confirmed') {
-    return 'text-emerald-600'
-  }
-
-  if (verificationState.value === 'timeout') {
-    return 'text-amber-600'
-  }
-
+  if (verificationState.value === 'confirmed') return 'text-emerald-600'
+  if (verificationState.value === 'timeout') return 'text-amber-600'
   return 'text-cyan-600'
 })
 
 const summaryCards = computed(() => [
   {
-    title: '轮询进度',
+    title: t('billing.result.summaryCards.polling'),
     value: pollingProgressText.value,
-    description: '按约定每 2 秒轮询一次，最多 10 次。',
+    description: t('billing.result.summaryCards.pollingHint'),
     className: verificationState.value === 'confirmed' ? 'border-emerald-100 bg-emerald-50/80' : 'border-cyan-100 bg-cyan-50/80'
   },
   {
-    title: '订阅状态',
+    title: t('billing.result.summaryCards.subscription'),
     value: subscriptionStatusText.value,
     description: currentPeriodText.value,
     className: verificationState.value === 'confirmed' ? 'border-emerald-100 bg-emerald-50/80' : 'border-slate-200 bg-slate-50/80'
   },
   {
-    title: '最新订单',
+    title: t('billing.result.summaryCards.order'),
     value: latestOrderStatusText.value,
-    description: latestOrder.value?.orderNo || '后端暂未返回订单号',
+    description: latestOrder.value?.orderNo || t('billing.result.summaryCards.missingOrderNo'),
     className: latestOrder.value?.status === 'paid' ? 'border-emerald-100 bg-emerald-50/80' : 'border-amber-100 bg-amber-50/80'
   }
 ])
 
 const sideHintText = computed(() => {
-  if (verificationState.value === 'confirmed') {
-    return '支付结果已经被后端确认。你现在可以回到账单页继续管理订阅，或者直接返回记账页。'
-  }
-
-  if (verificationState.value === 'timeout') {
-    return '如果后端稍后才落库，你可以重新进入这个页面再次确认，或回到账单页手动刷新。'
-  }
-
-  return '页面正在等后端同步订阅与订单状态。只要拿到 active 订阅或 paid 订单，就会自动停止轮询。'
+  if (verificationState.value === 'confirmed') return t('billing.result.side.confirmed')
+  if (verificationState.value === 'timeout') return t('billing.result.side.timeout')
+  return t('billing.result.side.checking')
 })
 </script>

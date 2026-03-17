@@ -955,6 +955,11 @@
       "eyebrow": "订阅与账单",
       "stripeHosted": "Stripe 托管支付",
       "priceLabel": "价格",
+      "defaultPlanName": "Pro 月付",
+      "defaultPlanDescription": "按月订阅，可在 Stripe 中管理账单与支付方式。",
+      "serviceSyncingLabel": "正在同步状态",
+      "intervalMonth": "/月",
+      "intervalYear": "/年",
       "heroDescription": "购买后将跳转到 Stripe 完成支付。返回后，订阅结果仍然后端为准。",
       "section": {
         "activeTitle": "当前订阅",

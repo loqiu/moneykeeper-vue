@@ -15,7 +15,7 @@
 
           <div class="space-y-4">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-600">Billing Return</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-600">{{ t('billing.result.eyebrow') }}</p>
               <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">{{ cancelTitle }}</h1>
               <p class="mt-3 max-w-3xl text-sm leading-7 text-slate-500 sm:text-base">{{ cancelDescription }}</p>
             </div>
@@ -42,12 +42,12 @@
             type="info"
             :closable="false"
             show-icon
-            title="当前页面只表示你已经离开支付页，并不代表系统已经记录新的订阅状态。"
+            :title="t('billing.result.alert.cancel')"
             class="!rounded-3xl"
           />
 
           <div class="rounded-3xl border border-slate-200 bg-slate-50/80 p-5">
-            <h2 class="text-lg font-semibold text-slate-900">你可以怎么做</h2>
+            <h2 class="text-lg font-semibold text-slate-900">{{ t('billing.result.cancelPage.whatNextTitle') }}</h2>
             <div class="mt-4 space-y-3">
               <div
                 v-for="(item, index) in nextSteps"
@@ -66,9 +66,9 @@
           </div>
 
           <div class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 class="text-lg font-semibold text-slate-900">页面说明</h2>
+            <h2 class="text-lg font-semibold text-slate-900">{{ t('billing.result.cancelPage.notesTitle') }}</h2>
             <p class="mt-3 text-sm leading-7 text-slate-500">
-              为了避免误导，这个页面不会直接写成“支付取消成功”或“升级失败”。它只表示用户流程返回，业务状态依然以后端为准。
+              {{ t('billing.result.cancelPage.notesDescription') }}
             </p>
           </div>
         </section>
@@ -80,9 +80,9 @@
                 <el-icon :size="20"><InfoFilled /></el-icon>
               </div>
               <div>
-                <h3 class="text-base font-semibold text-amber-900">保持当前判断</h3>
+                <h3 class="text-base font-semibold text-amber-900">{{ t('billing.result.side.cancelTitle') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-amber-800">
-                  如果你只是中途离开，这不会影响你继续回到账单页重新发起流程，或者直接返回记账页继续使用当前功能。
+                  {{ t('billing.result.side.cancelDescription') }}
                 </p>
               </div>
             </div>
@@ -90,10 +90,10 @@
 
           <div class="grid gap-3">
             <el-button class="!h-12 !rounded-full !border-slate-200 !bg-white hover:!bg-slate-50" @click="goBack">
-              返回订阅页
+              {{ t('billing.result.actions.backToBilling') }}
             </el-button>
             <el-button type="primary" class="!h-12 !rounded-full !border-0 !bg-slate-900 hover:!bg-slate-800" @click="goToHome">
-              返回记账页
+              {{ t('billing.result.actions.backToAccounting') }}
             </el-button>
           </div>
         </aside>
@@ -103,49 +103,47 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { CircleCloseFilled, InfoFilled } from '@element-plus/icons-vue'
 import { usePaymentResult } from '@/composables/usePaymentResult'
 
-const {
-  cancelTitle,
-  cancelDescription,
-  goToHome,
-  goBack
-} = usePaymentResult('cancel')
+const { t } = useI18n()
+const { cancelTitle, cancelDescription, goToHome, goBack } = usePaymentResult('cancel')
 
-const summaryCards = [
+const summaryCards = computed(() => [
   {
-    title: '流程状态',
-    value: '已离开支付页',
-    description: '只表示用户流程结束，并不代表新的订阅状态。',
+    title: t('billing.result.summaryCards.flow'),
+    value: t('billing.result.summaryCards.flowValue'),
+    description: t('billing.result.summaryCards.flowHint'),
     className: 'border-amber-100 bg-amber-50/80'
   },
   {
-    title: '订阅确认',
-    value: '没有变更',
-    description: '当前页面没有拿到任何新的后端订阅确认结果。',
+    title: t('billing.result.summaryCards.verification'),
+    value: t('billing.result.summaryCards.verificationValue'),
+    description: t('billing.result.summaryCards.verificationHint'),
     className: 'border-slate-200 bg-slate-50/80'
   },
   {
-    title: '后续操作',
-    value: '可以再试',
-    description: '你可以回到账单页重新查看状态，或再次发起购买流程。',
+    title: t('billing.result.summaryCards.next'),
+    value: t('billing.result.summaryCards.nextValue'),
+    description: t('billing.result.summaryCards.nextHint'),
     className: 'border-cyan-100 bg-cyan-50/80'
   }
-]
+])
 
-const nextSteps = [
+const nextSteps = computed(() => [
   {
-    title: '回到账单页重新查看状态',
-    description: '账单页会重新读取后端支付状态、套餐和当前订阅。'
+    title: t('billing.result.cancelPage.steps.review.title'),
+    description: t('billing.result.cancelPage.steps.review.description')
   },
   {
-    title: '如果只是暂时离开，可稍后再试',
-    description: '当前前端会重新请求 checkout session，而不是继续依赖写死的 Payment Link。'
+    title: t('billing.result.cancelPage.steps.retry.title'),
+    description: t('billing.result.cancelPage.steps.retry.description')
   },
   {
-    title: '继续使用当前记账功能',
-    description: '退出支付流程不会影响你继续记录、筛选和查看图表。'
+    title: t('billing.result.cancelPage.steps.continue.title'),
+    description: t('billing.result.cancelPage.steps.continue.description')
   }
-]
+])
 </script>

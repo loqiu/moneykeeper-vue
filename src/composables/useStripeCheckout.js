@@ -1,6 +1,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
+import i18n from '@/i18n'
 import {
   cancelCurrentSubscription as cancelCurrentSubscriptionApi,
   createBillingPortalSession,
@@ -36,20 +37,24 @@ const DEFAULT_SUBSCRIPTION = {
   canceledAt: '',
   stripeSubscriptionId: ''
 }
-const DEFAULT_PLAN = {
+
+const translate = (key, params = {}) => i18n.global.t(key, params)
+const getLocale = () => i18n.global.locale.value || 'en-GB'
+
+const getDefaultPlan = () => ({
   code: DEFAULT_PLAN_CODE,
-  name: 'Pro 月付',
-  description: '按月订阅，可在 Stripe 中管理账单与支付方式。',
+  name: translate('billing.checkout.defaultPlanName'),
+  description: translate('billing.checkout.defaultPlanDescription'),
   currency: 'gbp',
   amountMinor: 990,
   billingInterval: 'month'
-}
+})
 
 const formatMoneyFromMinor = (amountMinor, currency) => {
   const amount = Number(amountMinor || 0) / 100
 
   try {
-    return new Intl.NumberFormat('en-GB', {
+    return new Intl.NumberFormat(getLocale(), {
       style: 'currency',
       currency: (currency || 'GBP').toUpperCase()
     }).format(amount)
@@ -60,7 +65,7 @@ const formatMoneyFromMinor = (amountMinor, currency) => {
 
 const formatDate = (value) => {
   if (!value) {
-    return '后端暂未返回'
+    return translate('billing.checkout.messages.periodUnknown')
   }
 
   const date = new Date(value)
@@ -68,7 +73,7 @@ const formatDate = (value) => {
     return value
   }
 
-  return new Intl.DateTimeFormat('zh-CN', {
+  return new Intl.DateTimeFormat(getLocale(), {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -77,33 +82,33 @@ const formatDate = (value) => {
 
 const mapSubscriptionStatus = (subscription) => {
   if (!subscription.active && subscription.status === 'none') {
-    return '未开通'
+    return translate('billing.checkout.messages.subscriptionNone')
   }
 
   if (subscription.cancelAtPeriodEnd) {
-    return '当前有效，到期后取消'
+    return translate('billing.checkout.messages.subscriptionCancelAtPeriodEnd')
   }
 
   if (subscription.active || subscription.status === 'active') {
-    return '订阅有效'
+    return translate('billing.checkout.messages.subscriptionActive')
   }
 
   const statusMap = {
-    trialing: '试用中',
-    past_due: '待补款',
-    canceled: '已取消',
-    unpaid: '未支付'
+    trialing: 'billing.checkout.messages.subscriptionTrialing',
+    past_due: 'billing.checkout.messages.subscriptionPastDue',
+    canceled: 'billing.checkout.messages.subscriptionCanceled',
+    unpaid: 'billing.checkout.messages.subscriptionUnpaid'
   }
 
-  return statusMap[subscription.status] || subscription.status || '待确认'
+  return translate(statusMap[subscription.status], { status: subscription.status }) || subscription.status
 }
 
 const normalizePlanCopy = (plan) => {
   if (plan.code === DEFAULT_PLAN_CODE) {
     return {
       ...plan,
-      name: DEFAULT_PLAN.name,
-      description: DEFAULT_PLAN.description
+      name: translate('billing.checkout.defaultPlanName'),
+      description: translate('billing.checkout.defaultPlanDescription')
     }
   }
 
@@ -131,20 +136,21 @@ export function useStripeCheckout() {
   })
 
   const selectedPlan = computed(() => {
+    const defaultPlan = getDefaultPlan()
     const matchedPlan = plans.value.find((item) => item.code === effectivePlanCode.value)
     const subscriptionFallback = hasActiveSubscription.value
       ? {
-          code: currentSubscription.value.planCode || DEFAULT_PLAN.code,
-          name: currentSubscription.value.planName || DEFAULT_PLAN.name,
-          description: DEFAULT_PLAN.description,
-          currency: currentSubscription.value.currency || DEFAULT_PLAN.currency,
-          amountMinor: currentSubscription.value.amountMinor || DEFAULT_PLAN.amountMinor,
-          billingInterval: currentSubscription.value.billingInterval || DEFAULT_PLAN.billingInterval
+          code: currentSubscription.value.planCode || defaultPlan.code,
+          name: currentSubscription.value.planName || defaultPlan.name,
+          description: defaultPlan.description,
+          currency: currentSubscription.value.currency || defaultPlan.currency,
+          amountMinor: currentSubscription.value.amountMinor || defaultPlan.amountMinor,
+          billingInterval: currentSubscription.value.billingInterval || defaultPlan.billingInterval
         }
       : null
 
-    const plan = matchedPlan || subscriptionFallback || DEFAULT_PLAN
-    return normalizePlanCopy({ ...DEFAULT_PLAN, ...plan })
+    const plan = matchedPlan || subscriptionFallback || defaultPlan
+    return normalizePlanCopy({ ...defaultPlan, ...plan })
   })
 
   const serviceState = computed(() => {
@@ -161,14 +167,16 @@ export function useStripeCheckout() {
 
   const paymentStatusText = computed(() => {
     if (serviceState.value === 'loading') {
-      return '正在检查'
+      return translate('billing.checkout.actions.checking')
     }
 
     if (serviceState.value === 'error') {
-      return '状态获取失败'
+      return translate('billing.checkout.messages.statusUnavailable')
     }
 
-    return paymentStatus.value.ready ? '支付可用' : '支付暂不可用'
+    return paymentStatus.value.ready
+      ? translate('billing.checkout.messages.paymentAvailable')
+      : translate('billing.checkout.messages.paymentBlocked')
   })
 
   const statusBadgeType = computed(() => {
@@ -191,82 +199,92 @@ export function useStripeCheckout() {
 
   const currentPeriodText = computed(() => {
     if (!hasActiveSubscription.value) {
-      return '当前没有有效订阅周期'
+      return translate('billing.checkout.messages.periodMissing')
     }
 
     const { currentPeriodStart, currentPeriodEnd, cancelAtPeriodEnd } = currentSubscription.value
 
     if (currentPeriodStart && currentPeriodEnd) {
       return cancelAtPeriodEnd
-        ? `${formatDate(currentPeriodStart)} - ${formatDate(currentPeriodEnd)}（到期后取消）`
-        : `${formatDate(currentPeriodStart)} - ${formatDate(currentPeriodEnd)}`
+        ? translate('billing.checkout.messages.periodCancelRange', {
+            start: formatDate(currentPeriodStart),
+            end: formatDate(currentPeriodEnd)
+          })
+        : translate('billing.checkout.messages.periodRange', {
+            start: formatDate(currentPeriodStart),
+            end: formatDate(currentPeriodEnd)
+          })
     }
 
     if (currentPeriodEnd) {
       return cancelAtPeriodEnd
-        ? `当前周期到 ${formatDate(currentPeriodEnd)} 结束后取消`
-        : `当前周期到 ${formatDate(currentPeriodEnd)} 结束`
+        ? translate('billing.checkout.messages.periodCancelUntil', { end: formatDate(currentPeriodEnd) })
+        : translate('billing.checkout.messages.periodUntil', { end: formatDate(currentPeriodEnd) })
     }
 
-    return '后端暂未返回订阅周期时间'
+    return translate('billing.checkout.messages.periodUnknown')
   })
 
   const paymentHintText = computed(() => {
     if (serviceState.value === 'loading') {
-      return '正在检查支付状态，请稍等。'
+      return translate('billing.checkout.hints.checking')
     }
 
     if (serviceState.value === 'error') {
-      return `${statusFetchError.value || '支付状态获取失败'}。请先刷新状态；如果仍失败，请确认当前环境的登录态和 /api 代理。`
+      return translate('billing.checkout.hints.statusError', {
+        message: statusFetchError.value || translate('billing.checkout.errors.statusFetchFailed')
+      })
     }
 
     if (!paymentStatus.value.ready) {
-      return '支付服务当前未开放，暂时无法购买。'
+      return translate('billing.checkout.hints.blocked')
     }
 
     if (hasActiveSubscription.value) {
       return currentSubscription.value.cancelAtPeriodEnd
-        ? '你的订阅仍然有效，并已设置在当前周期结束后自动取消。'
-        : '你已经开通当前套餐，可以直接前往 Stripe 管理订阅。'
+        ? translate('billing.checkout.hints.activeCancel')
+        : translate('billing.checkout.hints.activeManage')
     }
 
-    return '点击购买后会跳转到 Stripe 安全支付页面完成付款。'
+    return translate('billing.checkout.hints.buy')
   })
 
   const primaryActionText = computed(() => {
     if (serviceState.value === 'loading') {
-      return '正在检查'
+      return translate('billing.checkout.actions.checking')
     }
 
     if (serviceState.value === 'error') {
-      return '重新获取状态'
+      return translate('billing.checkout.actions.retryStatus')
     }
 
     if (hasActiveSubscription.value) {
-      return '管理订阅'
+      return translate('billing.checkout.actions.manageSubscription')
     }
 
-    return paymentStatus.value.ready ? '立即购买' : '暂不可购买'
+    return paymentStatus.value.ready
+      ? translate('billing.checkout.actions.buyNow')
+      : translate('billing.checkout.actions.blocked')
   })
 
   const primaryActionDescription = computed(() => {
     if (serviceState.value === 'error') {
-      return '先重新检查支付状态，再决定是否继续购买。'
+      return translate('billing.checkout.hints.retry')
     }
 
     if (serviceState.value === 'loading') {
-      return '页面正在读取后端支付状态。'
+      return translate('billing.checkout.hints.loading')
     }
 
     if (hasActiveSubscription.value) {
-      return '查看账单、支付方式和当前订阅设置。'
+      return translate('billing.checkout.hints.manage')
     }
 
     if (!paymentStatus.value.ready) {
-      return '支付服务正在准备中，请稍后再试。'
+      return translate('billing.checkout.hints.preparing')
     }
 
-    return '前往 Stripe 完成当前套餐的支付。'
+    return translate('billing.checkout.hints.checkout')
   })
 
   const primaryActionDisabled = computed(() => {
@@ -286,7 +304,9 @@ export function useStripeCheckout() {
   })
 
   const secondaryActionText = computed(() => {
-    return currentSubscription.value.cancelAtPeriodEnd ? '已设置到期取消' : '取消订阅'
+    return currentSubscription.value.cancelAtPeriodEnd
+      ? translate('billing.checkout.actions.cancelScheduled')
+      : translate('billing.checkout.actions.cancelSubscription')
   })
 
   const priceText = computed(() => {
@@ -294,7 +314,9 @@ export function useStripeCheckout() {
   })
 
   const billingIntervalText = computed(() => {
-    return selectedPlan.value.billingInterval === 'year' ? '/年' : '/月'
+    return selectedPlan.value.billingInterval === 'year'
+      ? translate('billing.checkout.intervalYear')
+      : translate('billing.checkout.intervalMonth')
   })
 
   const buildAbsoluteUrl = (path) => {
@@ -320,24 +342,27 @@ export function useStripeCheckout() {
         paymentStatus.value = results[0].value
         statusFetchError.value = ''
       } else {
-        statusFetchError.value = getApiErrorMessage(results[0].reason, '支付状态获取失败')
+        statusFetchError.value = getApiErrorMessage(
+          results[0].reason,
+          translate('billing.checkout.errors.statusFetchFailed')
+        )
       }
       hasLoadedStatus.value = true
 
       if (results[1].status === 'fulfilled') {
         plans.value = results[1].value
       } else if (!silent) {
-        ElMessage.warning('套餐信息获取失败，先显示默认套餐。')
+        ElMessage.warning(translate('billing.checkout.errors.plansFetchFailed'))
       }
 
       if (results[2].status === 'fulfilled') {
         currentSubscription.value = results[2].value
       } else if (!silent) {
-        ElMessage.warning('订阅状态获取失败，先按未订阅展示。')
+        ElMessage.warning(translate('billing.checkout.errors.subscriptionFetchFailed'))
       }
 
       if (!plans.value.length) {
-        plans.value = [DEFAULT_PLAN]
+        plans.value = [getDefaultPlan()]
       }
     } finally {
       if (silent) {
@@ -360,12 +385,12 @@ export function useStripeCheckout() {
       })
 
       if (!session.url) {
-        throw new Error('后端未返回可用的订阅管理地址')
+        throw new Error(translate('billing.checkout.errors.portalUrlMissing'))
       }
 
       window.location.href = session.url
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '打开订阅管理失败，请稍后重试'))
+      ElMessage.error(getApiErrorMessage(error, translate('billing.checkout.errors.portalOpenFailed')))
     } finally {
       actionLoading.value = false
     }
@@ -373,7 +398,7 @@ export function useStripeCheckout() {
 
   const handleCheckout = async () => {
     if (!paymentStatus.value.ready) {
-      ElMessage.warning('支付暂不可用')
+      ElMessage.warning(translate('billing.checkout.errors.paymentBlocked'))
       return
     }
 
@@ -392,7 +417,7 @@ export function useStripeCheckout() {
       }
 
       if (!paymentStatus.value.ready) {
-        throw new Error('支付服务当前未准备完成')
+        throw new Error(translate('billing.checkout.errors.serviceNotReady'))
       }
 
       const session = await createCheckoutSession({
@@ -402,12 +427,12 @@ export function useStripeCheckout() {
       })
 
       if (!session.checkoutUrl) {
-        throw new Error('后端未返回可用的支付地址')
+        throw new Error(translate('billing.checkout.errors.checkoutUrlMissing'))
       }
 
       window.location.href = session.checkoutUrl
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '发起支付失败，请稍后重试'))
+      ElMessage.error(getApiErrorMessage(error, translate('billing.checkout.errors.checkoutFailed')))
     } finally {
       actionLoading.value = false
     }
@@ -434,11 +459,11 @@ export function useStripeCheckout() {
 
     try {
       await ElMessageBox.confirm(
-        '取消订阅会在当前计费周期结束后生效，确认继续吗？',
-        '取消订阅',
+        translate('billing.checkout.confirm.cancelDescription'),
+        translate('billing.checkout.confirm.cancelTitle'),
         {
-          confirmButtonText: '确认取消',
-          cancelButtonText: '我再想想',
+          confirmButtonText: translate('billing.checkout.confirm.confirm'),
+          cancelButtonText: translate('billing.checkout.confirm.cancel'),
           type: 'warning'
         }
       )
@@ -452,10 +477,10 @@ export function useStripeCheckout() {
     cancelLoading.value = true
     try {
       await cancelCurrentSubscriptionApi()
-      ElMessage.success('已设置为到期后取消订阅')
+      ElMessage.success(translate('billing.checkout.actions.cancelScheduled'))
       await fetchCheckoutData({ silent: true })
     } catch (error) {
-      ElMessage.error(getApiErrorMessage(error, '取消订阅失败，请稍后重试'))
+      ElMessage.error(getApiErrorMessage(error, translate('billing.checkout.errors.cancelFailed')))
     } finally {
       cancelLoading.value = false
     }

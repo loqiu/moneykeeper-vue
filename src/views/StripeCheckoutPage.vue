@@ -12,7 +12,7 @@
           <div class="space-y-5">
             <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm text-slate-200 backdrop-blur">
               <el-icon><CreditCard /></el-icon>
-              <span>订阅与账单</span>
+              <span>{{ t('billing.checkout.eyebrow') }}</span>
             </div>
             <div>
               <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">{{ selectedPlan.name }}</h1>
@@ -28,19 +28,19 @@
                 {{ subscriptionStatusText }}
               </span>
               <span class="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-medium text-slate-200">
-                {{ serviceState === 'loading' ? '正在同步状态' : 'Stripe 托管支付' }}
+                {{ serviceState === 'loading' ? t('billing.checkout.serviceSyncingLabel') : t('billing.checkout.stripeHosted') }}
               </span>
             </div>
           </div>
 
           <div class="rounded-[32px] border border-white/10 bg-white/10 p-5 backdrop-blur">
-            <div class="text-xs uppercase tracking-[0.24em] text-slate-300">价格</div>
+            <div class="text-xs uppercase tracking-[0.24em] text-slate-300">{{ t('billing.checkout.priceLabel') }}</div>
             <div class="mt-4 flex items-end gap-2">
               <span class="text-5xl font-semibold leading-none">{{ priceText }}</span>
               <span class="pb-1 text-sm text-slate-300">{{ billingIntervalText }}</span>
             </div>
             <p class="mt-4 text-sm leading-6 text-slate-300">
-              购买后将跳转到 Stripe 完成支付。返回后，订阅结果仍然后端为准。
+              {{ t('billing.checkout.heroDescription') }}
             </p>
             <el-button
               type="primary"
@@ -67,7 +67,7 @@
             class="!px-0 !text-slate-500 hover:!text-slate-900"
             @click="fetchCheckoutData()"
           >
-            刷新状态
+            {{ t('billing.checkout.actions.refreshStatus') }}
           </el-button>
         </div>
 
@@ -75,7 +75,7 @@
           :type="statusAlertType"
           :closable="false"
           show-icon
-          :title="statusAlertTitle"
+          :title="paymentHintText"
           class="!mt-6 !rounded-3xl"
         />
 
@@ -106,15 +106,14 @@
                 <el-icon :size="20"><CircleCheckFilled /></el-icon>
               </div>
               <div class="min-w-0 flex-1">
-                <h3 class="text-lg font-semibold text-emerald-900">你已经开通当前套餐</h3>
+                <h3 class="text-lg font-semibold text-emerald-900">{{ t('billing.checkout.states.subscribedTitle') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-emerald-800">{{ currentPeriodText }}</p>
                 <p class="mt-2 text-sm leading-6 text-emerald-800">
-                  {{ currentSubscription.cancelAtPeriodEnd ? '当前订阅已设置为到期后自动取消。' : '如需修改账单或支付方式，可直接进入 Stripe 管理页。' }}
+                  {{ currentSubscription.cancelAtPeriodEnd ? t('billing.checkout.states.subscribedCancelHint') : t('billing.checkout.states.subscribedManageHint') }}
                 </p>
               </div>
             </div>
             <el-button
-              v-if="hasActiveSubscription"
               class="!mt-4 !h-11 !rounded-full !border-slate-200 !bg-white hover:!bg-slate-50"
               :loading="cancelLoading"
               :disabled="!canCancelSubscription"
@@ -130,9 +129,9 @@
                 <el-icon :size="20"><WalletFilled /></el-icon>
               </div>
               <div class="min-w-0 flex-1">
-                <h3 class="text-lg font-semibold text-sky-900">当前可以购买</h3>
+                <h3 class="text-lg font-semibold text-sky-900">{{ t('billing.checkout.states.availableTitle') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-sky-800">
-                  点击上方主按钮即可跳转到 Stripe 完成支付。支付完成后，成功页会继续向后端确认真实订阅状态。
+                  {{ t('billing.checkout.states.availableDescription') }}
                 </p>
               </div>
             </div>
@@ -144,10 +143,10 @@
                 <el-icon :size="20"><CircleCloseFilled /></el-icon>
               </div>
               <div class="min-w-0 flex-1">
-                <h3 class="text-lg font-semibold text-rose-900">支付状态没有取到</h3>
+                <h3 class="text-lg font-semibold text-rose-900">{{ t('billing.checkout.states.errorTitle') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-rose-800">{{ statusFetchError }}</p>
                 <p class="mt-2 text-sm leading-6 text-rose-800">
-                  这时前端不会把它误当成 ready=false。请先刷新状态；如果仍失败，再检查当前登录态或当前环境的 /api 代理是否命中了正确后端。
+                  {{ t('billing.checkout.states.errorDescription') }}
                 </p>
               </div>
             </div>
@@ -159,9 +158,9 @@
                 <el-icon :size="20"><WarningFilled /></el-icon>
               </div>
               <div class="min-w-0 flex-1">
-                <h3 class="text-lg font-semibold text-amber-900">当前暂时不能购买</h3>
+                <h3 class="text-lg font-semibold text-amber-900">{{ t('billing.checkout.states.blockedTitle') }}</h3>
                 <p class="mt-2 text-sm leading-6 text-amber-800">
-                  后端支付状态当前没有开放购买。你可以稍后刷新状态，或先继续使用记账功能。
+                  {{ t('billing.checkout.states.blockedDescription') }}
                 </p>
               </div>
             </div>
@@ -174,6 +173,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import {
   CircleCheckFilled,
   CircleCloseFilled,
@@ -184,6 +184,7 @@ import {
 } from '@element-plus/icons-vue'
 import { useStripeCheckout } from '@/composables/useStripeCheckout'
 
+const { t } = useI18n()
 const {
   initializing,
   refreshing,
@@ -211,68 +212,31 @@ const {
 } = useStripeCheckout()
 
 const sectionTitle = computed(() => {
-  if (hasActiveSubscription.value) {
-    return '当前订阅'
-  }
-
-  if (serviceState.value === 'available') {
-    return '购买前确认'
-  }
-
-  if (serviceState.value === 'error') {
-    return '状态获取失败'
-  }
-
-  if (serviceState.value === 'loading') {
-    return '正在同步状态'
-  }
-
-  return '当前状态'
+  if (hasActiveSubscription.value) return t('billing.checkout.section.activeTitle')
+  if (serviceState.value === 'available') return t('billing.checkout.section.availableTitle')
+  if (serviceState.value === 'error') return t('billing.checkout.section.errorTitle')
+  if (serviceState.value === 'loading') return t('billing.checkout.section.loadingTitle')
+  return t('billing.checkout.section.blockedTitle')
 })
 
 const sectionDescription = computed(() => {
-  if (hasActiveSubscription.value) {
-    return '这里展示的是当前有效订阅和后续管理入口。'
-  }
-
-  if (serviceState.value === 'available') {
-    return '当前环境已经允许购买，你可以直接继续。'
-  }
-
-  if (serviceState.value === 'error') {
-    return '这不是 ready=false，而是前端没有成功拿到支付状态。'
-  }
-
-  if (serviceState.value === 'loading') {
-    return '页面正在向后端同步支付状态、套餐和订阅信息。'
-  }
-
-  return '当前环境还没有开放购买。'
+  if (hasActiveSubscription.value) return t('billing.checkout.section.activeDescription')
+  if (serviceState.value === 'available') return t('billing.checkout.section.availableDescription')
+  if (serviceState.value === 'error') return t('billing.checkout.section.errorDescription')
+  if (serviceState.value === 'loading') return t('billing.checkout.section.loadingDescription')
+  return t('billing.checkout.section.blockedDescription')
 })
 
 const statusAlertType = computed(() => {
-  if (serviceState.value === 'available') {
-    return 'success'
-  }
-
-  if (serviceState.value === 'error') {
-    return 'error'
-  }
-
-  if (serviceState.value === 'loading') {
-    return 'info'
-  }
-
+  if (serviceState.value === 'available') return 'success'
+  if (serviceState.value === 'error') return 'error'
+  if (serviceState.value === 'loading') return 'info'
   return 'warning'
-})
-
-const statusAlertTitle = computed(() => {
-  return paymentHintText.value
 })
 
 const summaryCards = computed(() => [
   {
-    title: '套餐',
+    title: t('billing.checkout.cards.plan'),
     value: selectedPlan.value.name,
     description: `${priceText.value}${billingIntervalText.value}`,
     icon: Tickets,
@@ -280,19 +244,21 @@ const summaryCards = computed(() => [
     iconClass: 'bg-sky-500 text-white'
   },
   {
-    title: '订阅状态',
+    title: t('billing.checkout.cards.subscriptionStatus'),
     value: subscriptionStatusText.value,
-    description: hasActiveSubscription.value ? currentPeriodText.value : '当前还没有生效中的订阅。',
+    description: hasActiveSubscription.value ? currentPeriodText.value : t('billing.checkout.cards.subscriptionEmpty'),
     icon: CircleCheckFilled,
     className: hasActiveSubscription.value ? 'border-emerald-100 bg-emerald-50/80' : 'border-slate-200 bg-slate-50/80',
     iconClass: hasActiveSubscription.value ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-slate-700'
   },
   {
-    title: '支付状态',
+    title: t('billing.checkout.cards.paymentStatus'),
     value: paymentStatusText.value,
     description: serviceState.value === 'error'
-      ? (statusFetchError.value || '未能读取到后端支付状态。')
-      : (serviceState.value === 'available' ? '当前可以继续购买当前套餐。' : '当前还不能继续购买当前套餐。'),
+      ? (statusFetchError.value || t('billing.checkout.cards.statusUnavailable'))
+      : (serviceState.value === 'available'
+          ? t('billing.checkout.cards.paymentAvailable')
+          : t('billing.checkout.cards.paymentBlocked')),
     icon: serviceState.value === 'error' ? CircleCloseFilled : WalletFilled,
     className: serviceState.value === 'available'
       ? 'border-emerald-100 bg-emerald-50/80'

@@ -950,6 +950,221 @@
       }
     }
   },
+  "billing": {
+    "checkout": {
+      "eyebrow": "Billing & subscriptions",
+      "stripeHosted": "Stripe hosted checkout",
+      "priceLabel": "Price",
+      "defaultPlanName": "Pro Monthly",
+      "defaultPlanDescription": "Monthly subscription managed through Stripe billing and payment methods.",
+      "serviceSyncingLabel": "Syncing status",
+      "intervalMonth": "/month",
+      "intervalYear": "/year",
+      "heroDescription": "You will be redirected to Stripe to complete payment. The final subscription state still comes from the backend after you return.",
+      "section": {
+        "activeTitle": "Current subscription",
+        "availableTitle": "Before you buy",
+        "errorTitle": "Status unavailable",
+        "loadingTitle": "Syncing status",
+        "blockedTitle": "Current status",
+        "activeDescription": "This section shows the active subscription together with the actions you can take next.",
+        "availableDescription": "The current environment is ready for purchase and you can continue now.",
+        "errorDescription": "This does not mean ready=false. It means the frontend could not fetch the payment status.",
+        "loadingDescription": "The page is synchronising payment status, plan data, and the current subscription from the backend.",
+        "blockedDescription": "Purchasing is not available in the current environment yet."
+      },
+      "cards": {
+        "plan": "Plan",
+        "subscriptionStatus": "Subscription status",
+        "paymentStatus": "Payment status",
+        "subscriptionEmpty": "There is no active subscription yet.",
+        "statusUnavailable": "The backend payment status is not available.",
+        "paymentAvailable": "You can continue and purchase the current plan now.",
+        "paymentBlocked": "The current plan cannot be purchased yet."
+      },
+      "states": {
+        "subscribedTitle": "Your plan is already active",
+        "subscribedCancelHint": "The current subscription is already scheduled to cancel at the end of the billing period.",
+        "subscribedManageHint": "Open Stripe to manage billing details or the payment method.",
+        "availableTitle": "Purchase is available",
+        "availableDescription": "Use the main button above to continue to Stripe. The success page will keep polling the backend until the subscription is actually confirmed.",
+        "errorTitle": "Payment status could not be loaded",
+        "errorDescription": "The frontend will not misread this as ready=false. Refresh first. If it still fails, check the current login state and whether the environment is hitting the expected backend.",
+        "blockedTitle": "Purchasing is temporarily unavailable",
+        "blockedDescription": "The backend currently reports that payment is not ready. Refresh later or continue using the accounting features first."
+      },
+      "actions": {
+        "refreshStatus": "Refresh status",
+        "retryStatus": "Retry status check",
+        "manageSubscription": "Manage subscription",
+        "buyNow": "Buy now",
+        "blocked": "Unavailable right now",
+        "checking": "Checking...",
+        "cancelSubscription": "Cancel subscription",
+        "cancelScheduled": "Cancellation scheduled"
+      },
+      "hints": {
+        "checking": "Checking the payment status. Please wait a moment.",
+        "statusError": "{message}. Refresh first. If it still fails, confirm the current login state and /api routing in this environment.",
+        "blocked": "The payment service is not open right now, so purchasing is temporarily unavailable.",
+        "activeCancel": "Your subscription is still active and already scheduled to cancel at the end of the current billing period.",
+        "activeManage": "You already have the current plan and can jump straight to Stripe to manage it.",
+        "buy": "Clicking buy will redirect you to Stripe's secure checkout page.",
+        "retry": "Refresh the payment status first, then decide whether to continue.",
+        "loading": "The page is still loading the backend payment state.",
+        "manage": "Review billing details, payment methods, and the current subscription in Stripe.",
+        "preparing": "The payment service is still preparing. Please try again later.",
+        "checkout": "Continue to Stripe to pay for the current plan."
+      },
+      "messages": {
+        "statusUnavailable": "Failed to load payment status",
+        "paymentAvailable": "Payment available",
+        "paymentBlocked": "Payment unavailable",
+        "subscriptionNone": "Not subscribed",
+        "subscriptionActive": "Active subscription",
+        "subscriptionTrialing": "Trialing",
+        "subscriptionPastDue": "Past due",
+        "subscriptionCanceled": "Cancelled",
+        "subscriptionUnpaid": "Unpaid",
+        "subscriptionCancelAtPeriodEnd": "Active now, cancelling at period end",
+        "periodMissing": "There is no active subscription period right now",
+        "periodCancelRange": "{start} - {end} (cancels at period end)",
+        "periodRange": "{start} - {end}",
+        "periodCancelUntil": "Current period ends on {end}, then the subscription will cancel",
+        "periodUntil": "Current period ends on {end}",
+        "periodUnknown": "The backend has not returned the subscription period yet"
+      },
+      "confirm": {
+        "cancelTitle": "Cancel subscription",
+        "cancelDescription": "Cancelling the subscription takes effect at the end of the current billing period. Continue?",
+        "confirm": "Confirm cancellation",
+        "cancel": "Keep subscription"
+      },
+      "errors": {
+        "statusFetchFailed": "Failed to fetch the payment status",
+        "plansFetchFailed": "Failed to load plan details, so the default plan is shown for now.",
+        "subscriptionFetchFailed": "Failed to load the current subscription, so the page is showing the unsubscribed state for now.",
+        "portalUrlMissing": "The backend did not return a usable billing portal URL",
+        "portalOpenFailed": "Failed to open subscription management. Please try again later.",
+        "paymentBlocked": "Payment is not available right now",
+        "serviceNotReady": "The payment service is not ready yet",
+        "checkoutUrlMissing": "The backend did not return a usable checkout URL",
+        "checkoutFailed": "Failed to start checkout. Please try again later.",
+        "cancelFailed": "Failed to cancel the subscription. Please try again later."
+      }
+    },
+    "result": {
+      "eyebrow": "Billing return",
+      "successTitleChecking": "Checking your payment result",
+      "successTitleConfirmed": "Subscription confirmed",
+      "successTitleTimeout": "Returned from payment, still waiting for backend confirmation",
+      "successDescriptionChecking": "Stripe has already returned to the frontend. The page is polling the subscription and order endpoints, and only confirmed backend results will be shown as effective.",
+      "successDescriptionConfirmed": "The frontend has received a confirmed result from the backend subscription or order APIs. This page now shows a confirmed state rather than a local guess.",
+      "successDescriptionTimeout": "Stripe returned to the frontend, but no active subscription or paid order was confirmed within the polling window. Please try again later or revisit billing to check again.",
+      "cancelTitle": "You left the payment flow",
+      "cancelDescription": "This only shows that you left Stripe Checkout. The actual subscription state still comes from the backend, and the frontend will not interpret this return as success or failure by itself.",
+      "alert": {
+        "confirmed": "The backend has confirmed the result, so this page is showing a confirmed state.",
+        "timeout": "Polling attempts are exhausted and there is still no active subscription or paid order. You can try again later.",
+        "checking": "The page polls the subscription and order endpoints every 2 seconds, up to 10 attempts.",
+        "cancel": "This page only shows that you have left the payment page. It does not mean the system has already recorded a new subscription state."
+      },
+      "session": {
+        "title": "Session identifier",
+        "description": "Shown only for troubleshooting and reconciliation. It does not directly represent business success.",
+        "present": "Returned with session_id",
+        "missing": "No session_id returned",
+        "missingValue": "The current URL does not contain a session_id that can be displayed"
+      },
+      "backendSummary": {
+        "title": "Backend result summary",
+        "confirmedBy": "Confirmed by: {value}",
+        "period": "Subscription period: {value}",
+        "latestOrder": "Latest order: {value}",
+        "orderTime": "Order time: {value}",
+        "missingOrderNo": "The backend did not return an order number"
+      },
+      "summaryCards": {
+        "polling": "Polling progress",
+        "pollingHint": "The page polls every 2 seconds, up to 10 attempts.",
+        "subscription": "Subscription status",
+        "order": "Latest order",
+        "missingOrderNo": "No order number from backend",
+        "flow": "Flow state",
+        "flowValue": "Left the payment page",
+        "flowHint": "This only reflects the user flow, not a new subscription state.",
+        "verification": "Subscription check",
+        "verificationValue": "No new change",
+        "verificationHint": "The current page has not received a new confirmed subscription result from the backend.",
+        "next": "Next action",
+        "nextValue": "Can try again",
+        "nextHint": "You can go back to billing to review status, or start the purchase flow again."
+      },
+      "side": {
+        "title": "Recommended next step",
+        "confirmed": "The backend has confirmed the payment result. You can go back to billing to keep managing the subscription, or return to accounting now.",
+        "timeout": "If the backend settles slightly later, reopen this page to verify again, or return to billing and refresh there.",
+        "checking": "The page is waiting for backend subscription and order state. As soon as it sees an active subscription or a paid order, polling stops automatically.",
+        "cancelTitle": "Keep the current judgement",
+        "cancelDescription": "If you only left in the middle of the flow, this does not stop you from returning to billing and starting the flow again, or just going back to accounting."
+      },
+      "actions": {
+        "retry": "Retry verification",
+        "polling": "Polling...",
+        "backToBilling": "Back to billing",
+        "backToAccounting": "Back to accounting"
+      },
+      "cancelPage": {
+        "whatNextTitle": "What you can do next",
+        "notesTitle": "Page note",
+        "notesDescription": "To avoid misleading users, this page does not directly say “payment cancelled successfully” or “upgrade failed”. It only shows that the user flow has returned, while the business state still depends on the backend.",
+        "steps": {
+          "review": {
+            "title": "Go back to billing and review the status",
+            "description": "The billing page reloads backend payment status, plan data, and the current subscription."
+          },
+          "retry": {
+            "title": "If you only stepped away, try again later",
+            "description": "The frontend now requests a new checkout session instead of relying on a hard-coded payment link."
+          },
+          "continue": {
+            "title": "Keep using the current accounting features",
+            "description": "Leaving the payment flow does not block you from recording, filtering, or reviewing charts."
+          }
+        }
+      },
+      "messages": {
+        "subscriptionNone": "Not subscribed",
+        "subscriptionActive": "Active subscription",
+        "subscriptionTrialing": "Trialing",
+        "subscriptionPastDue": "Past due",
+        "subscriptionCanceled": "Cancelled",
+        "subscriptionUnpaid": "Unpaid",
+        "subscriptionCancelAtPeriodEnd": "Active now, cancelling at period end",
+        "orderPending": "Awaiting payment",
+        "orderCheckoutCreated": "Checkout created",
+        "orderPaid": "Paid",
+        "orderFailed": "Payment failed",
+        "orderCanceled": "Cancelled",
+        "orderRefunded": "Refunded",
+        "notReady": "The backend has not returned a value yet",
+        "confirmedBySubscription": "Confirmed through subscription status",
+        "confirmedByOrder": "Confirmed through the latest order",
+        "confirmedWaiting": "Polling ended and is still waiting for backend confirmation",
+        "confirmedChecking": "Waiting for backend subscription and order synchronisation",
+        "confirmedUnknown": "Not confirmed yet",
+        "noOrder": "No order record yet",
+        "noPeriod": "There is no active subscription period right now",
+        "periodUntil": "The current period ends on {date}",
+        "periodRange": "{start} - {end}",
+        "periodUnknown": "The backend has not returned the subscription period yet",
+        "pollingConfirmed": "Confirmed on poll attempt {count}",
+        "pollingTimeout": "Finished {count} polling attempts without a confirmed result",
+        "pollingReady": "Ready to start polling, up to {count} attempts",
+        "pollingProgress": "Polling {current} / {total}"
+      }
+    }
+  },
   "errors": {
     "common": {
       "request_failed": "Request failed",
