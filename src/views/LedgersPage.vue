@@ -149,12 +149,6 @@
             </el-button>
           </el-form>
 
-          <div class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
-            <p class="font-medium text-slate-900">{{ t('platform.ledgers.create.nextTitle') }}</p>
-            <ul class="mt-3 space-y-2 list-decimal pl-5">
-              <li v-for="(step, index) in nextSteps" :key="index">{{ step }}</li>
-            </ul>
-          </div>
         </article>
       </section>
     </div>
@@ -188,7 +182,6 @@ const typeOptions = computed(() => [
   { label: t('platform.ledgers.types.project'), value: 'project' }
 ])
 
-const nextSteps = computed(() => t('platform.ledgers.create.steps'))
 const currentLedgerName = computed(() => currentLedger.value?.name || t('platform.ledgers.messages.currentLedgerFallback'))
 
 const roleLabel = (role) => t(`common.roles.${role || 'member'}`)
