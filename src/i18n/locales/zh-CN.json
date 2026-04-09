@@ -720,7 +720,7 @@
       },
       "list": {
         "title": "我的账本",
-        "description": "默认账本、共享账本和后续平台能力都会从这里进入。",
+        "description": "默认账本和共享账本都会从这里进入。",
         "refresh": "刷新列表",
         "loadErrorTitle": "账本列表加载失败",
         "loadingTitle": "正在加载账本列表...",
@@ -728,24 +728,18 @@
         "emptyTitle": "还没有可用账本",
         "emptyDescription": "可以先创建一个 shared、family 或 project 类型的账本。",
         "defaultBadge": "默认",
-        "contextDescription": "当前阶段先把账本上下文接起来，后续预算、通知、导出和搜索页面都会默认基于这里的选择工作。",
+        "contextDescription": "切换当前上下文后，预算、通知、导出和搜索都会跟着这个账本一起切换。",
         "currentContext": "当前上下文",
         "setCurrentContext": "设为当前上下文",
         "membersAction": "成员与邀请"
       },
       "create": {
         "title": "创建账本",
-        "description": "当前后端支持 shared / family / project 三种类型。",
+        "description": "创建新的共享、家庭或项目账本，并立即切换到这个上下文。",
         "nameLabel": "账本名称",
         "namePlaceholder": "例如：Family Budget",
         "typeLabel": "账本类型",
-        "submit": "创建并加入账本上下文",
-        "nextTitle": "下一步接入",
-        "steps": [
-          "把当前账本挂到预算、通知、导出和搜索页面。",
-          "再把记录与分类接口迁到 /api/ledgers/{ledgerId}/...。",
-          "最后把成员和邀请页接成真实管理页。"
-        ]
+        "submit": "创建并加入账本上下文"
       },
       "types": {
         "shared": "共享账本",

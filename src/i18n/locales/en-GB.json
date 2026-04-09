@@ -720,7 +720,7 @@
       },
       "list": {
         "title": "My ledgers",
-        "description": "Default ledgers, shared ledgers, and later platform features all start here.",
+        "description": "Default and shared ledgers are managed here.",
         "refresh": "Refresh list",
         "loadErrorTitle": "Failed to load ledgers",
         "loadingTitle": "Loading ledgers...",
@@ -728,24 +728,18 @@
         "emptyTitle": "No ledger available yet",
         "emptyDescription": "Start by creating a shared, family, or project ledger.",
         "defaultBadge": "Default",
-        "contextDescription": "This phase focuses on wiring ledger context first. Budgets, notifications, exports, and search will all follow this selection.",
+        "contextDescription": "When you switch the current context, budgets, notifications, exports, and search follow the same ledger.",
         "currentContext": "Current context",
         "setCurrentContext": "Set as current context",
         "membersAction": "Members and invites"
       },
       "create": {
         "title": "Create a ledger",
-        "description": "The backend currently supports shared, family, and project ledgers.",
+        "description": "Create a new shared, family, or project ledger and switch into it right away.",
         "nameLabel": "Ledger name",
         "namePlaceholder": "For example: Family Budget",
         "typeLabel": "Ledger type",
-        "submit": "Create and join the ledger context",
-        "nextTitle": "Next steps",
-        "steps": [
-          "Attach the current ledger to budgets, notifications, exports, and search.",
-          "Move records and category APIs under /api/ledgers/{ledgerId}/....",
-          "Turn the members and invites page into a full management view."
-        ]
+        "submit": "Create and join the ledger context"
       },
       "types": {
         "shared": "Shared",
